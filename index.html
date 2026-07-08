@@ -1050,31 +1050,35 @@ body.app-ops #shell-ops { display: block; }
   /* ─── Bottom Tab Bar (Instagram-style floating pill) ─── */
   body.app-mobile #shell-mobile .tab-bar{
     position: fixed;
-    left: 17px; right: 17px;
+    left: 50%; right: auto;
+    transform: translateX(-50%);
+    width: calc(100% - 34px); max-width: 560px;
     bottom: calc(env(safe-area-inset-bottom) - 18px);
-    /* Dark translucent capsule with backdrop blur — content scrolls softly
-       underneath it, the way Instagram's floating tab bar reads over the feed.
+    /* Frosted-glass capsule — translucent gradient + backdrop blur so content
+       scrolls softly underneath, the way Instagram's floating tab bar reads.
        Falls back to a solid dark fill where backdrop-filter is unsupported. */
-    background: rgba(22, 24, 30, 0.58);
-    -webkit-backdrop-filter: saturate(150%) blur(22px);
-    backdrop-filter: saturate(150%) blur(22px);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.55));
+    -webkit-backdrop-filter: saturate(160%) blur(30px);
+    backdrop-filter: saturate(160%) blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: 32px;
     height: var(--tab-bar-h);
     padding: 0 6px;
     display: flex;
     align-items: center;
     z-index: 200;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.30), 0 3px 10px rgba(0,0,0,0.18);
-    /* Smooth shrink/grow as the user scrolls (see initTabBarScrollShrink). */
+    box-shadow: 0 10px 30px rgba(14,27,44,0.16), 0 3px 10px rgba(14,27,44,0.10), inset 0 1px 0 rgba(255,255,255,0.9);
+    /* Smooth shrink/grow as the user scrolls (see initTabBarScrollShrink):
+       consolidates both vertically (height) and horizontally (width). */
     transition: height 0.26s cubic-bezier(0.16,1,0.3,1),
+                width 0.26s cubic-bezier(0.16,1,0.3,1),
                 bottom 0.26s cubic-bezier(0.16,1,0.3,1),
                 box-shadow 0.26s ease;
     overflow: hidden;
   }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     body.app-mobile #shell-mobile .tab-bar{
-      background: rgba(22, 24, 30, 0.90);
+      background: rgba(248, 250, 252, 0.95);
     }
   }
   /* Shrunk state — applied while scrolling down. The pill gets shorter, drops a
@@ -1082,8 +1086,9 @@ body.app-ops #shell-ops { display: block; }
      compact icon-only capsule (grows back on scroll up). */
   body.app-mobile #shell-mobile .tab-bar.tab-bar--shrunk{
     height: 48px;
+    width: min(272px, calc(100% - 48px));
     bottom: calc(env(safe-area-inset-bottom) - 20px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.26);
+    box-shadow: 0 6px 18px rgba(14,27,44,0.16), inset 0 1px 0 rgba(255,255,255,0.9);
   }
   body.app-mobile #shell-mobile .tab-bar.tab-bar--shrunk .tab-btn-label{
     max-height: 0;
@@ -1102,7 +1107,7 @@ body.app-ops #shell-ops { display: block; }
     align-items: center;
     justify-content: center;
     gap: 4px;
-    color: rgba(255, 255, 255, 0.62);
+    color: rgba(14, 27, 44, 0.5);
     transition: color 0.16s;
     min-height: 0;
     position: relative;
@@ -1134,7 +1139,7 @@ body.app-ops #shell-ops { display: block; }
     transition: max-height 0.24s cubic-bezier(0.16,1,0.3,1), opacity 0.18s ease;
     max-height: 16px;
   }
-  body.app-mobile #shell-mobile .tab-btn.active{ color: #fff; }
+  body.app-mobile #shell-mobile .tab-btn.active{ color: #0E1B2C; }
   body.app-mobile #shell-mobile .tab-btn.active .tab-btn-label{ font-weight: 600; }
   body.app-mobile #shell-mobile .tab-btn:active .tab-btn-icon{ transform: scale(0.92); transition: transform 0.08s; }
 
@@ -6692,16 +6697,16 @@ body.app-ops #shell-ops { display: block; }
   #view-tools-finance .dfc-addon-line{ border-bottom:1px solid var(--border);padding:13px 0;gap:14px; }
   #view-tools-finance .dfc-addon-line:last-of-type{ border-bottom:none; }
   #view-tools-finance .dfc-detail{ margin-top:14px; }
-  .dtools-h1{ font-size:22px; font-weight:700; color:var(--tp); margin:0 0 16px; }
-  .dtools-cards{ display:grid; gap:14px; max-width:560px; }
-  .dtools-card{ display:flex; align-items:center; gap:16px; padding:20px; background:var(--white); border:1px solid var(--border); border-radius:14px; cursor:pointer; text-align:left; font-family:inherit; transition:box-shadow .15s,border-color .15s; }
+  .dtools-h1{ font-size:26px; font-weight:700; color:var(--tp); margin:0 0 22px; }
+  .dtools-cards{ display:grid; gap:16px; max-width:none; }
+  .dtools-card{ display:flex; align-items:center; gap:20px; padding:26px 30px; background:var(--white); border:1px solid var(--border); border-radius:16px; cursor:pointer; text-align:left; font-family:inherit; transition:box-shadow .15s,border-color .15s; }
   .dtools-card:hover{ border-color:var(--blue); box-shadow:0 4px 16px rgba(26,74,138,0.10); }
-  .dtools-card-ico{ width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:11px;background:var(--surface);color:var(--blue); }
-  .dtools-card-ico svg{ width:24px;height:24px; }
-  .dtools-card-txt{ flex:1;display:flex;flex-direction:column;gap:3px; }
-  .dtools-card-title{ font-size:15px;font-weight:650;color:var(--tp); }
-  .dtools-card-sub{ font-size:12.5px;color:var(--ts); }
-  .dtools-card-chev{ font-size:22px;color:var(--tm); }
+  .dtools-card-ico{ width:56px;height:56px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:14px;background:var(--surface);color:var(--blue); }
+  .dtools-card-ico svg{ width:30px;height:30px; }
+  .dtools-card-txt{ flex:1;display:flex;flex-direction:column;gap:4px; }
+  .dtools-card-title{ font-size:18px;font-weight:650;color:var(--tp); }
+  .dtools-card-sub{ font-size:13.5px;color:var(--ts); }
+  .dtools-card-chev{ font-size:28px;color:var(--tm); }
   .dfc-head{ margin-bottom:18px; }
   .dfc-back{ background:none;border:none;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;padding:0;margin-bottom:8px;font-family:inherit;display:block; }
   .dfc-sub{ font-size:12.5px;color:var(--ts);max-width:560px;margin-top:4px; }
@@ -7389,6 +7394,43 @@ body.app-ops #shell-ops { display: block; }
   body.app-mobile #shell-mobile .cal-won-ribbon.sealed{ background:#8E2A22; }
   body.app-desktop #shell-desktop .cal-won-sealed,
   body.app-mobile #shell-mobile .cal-won-sealed{ box-shadow:inset 0 0 0 2px #C0392B; }
+
+  /* Practice Summary modal — body-level (outside both shell IIFEs), so these
+     selectors are intentionally un-scoped. */
+  .psum-backdrop{ position:fixed; inset:0; background:rgba(14,27,44,.55); z-index:100000; display:none; align-items:center; justify-content:center; padding:20px; }
+  .psum-panel{ background:#fff; border-radius:16px; max-width:560px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:0 24px 60px rgba(14,27,44,.35); font-family:'Geist',system-ui,-apple-system,sans-serif; }
+  .psum-head{ position:sticky; top:0; background:#fff; display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #E5E9EF; z-index:1; }
+  .psum-title{ font-size:17px; font-weight:700; color:#0E1B2C; }
+  .psum-x{ background:none; border:none; font-size:24px; line-height:1; color:#6B7785; cursor:pointer; padding:0 4px; }
+  .psum-body{ padding:16px 20px 20px; }
+  .psum-name{ font-size:18px; font-weight:700; color:#0E1B2C; }
+  .psum-subtle{ font-size:13px; color:#6B7785; margin:2px 0 14px; display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
+  .psum-sec{ margin-bottom:15px; }
+  .psum-sec-h{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#6B7785; margin-bottom:6px; }
+  .psum-sec p{ margin:0; font-size:13.5px; line-height:1.5; color:#0E1B2C; }
+  .psum-kv{ display:flex; justify-content:space-between; gap:12px; font-size:13.5px; padding:3px 0; color:#0E1B2C; }
+  .psum-kv .k{ color:#6B7785; }
+  .psum-pill{ display:inline-block; padding:4px 10px; border-radius:12px; font-size:11.5px; font-weight:600; margin:0 6px 6px 0; line-height:1.3; }
+  .psum-rec{ background:#F0F7F3; border:1px solid #BFE0CE; border-radius:12px; padding:14px; }
+  .psum-rec-dev{ font-weight:700; color:#0F7E54; font-size:14px; margin-bottom:3px; }
+  .psum-rec p{ font-size:13px; line-height:1.5; color:#0E1B2C; }
+  .psum-foot{ font-size:11px; color:#99A2AE; margin-top:14px; font-style:italic; }
+  .psum-socials{ display:flex; flex-wrap:wrap; gap:8px; }
+  .psum-social{ display:inline-flex; align-items:center; gap:4px; padding:6px 12px; border:1px solid #C9DDF7; border-radius:20px; background:#F4F8FE; color:#1F5F8A; font-size:12.5px; font-weight:600; text-decoration:none; }
+  .psum-social:hover{ background:#E3F0FA; }
+
+  /* Today's Suggested Stops roll-up (both shells; line items reuse master card styles) */
+  .sugg-rollup{ margin:14px 12px 22px; border:1px solid var(--border); border-radius:14px; background:var(--white); overflow:hidden; }
+  .sugg-head{ width:100%; display:flex; align-items:center; gap:10px; padding:14px 16px; background:none; border:none; cursor:pointer; font-family:inherit; text-align:left; }
+  .sugg-title{ font-size:14px; font-weight:700; color:var(--tp); flex:1; }
+  .sugg-count{ display:inline-flex; align-items:center; justify-content:center; min-width:20px; height:20px; padding:0 6px; border-radius:10px; background:var(--green); color:#fff; font-size:11px; font-weight:700; }
+  .sugg-chev{ font-size:14px; color:var(--tm); }
+  .sugg-body{ padding:2px 12px 14px; border-top:1px solid var(--border); }
+  .sugg-empty{ padding:22px 8px; text-align:center; color:var(--tm); font-size:13px; line-height:1.5; }
+  .sugg-blanket{ display:flex; flex-wrap:wrap; gap:8px; padding:12px 2px; }
+  .sugg-blanket-btn{ flex:1; min-width:120px; padding:9px 12px; border:1px solid var(--border); border-radius:9px; background:var(--surface,#F4F6F9); color:var(--tp); font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer; }
+  .sugg-blanket-btn.is-danger{ color:#8A2F23; border-color:#E8B0A8; background:#FBE6E3; }
+  .sugg-list{ display:flex; flex-direction:column; gap:10px; }
   body.app-desktop #shell-desktop .mgmt-page-hdr{
     display: flex;
     justify-content: space-between;
@@ -18111,6 +18153,7 @@ body.app-ops #shell-ops { display: block; }
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
   }
   body.app-desktop #shell-desktop .lv-toggle{
     display: inline-flex;
@@ -19828,6 +19871,7 @@ body.app-ops #shell-ops { display: block; }
     </div>
     <div class="sect-h">⚡ Tasks due today</div>
     <div id="today-tasks"></div>
+    <div id="today-suggested-mobile"></div>
   </div>
 </div>
 
@@ -22500,6 +22544,7 @@ body.app-ops #shell-ops { display: block; }
       </div>
     </div>
 
+    <div id="today-suggested-desktop"></div>
   </div>
 </div>
 
@@ -32073,6 +32118,460 @@ function _prospectAddress(p) {
   return '';
 }
 
+// Business type = the segment of `p.type` before the "·" ("MedSpa · Brickell" → "MedSpa").
+function _prospectBizType(p) {
+  const t = (p && p.type) ? String(p.type) : '';
+  const i = t.indexOf('·');
+  return (i >= 0 ? t.slice(0, i) : t).trim();
+}
+// City/neighborhood = the segment after the "·" ("MedSpa · Brickell, Miami" → "Brickell, Miami").
+function _prospectCity(p) {
+  const t = (p && p.type) ? String(p.type) : '';
+  const i = t.indexOf('·');
+  return (i >= 0 ? t.slice(i + 1) : '').trim();
+}
+// Aesthetic-maturity class — orthogonal to the base specialty, so ANY private
+// medical practice can be 'none' | 'cash' | 'device'. Priority:
+//   1) explicit p.maturity override
+//   2) device-owned signal in tags        → 'device' (Has devices)
+//   3) aesthetic/cash-pay signal in tags   → 'cash'   (Cash-pay, no device)
+//   4) no signal → deterministic id-seeded spread so the demo shows all three
+//      across every practice type. Type-agnostic on purpose; swap for a real
+//      field when the backend supplies one.
+function _prospectMaturity(p) {
+  if (p && p.maturity) return p.maturity;
+  const tags = (p && Array.isArray(p.tags)) ? p.tags.map(t => String(Array.isArray(t) ? t[0] : t).toLowerCase()) : [];
+  const s = tags.join(' ');
+  if (/device owned|owns? device|competitor device|has devices?/.test(s)) return 'device';
+  if (/aesthetic service|cash.?pay|injectabl|botox|filler|no devices on file/.test(s)) return 'cash';
+  const id = String((p && p.id) || '');
+  let h = 0; for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  const r = h % 3;
+  return r === 0 ? 'none' : (r === 1 ? 'cash' : 'device');
+}
+const PROSPECT_MATURITY_LABEL = { none: 'No aesthetics', cash: 'Cash-pay only', device: 'Has devices' };
+
+// ─── Practice Summary ─────────────────────────────────────────────────────
+// Deterministic, demo-synthesized practice profile for a prospect. Real
+// signals (owner line, "Est." tag, business type, device tags, maturity) are
+// used where present; everything else is filled from id-seeded pools so the
+// same prospect always yields the same summary. Grounds the device pitch in
+// the app's real (anonymized) catalog via getActiveDevices().
+function _practiceSummaryHTML(p) {
+  const esc = (typeof escapeAttr === 'function') ? escapeAttr : (s => String(s == null ? '' : s));
+  const bizType = _prospectBizType(p) || 'Private medical practice';
+  const city = _prospectCity(p);
+  const mat = _prospectMaturity(p);
+  const year = new Date().getFullYear();
+  let h = 0; const _id = String(p.id || ''); for (let i = 0; i < _id.length; i++) h = (h * 31 + _id.charCodeAt(i)) >>> 0;
+  const pick = (arr, seed) => arr[(h + (seed || 0)) % arr.length];
+  const pickN = (arr, n, seed) => { const out = []; const start = (h + (seed || 0)) % arr.length; for (let i = 0; i < n && i < arr.length; i++) out.push(arr[(start + i) % arr.length]); return out; };
+
+  // 1–2 Owner(s) + licensure. Prefer the det "👤" line / "* Owner" tag; else synthesize.
+  const LIC_FULL = { MD: 'Doctor of Medicine (MD)', DO: 'Doctor of Osteopathic Medicine (DO)', NP: 'Nurse Practitioner (NP)', PA: 'Physician Assistant (PA)', RN: 'Registered Nurse (RN)' };
+  const detArr = Array.isArray(p.det) ? p.det : [];
+  const ownerLine = detArr.find(d => typeof d === 'string' && d.indexOf('\u{1F464}') === 0);
+  const tagArr = (Array.isArray(p.tags) ? p.tags : []).map(t => String(Array.isArray(t) ? t[0] : t));
+  const licTag = tagArr.map(t => (t.match(/\b(MD|DO|NP|PA|RN)\b/) || [])[1]).find(Boolean);
+  let ownerName = '', ownerLic = '';
+  if (ownerLine) {
+    const clean = ownerLine.replace('\u{1F464}', '').trim();
+    const m = clean.match(/^(.*?),\s*(MD|DO|NP|PA|RN)\b/);
+    if (m) { ownerName = m[1].trim(); ownerLic = m[2]; } else { ownerName = clean; }
+  }
+  if (!ownerLic) ownerLic = licTag || (['Dermatology', 'Plastic Surgery', 'OBGYN', 'Hospital'].indexOf(bizType) >= 0 ? 'MD' : bizType === 'Primary Care' ? pick(['MD', 'DO'], 3) : pick(['MD', 'DO', 'NP'], 3));
+  if (!ownerName) ownerName = pick(['Dr. Sarah Whitfield', 'Dr. Marcus Ellery', 'Dr. Priya Nair', 'Dr. James Okonkwo', 'Dr. Elena Vasquez', 'Dr. David Chen', 'Dr. Rachel Adler', 'Dr. Thomas Beaumont'], 1);
+  const twoOwners = (h % 3 === 0);
+  const owner2 = twoOwners ? pick(['Dr. Karen Liu, DO', 'Dr. Anthony Rossi, MD', 'NP Bianca Serrano, NP', 'Dr. Omar Haddad, MD'], 7) : '';
+
+  // Time in business + owner time licensed.
+  const estTag = tagArr.map(t => (t.match(/(?:Est\.?|Since)\s*(\d{4})/i) || [])[1]).find(Boolean);
+  const foundYear = estTag ? parseInt(estTag, 10) : (year - (6 + (h % 16)));
+  const yearsInBiz = Math.max(1, year - foundYear);
+  const licYear = foundYear - pick([3, 5, 7, 9, 11], 5);
+  const yearsLicensed = Math.max(yearsInBiz + 1, year - licYear);
+
+  // Medical offering summary by base specialty.
+  const OFFERING = {
+    'MedSpa': 'Medical spa centered on elective, cash-pay aesthetics — injectables, skin health, and membership-driven recurring treatments under medical-director oversight.',
+    'Dermatology': 'Medical and cosmetic dermatology — general derm, skin-cancer/mole care, and an elective aesthetic line that is a natural fit for energy-based devices.',
+    'Plastic Surgery': 'Surgical and non-surgical aesthetics — a high-ticket patient base that cross-sells well into device-based skin and body treatments.',
+    'OBGYN': "Women's health practice with growing aesthetic/wellness add-ons (intimate wellness, skin, hormone therapy) alongside core OB/GYN care.",
+    'Primary Care': 'Primary/family medicine — largely medical today, a greenfield candidate to layer in cash-pay aesthetic and wellness services.',
+    'Hospital': 'Multi-specialty group; device fit depends on the specific department and its elective/aesthetic footprint.'
+  };
+  const offering = OFFERING[bizType] || `${bizType} practice; aesthetic footprint assessed from available signals below.`;
+
+  // Cash-pay treatments.
+  const CASH_POOL = ['Botox / Dysport (neuromodulators)', 'Dermal fillers (HA)', 'IV hydration therapy', 'Hormone replacement (HRT)', 'Medical weight loss (GLP-1 \u2014 semaglutide / tirzepatide)', 'Peptide therapy', 'PRP / PRF', 'Microneedling', 'Chemical peels', 'Kybella', 'Sclerotherapy', 'B12 / vitamin injections'];
+  let cashList;
+  if (mat === 'none') cashList = null;
+  else cashList = pickN(CASH_POOL, mat === 'device' ? 6 : 5, 2);
+
+  // Device treatments + technology (only if they own devices).
+  const DEVICE_POOL = [['Laser hair removal', 'Candela GentleMax Pro'], ['RF microneedling', 'InMode Morpheus8'], ['IPL photofacial', 'Lumenis M22'], ['Body contouring', 'CoolSculpting (cryolipolysis)'], ['Skin tightening', 'Cutera Secret RF'], ['Muscle stim / body', 'BTL Emsculpt NEO'], ['CO2 resurfacing', 'Lumenis AcuPulse']];
+  const deviceList = (mat === 'device') ? pickN(DEVICE_POOL, (h % 2 === 0 ? 2 : 1), 4) : null;
+
+  // ── Device recommendation, grounded in the real (anonymized) catalog ──
+  const DEV_MODALITY = {
+    dev_soprano_plat: 'laser hair removal', dev_soprano_ti: 'high-throughput laser hair removal',
+    dev_alma_harmony: 'IPL multi-application platform (photofacials, pigment & vascular)', dev_harmony_xl_pro: 'IPL multi-application platform',
+    dev_alma_veil: 'non-ablative skin resurfacing', dev_alma_hybrid: 'ablative CO\u2082 resurfacing',
+    dev_alma_frax_pro: 'fractional resurfacing', dev_alma_duo: 'body & wellness (acoustic)',
+    dev_alma_ted: 'acoustic hair restoration', dev_accent_prime: 'RF skin tightening & body contouring',
+    dev_opus_plasma: 'plasma skin resurfacing'
+  };
+  const activeDevs = (typeof getActiveDevices === 'function') ? getActiveDevices() : [];
+  const byId = {}; activeDevs.forEach(d => { byId[d.id] = d; });
+  const fmt$ = (n) => '$' + (Number(n) || 0).toLocaleString();
+  const recFor = (ids) => ids.map(id => byId[id]).filter(Boolean).map(d => ({ d, modality: DEV_MODALITY[d.id] || (d.category || 'aesthetic device') }));
+  let recs = [], recWhy = '';
+  if (mat === 'none') {
+    recs = recFor(['dev_alma_harmony', 'dev_soprano_plat']);
+    recWhy = `As a greenfield ${bizType.toLowerCase()} with no aesthetic line yet, lead with a broad, easy-to-adopt platform. An IPL multi-application system opens photofacials, pigment, vascular and hair-removal in one purchase \u2014 fast patient appeal and strong cash-pay margins to fund the rest. Pair the pitch with starting injectables to seed demand.`;
+  } else if (mat === 'cash') {
+    recs = recFor(['dev_accent_prime', 'dev_soprano_plat']);
+    recWhy = `They already run cash-pay treatments and have the aesthetic patient base \u2014 but no device revenue. Their first device should monetize that base: an RF skin-tightening & body-contouring platform is a natural upsell to injectable clients and adds consumable pull-through. Laser hair removal is a high-volume, quick-ROI alternative if capital is tight.`;
+  } else {
+    recs = recFor(['dev_opus_plasma', 'dev_accent_prime']);
+    recWhy = `They already own energy-based devices, so sell into the gap rather than compete with what's installed. A complementary resurfacing/RF modality expands the treatment menu for existing patients, and its single-use tips / cartridges add recurring consumable revenue \u2014 a strong land-and-expand angle.`;
+  }
+  if (!recs.length && activeDevs.length) recs = recFor([activeDevs[0].id]);
+
+  // ── Assemble HTML ──
+  const sec = (title, inner) => `<div class="psum-sec"><div class="psum-sec-h">${title}</div>${inner}</div>`;
+  const kv = (k, v) => `<div class="psum-kv"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+  const pills = (arr) => arr.map(x => `<span class="psum-pill" style="background:#EEF2F7;color:#3A4654;">${esc(x)}</span>`).join('');
+
+  let ownersHtml = kv('Owner', esc(ownerName) + (ownerLic ? ' \u00b7 ' + ownerLic : ''));
+  if (owner2) ownersHtml += kv('Co-owner', esc(owner2));
+  ownersHtml += kv('Licensure', LIC_FULL[ownerLic] || ownerLic);
+
+  const cashHtml = cashList
+    ? `<div>${pills(cashList)}</div>`
+    : `<p style="color:#6B7785;">None on file \u2014 <strong style="color:#0E1B2C;">greenfield</strong> for cash-pay aesthetic services (injectables, IV, weight loss, HRT).</p>`;
+
+  const deviceHtml = deviceList
+    ? `<div>${deviceList.map(([tx, tech]) => `<span class="psum-pill" style="background:#FCEFD8;color:#8A5D11;">${esc(tx)} \u2014 ${esc(tech)}</span>`).join('')}</div>`
+    : `<p style="color:#6B7785;">No energy-based device treatments on file.</p>`;
+
+  const recHtml = `<div class="psum-rec">
+    ${recs.map(r => `<div class="psum-rec-dev">${esc(r.d.name)} \u2014 ${esc(r.modality)} \u00b7 ${fmt$(r.d.basePrice)}</div>`).join('')}
+    <p style="margin-top:6px;">${recWhy}</p>
+  </div>`;
+
+  const matPill = `<span class="psum-pill" style="background:${mat === 'device' ? '#E7EBF0;color:#3A4654' : mat === 'cash' ? '#E3F0FA;color:#1F5F8A' : '#EAF4EC;color:#2E7D46'};">${PROSPECT_MATURITY_LABEL[mat]}</span>`;
+
+  const socials = _practiceSocials(p);
+  const socialHtml = socials.length
+    ? `<div class="psum-socials">${socials.map(s => `<a class="psum-social" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)} \u2197</a>`).join('')}</div>`
+    : `<p style="color:#6B7785;">No public social or web profiles found.</p>`;
+
+  return `<div class="psum-name">${esc(p.name)}</div>
+    <div class="psum-subtle">${esc(bizType)}${city ? ' \u00b7 ' + esc(city) : ''} ${matPill}</div>
+    ${sec('Ownership', ownersHtml)}
+    ${sec('Tenure', kv('Time in business', yearsInBiz + ' yrs (est. ' + foundYear + ')') + kv('Owner licensed', '~' + yearsLicensed + ' yrs (since ~' + licYear + ')'))}
+    ${sec('Medical offering', `<p>${esc(offering)}</p>`)}
+    ${sec('Cash-pay treatments', cashHtml)}
+    ${sec('Device / energy-based treatments', deviceHtml)}
+    ${sec('\u2726 Recommended pitch', recHtml)}
+    ${sec('Social & web', socialHtml)}
+    <div class="psum-foot">Demo summary \u2014 synthesized from available prospect signals; not verified practice data.</div>`;
+}
+
+// Deterministic social/web profiles for a business (demo — no live lookup).
+// Slugified from the name; per-platform inclusion is id-seeded and biased so
+// aesthetic practices skew Instagram/TikTok and medical practices skew web/LinkedIn.
+function _practiceSocials(p) {
+  const name = String((p && p.name) || '');
+  const slug = name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '');
+  if (!slug) return [];
+  let h = 0; const seed = String((p && p.id) || name); for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  const aesthetic = (typeof _prospectMaturity === 'function') && (_prospectMaturity(p) !== 'none');
+  const inc = (s, prob) => ((h + s * 97) % 100) < prob;
+  const out = [];
+  if (inc(1, 95)) out.push({ label: 'Website', url: 'https://www.' + slug + '.com' });
+  if (inc(2, 82)) out.push({ label: 'Facebook', url: 'https://facebook.com/' + slug });
+  if (inc(3, aesthetic ? 92 : 42)) out.push({ label: 'Instagram', url: 'https://instagram.com/' + slug });
+  if (inc(4, aesthetic ? 40 : 6)) out.push({ label: 'TikTok', url: 'https://www.tiktok.com/@' + slug });
+  if (inc(5, 66)) out.push({ label: 'Google', url: 'https://www.google.com/maps/search/' + encodeURIComponent(name) });
+  if (inc(6, 58)) out.push({ label: 'Yelp', url: 'https://www.yelp.com/biz/' + slug });
+  if (inc(7, aesthetic ? 26 : 44)) out.push({ label: 'LinkedIn', url: 'https://www.linkedin.com/company/' + slug });
+  return out;
+}
+
+function openPracticeSummary(prospectId) {
+  const found = (typeof _findAnyProspectById === 'function') ? _findAnyProspectById(prospectId)
+    : ((typeof _findProspectById === 'function') ? _findProspectById(prospectId) : null);
+  const p = found && found.prospect ? found.prospect : null;
+  if (!p) { if (typeof showToast === 'function') showToast('Prospect not found'); return; }
+  let modal = document.getElementById('practice-summary-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'practice-summary-modal';
+    modal.className = 'psum-backdrop';
+    modal.addEventListener('click', function (e) { if (e.target === modal) closePracticeSummary(); });
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = `<div class="psum-panel" role="dialog" aria-modal="true">
+    <div class="psum-head"><div class="psum-title">Practice Summary</div><button class="psum-x" onclick="closePracticeSummary()" aria-label="Close">\u00d7</button></div>
+    <div class="psum-body">${_practiceSummaryHTML(p)}</div>
+  </div>`;
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+window.openPracticeSummary = openPracticeSummary;
+function closePracticeSummary() { const m = document.getElementById('practice-summary-modal'); if (m) m.style.display = 'none'; document.body.style.overflow = ''; }
+window.closePracticeSummary = closePracticeSummary;
+
+// ═══════════════ Today's Suggested Stops ═══════════════
+// A daily, in-memory list of 5–10 brand-new practices (not in the master
+// lists) within 10 miles of today's calendar meetings (owned OR covered).
+// Falls back to today's route/call/day-plan prospect locations; if there's
+// no plan at all, the roll-up shows an explanatory message. Deterministic
+// per date. Acting on a suggestion commits it into the master lists.
+let _suggCache = { date: null, gen: null };
+let _suggOpen = false;
+let _suggMasterListIdCache = null;
+
+function _suggMiles(a, b) {
+  if (!a || !b) return Infinity;
+  const R = 3958.8, toRad = d => d * Math.PI / 180;
+  const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
+  const s = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(s));
+}
+function _suggCoordsForAny(o) {
+  if (!o) return null;
+  const cands = [];
+  if (o.type && typeof _prospectCity === 'function') cands.push(_prospectCity(o));
+  if (o.neighborhood) cands.push(o.neighborhood);
+  if (o.city) cands.push(o.city);
+  if (o.location) cands.push(o.location);
+  const names = (typeof getNeighborhoodNames === 'function') ? getNeighborhoodNames() : [];
+  for (let raw of cands) {
+    if (!raw) continue; raw = String(raw);
+    for (const t of [raw, raw.split(',')[0].trim()]) { const c = getNeighborhoodCoords(t); if (c) return c; }
+    const low = raw.toLowerCase();
+    const hit = names.find(n => low.indexOf(n.toLowerCase()) >= 0);
+    if (hit) return getNeighborhoodCoords(hit);
+  }
+  return null;
+}
+function _suggAnchors(today) {
+  const anchors = [];
+  const addFrom = (o) => {
+    let c = _suggCoordsForAny(o);
+    if (!c && o && o.prospectId && typeof _findProspectById === 'function') {
+      const f = _findProspectById(o.prospectId); if (f && f.prospect) c = _suggCoordsForAny(f.prospect);
+    }
+    if (c) anchors.push(c);
+  };
+  try {
+    const evts = (typeof window.collectCalEvents === 'function') ? window.collectCalEvents({ includeClosed: false }) : [];
+    evts.filter(e => e && e.date === today && !e.killed && !e.closed && (e.rep === CURRENT_REP || e.coveredBy === CURRENT_REP))
+      .forEach(e => { const opp = (typeof getOpportunity === 'function') ? getOpportunity(e.oppId) : null; if (opp) addFrom(opp); });
+  } catch (e) {}
+  if (anchors.length) return { hasPlan: true, anchors };
+  try {
+    const plan = (typeof getDayPlan === 'function') ? getDayPlan(today) : null;
+    if (plan) (plan.lists || []).forEach(l => (l.prospects || []).forEach(entry => {
+      const f = (typeof _findProspectById === 'function') ? _findProspectById(entry.prospectId) : null;
+      if (f && f.prospect) { const c = _suggCoordsForAny(f.prospect); if (c) anchors.push(c); }
+    }));
+  } catch (e) {}
+  return { hasPlan: anchors.length > 0, anchors };
+}
+function _suggGenerate(today) {
+  const info = _suggAnchors(today);
+  if (!info.hasPlan) return { hasPlan: false, list: [] };
+  const names = (typeof getNeighborhoodNames === 'function') ? getNeighborhoodNames() : [];
+  let nbhds = names.filter(n => { const c = getNeighborhoodCoords(n); return c && info.anchors.some(a => _suggMiles(a, c) <= 10); });
+  if (!nbhds.length && typeof _nearestNeighborhoodToCoord === 'function') nbhds = info.anchors.map(a => _nearestNeighborhoodToCoord(a.lat, a.lng)).filter(Boolean);
+  if (!nbhds.length) return { hasPlan: true, list: [] };
+  const existing = new Set();
+  (typeof prospectLists !== 'undefined' ? prospectLists : []).forEach(l => (l.prospects || []).forEach(p => existing.add(String(p.name || '').trim().toLowerCase())));
+  let seed = 0; for (let i = 0; i < today.length; i++) seed = (seed * 31 + today.charCodeAt(i)) >>> 0;
+  const rnd = (i) => { let x = (seed + i * 2654435761) >>> 0; x ^= x >>> 15; x = (x * 2246822519) >>> 0; x ^= x >>> 13; return (x >>> 0) / 4294967296; };
+  const at = (arr, i) => arr[Math.floor(rnd(i) * arr.length)];
+  const TYPES = ['MedSpa', 'Dermatology', 'Plastic Surgery', 'OBGYN', 'Primary Care', 'Family Medicine', 'Wellness Clinic', 'Urgent Care'];
+  const A = ['Coastal', 'Radiance', 'Elite', 'Vitality', 'Lumen', 'Aria', 'Serene', 'Pinnacle', 'Bloom', 'Nova', 'Palma', 'Vista', 'Clarity', 'Apex', 'Azure'];
+  const B = { MedSpa: ['Aesthetics', 'Med Spa', 'Skin & Laser', 'Aesthetic Studio'], Dermatology: ['Dermatology', 'Skin Institute', 'Derm Group'], 'Plastic Surgery': ['Plastic Surgery', 'Cosmetic Surgery'], OBGYN: ["Women's Health", 'OB/GYN Associates'], 'Primary Care': ['Primary Care', 'Family Practice', 'Medical Group'], 'Family Medicine': ['Family Medicine', 'Family Health'], 'Wellness Clinic': ['Wellness', 'Wellness & IV', 'Health & Wellness'], 'Urgent Care': ['Urgent Care', 'Walk-In Clinic'] };
+  const OWNERS = ['Dr. A. Moreno', 'Dr. J. Patel', 'Dr. S. Kim', 'Dr. L. Romano', 'Dr. M. Alvarez', 'Dr. R. Bennett', 'Dr. E. Costa', 'Dr. N. Farah', 'Dr. T. Okafor', 'Dr. P. Rivas'];
+  const LICS = ['MD', 'DO', 'NP', 'PA'];
+  const STREETS = ['Ponce de Leon Blvd', 'Biscayne Blvd', 'Collins Ave', 'SW 8th St', 'Coral Way', 'Alton Rd', 'NE 2nd Ave', 'US-1'];
+  const AI = {
+    none: 'No aesthetic services yet — greenfield for a first cash-pay line and entry device.',
+    cash: 'Runs cash-pay treatments but no device on file — strong first-device target.',
+    device: 'Owns a competitor device — opening for a complementary modality + consumables.'
+  };
+  const count = 5 + Math.floor(rnd(1) * 6);
+  const out = [];
+  let k = 0;
+  while (out.length < count && k < count * 5) {
+    const i = 20 + k * 11; k++;
+    const nb = at(nbhds, i + 1);
+    const type = at(TYPES, i + 2);
+    const nm = at(A, i + 3) + ' ' + at(B[type] || ['Medical'], i + 4);
+    const name = (rnd(i + 5) < 0.4 ? (nb.split(',')[0] + ' ') : '') + nm;
+    if (existing.has(name.trim().toLowerCase())) continue;
+    existing.add(name.trim().toLowerCase());
+    const lic = at(LICS, i + 7);
+    const est = 2026 - (2 + Math.floor(rnd(i + 9) * 20));
+    const phone = '(305) 555-' + String(1000 + Math.floor(rnd(i + 10) * 9000));
+    const addr = (100 + Math.floor(rnd(i + 11) * 9800)) + ' ' + at(STREETS, i + 12);
+    const roll = rnd(i + 13);
+    const matKey = roll < 0.4 ? 'none' : roll < 0.75 ? 'cash' : 'device';
+    const matTag = matKey === 'none' ? ['No devices on file', 'tag-dev'] : matKey === 'cash' ? ['Aesthetic services listed', 'tag-dev'] : ['Competitor device owned', 'tag-np'];
+    const det = ['\uD83D\uDCCD ' + addr + ', ' + nb.split(',')[0], '\uD83D\uDC64 ' + at(OWNERS, i + 8) + ', ' + lic, '\uD83D\uDCDE ' + phone, '\uD83C\uDFE2 1 location'];
+    const tags = [[lic + ' Owner', (lic === 'MD' || lic === 'DO') ? 'tag-md' : 'tag-np'], ['Est. ' + est, 'tag-est'], matTag];
+    out.push({ id: 'sugg_' + today + '_' + out.length, rank: out.length + 1, name: name, type: type + ' \u00b7 ' + nb, score: 62 + Math.floor(rnd(i + 6) * 33), ai: AI[matKey], det: det, tags: tags, bucket: 'unassigned', suggested: true });
+  }
+  return { hasPlan: true, list: out };
+}
+function _suggState() {
+  const today = (typeof dateToISOLocal === 'function') ? dateToISOLocal(new Date()) : (new Date()).toISOString().slice(0, 10);
+  if (_suggCache.date === today && _suggCache.gen) return _suggCache.gen;
+  _suggCache = { date: today, gen: _suggGenerate(today) };
+  return _suggCache.gen;
+}
+window.getTodaySuggestedStops = _suggState;
+// Let Practice Summary resolve suggested prospects too.
+function _findAnyProspectById(id) {
+  if (typeof _findProspectById === 'function') { const f = _findProspectById(id); if (f && f.prospect) return f; }
+  const st = _suggCache.gen; if (st && st.list) { const p = st.list.find(x => x.id === id); if (p) return { prospect: p, list: null }; }
+  return null;
+}
+window._findAnyProspectById = _findAnyProspectById;
+
+function _suggMasterListId() {
+  if (_suggMasterListIdCache) { const still = prospectLists.find(l => l.id === _suggMasterListIdCache); if (still) return _suggMasterListIdCache; }
+  let l = (typeof prospectLists !== 'undefined') ? prospectLists.find(x => x.name === 'Field discovery') : null;
+  if (!l && typeof createProspectList === 'function') {
+    const r = createProspectList({ name: 'Field discovery', location: "Near today's stops", filters: "Suggested near today's meetings", listType: 'discovery' });
+    l = (r && r.id) ? r : prospectLists.find(x => x.id === r);
+  }
+  if (!l) l = prospectLists && prospectLists[0];
+  _suggMasterListIdCache = l ? l.id : null;
+  return _suggMasterListIdCache;
+}
+function _suggCommit(id, bucket) {
+  const st = _suggState(); if (!st.list) return null;
+  const idx = st.list.findIndex(p => p.id === id); if (idx < 0) return null;
+  const p = st.list[idx];
+  const listId = _suggMasterListId(); if (!listId) return null;
+  const newId = 'mp_sugg_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+  const input = { id: newId, name: p.name, type: p.type, score: p.score, ai: p.ai, det: (p.det || []).slice(), tags: (p.tags || []).map(t => t.slice()), bucket: bucket || 'unassigned' };
+  try { addProspectToList(listId, input, { bucket: bucket || 'unassigned' }); } catch (e) {}
+  st.list.splice(idx, 1);
+  return newId;
+}
+function _suggAfter(shell, msg) {
+  _suggRenderInto(shell);
+  if (typeof showToast === 'function' && msg) showToast(msg);
+}
+function _suggToggle(shell) { _suggOpen = !_suggOpen; _suggRenderInto(shell); }
+window._suggToggle = _suggToggle;
+function _suggMoveAll(bucket, shell) {
+  const st = _suggState(); if (!st.hasPlan) return;
+  st.list.slice().forEach(p => _suggCommit(p.id, bucket));
+  _suggAfter(shell, bucket === 'revisit' ? 'All moved to Revisit (in Master)' : bucket === 'removed' ? 'All removed (kept in Master)' : 'All moved to Master');
+}
+window._suggMoveAll = _suggMoveAll;
+function _suggItem(id, action, shell) {
+  if (action === 'revisit') { _suggCommit(id, 'revisit'); _suggAfter(shell, 'Moved to Revisit (in Master)'); return; }
+  if (action === 'remove') { _suggCommit(id, 'removed'); _suggAfter(shell, 'Removed (kept in Master)'); return; }
+  const newId = _suggCommit(id, 'unassigned');
+  _suggRenderInto(shell);
+  if (newId) {
+    const alloc = action === 'day' ? 'pending' : action;
+    if (shell === 'mobile' && typeof window._mobGlPush === 'function') window._mobGlPush(newId, alloc);
+    else if (typeof window.lvOpenDayPicker === 'function') window.lvOpenDayPicker(newId, alloc);
+  }
+}
+window._suggItem = _suggItem;
+
+function _suggActsHTML(id, shell) {
+  if (shell === 'mobile') {
+    return `<div class="mob-gl-acts" style="margin-top:6px;">
+      <button class="mob-gl-act is-route" onclick="event.stopPropagation();_suggItem('${id}','route','mobile')">+ Route</button>
+      <button class="mob-gl-act is-calls" onclick="event.stopPropagation();_suggItem('${id}','calls','mobile')">+ Calls</button>
+      <button class="mob-gl-act" onclick="event.stopPropagation();_suggItem('${id}','day','mobile')">\u2192 Day</button>
+      <button class="mob-gl-act" onclick="event.stopPropagation();_suggItem('${id}','revisit','mobile')">Revisit</button>
+      <button class="mob-gl-act is-x" onclick="event.stopPropagation();_suggItem('${id}','remove','mobile')">Remove</button>
+      <button class="mob-gl-act" onclick="event.stopPropagation();openPracticeSummary('${id}')">\uD83D\uDCCB Summary</button>
+    </div>`;
+  }
+  return `<div class="pc-acts" style="margin-top:8px;flex-wrap:wrap;">
+    <button class="ab ab-r" onclick="_suggItem('${id}','route','desktop')">+ Routing</button>
+    <button class="ab ab-c" onclick="_suggItem('${id}','calls','desktop')">+ Call list</button>
+    <button class="ab" style="background:var(--white);color:var(--ts);border-color:var(--border);" onclick="_suggItem('${id}','day','desktop')">\u2192 Push to day</button>
+    <button class="ab" style="background:var(--white);color:var(--ts);border-color:var(--border);" onclick="_suggItem('${id}','revisit','desktop')">Revisit</button>
+    <button class="ab" style="background:var(--white);color:var(--ts);border-color:var(--border);" onclick="_suggItem('${id}','remove','desktop')">Remove</button>
+    <button class="ab" style="background:var(--white);color:var(--blue);border-color:#C9DDF7;font-weight:600;" onclick="openPracticeSummary('${id}')">\uD83D\uDCCB Practice summary</button>
+  </div>`;
+}
+function _suggRowHTML(p, shell, esc) {
+  const id = String(p.id).replace(/'/g, "\\'");
+  const tags = (p.tags || []).map(t => `<span class="tag ${t[1] || ''}">${esc(t[0])}</span>`).join('');
+  const acts = _suggActsHTML(id, shell);
+  if (shell === 'mobile') {
+    const det = (p.det || []).map(d => `<div class="mob-gl-det-line">${esc(d)}</div>`).join('');
+    return `<div class="mob-gl-pc sugg-item" onclick="_mobGlToggle(this,event)">
+      <div class="mob-gl-pc-top">
+        <div class="mob-gl-pc-rank">${esc(p.rank || '')}</div>
+        <div class="mob-gl-pc-info"><div class="mob-gl-pc-name" onclick="event.stopPropagation();openPracticeSummary('${id}')" style="cursor:pointer;">${esc(p.name)}</div><div class="mob-gl-pc-type">${esc(p.type || '')}</div></div>
+        <div class="mob-gl-pc-score">${esc(p.score || '')}</div>
+        <div class="mob-gl-chev" aria-hidden="true">\u25B8</div>
+      </div>
+      <div class="mob-gl-detail">
+        ${p.ai ? `<div class="mob-gl-ai">\u2726 ${esc(p.ai)}</div>` : ''}
+        ${det ? `<div class="mob-gl-det">${det}</div>` : ''}
+        ${tags ? `<div class="mob-gl-tags">${tags}</div>` : ''}
+        ${acts}
+      </div>
+    </div>`;
+  }
+  const det = (p.det || []).map(d => `<div style="font-size:12px;color:var(--ts);padding:1px 0;">${esc(d)}</div>`).join('');
+  return `<div class="pc sugg-item">
+    <div class="pc-top"><div class="pc-rank">${esc(p.rank || '')}</div><div class="pc-info"><div class="pc-name">${esc(p.name)}</div><div class="pc-type">${esc(p.type || '')}</div></div><div class="pc-score"><div class="sd"></div>${esc(p.score || '')}</div></div>
+    ${p.ai ? `<div class="ai-box"><div class="ai-lbl">\u2726 AI RECOMMENDATION</div>${esc(p.ai)}</div>` : ''}
+    <div class="pc-det">${det}</div>
+    <div class="pc-tags">${tags}</div>
+    ${acts}
+  </div>`;
+}
+function _suggRollupHTML(shell) {
+  const esc = (typeof escapeAttr === 'function') ? escapeAttr : (s => String(s == null ? '' : s));
+  const st = _suggState();
+  const n = st.hasPlan ? st.list.length : 0;
+  let body = '';
+  if (_suggOpen) {
+    let inner;
+    if (!st.hasPlan) inner = `<div class="sugg-empty">No plan in place for today. No suggestions available.</div>`;
+    else if (!st.list.length) inner = `<div class="sugg-empty">No new nearby practices to suggest right now.</div>`;
+    else inner = `<div class="sugg-blanket">
+        <button class="sugg-blanket-btn" onclick="_suggMoveAll('unassigned','${shell}')">Move all to Master</button>
+        <button class="sugg-blanket-btn" onclick="_suggMoveAll('revisit','${shell}')">Move all to Revisit</button>
+        <button class="sugg-blanket-btn is-danger" onclick="_suggMoveAll('removed','${shell}')">Remove all</button>
+      </div><div class="sugg-list">${st.list.map(p => _suggRowHTML(p, shell, esc)).join('')}</div>`;
+    body = `<div class="sugg-body">${inner}</div>`;
+  }
+  return `<div class="sugg-rollup">
+    <button type="button" class="sugg-head" onclick="_suggToggle('${shell}')">
+      <span class="sugg-title">\u2726 Today's Suggested Stops</span>
+      ${st.hasPlan && n ? `<span class="sugg-count">${n}</span>` : ''}
+      <span class="sugg-chev">${_suggOpen ? '\u25BE' : '\u25B8'}</span>
+    </button>
+    ${body}
+  </div>`;
+}
+function _suggRenderInto(shell) {
+  const el = document.getElementById('today-suggested-' + shell);
+  if (el) el.innerHTML = _suggRollupHTML(shell);
+}
+window._suggRenderInto = _suggRenderInto;
+
 // Backfill practiceId on every prospect, opportunity, and account that's
 // missing one. Idempotent — safe to re-run.
 //
@@ -33379,14 +33878,31 @@ function getProspectsForListsView(opts) {
     cityIndex.get(city).push({ list, rows });
   }
 
+  // Aesthetic-maturity annotation + optional filter, plus optional row sort.
+  // All gated on opts so legacy callers (mobile default) are unaffected.
+  const _matFilter = (opts.maturityFilter && opts.maturityFilter.size) ? opts.maturityFilter : null;
+  const _sortBy = opts.sortBy || 'city';   // 'city' | 'type' | 'score'
+  const _sortRows = (rows) => {
+    if (_sortBy === 'score') rows.sort((a, b) => (Number(b.prospect && b.prospect.score) || 0) - (Number(a.prospect && a.prospect.score) || 0));
+    else if (_sortBy === 'type') rows.sort((a, b) => _prospectBizType(a.prospect).localeCompare(_prospectBizType(b.prospect)) || (Number(b.prospect && b.prospect.score) || 0) - (Number(a.prospect && a.prospect.score) || 0));
+    return rows;
+  };
+
   // Sort cities alphabetically (stable ordering across renders).
   const groups = [];
   const cityNames = Array.from(cityIndex.keys()).sort((a, b) => a.localeCompare(b));
   for (const city of cityNames) {
-    const lists = cityIndex.get(city).slice();
+    let lists = cityIndex.get(city).slice();
     // Sort lists within a city by createdAt desc (newest first).
     lists.sort((a, b) => (b.list.createdAt || '').localeCompare(a.list.createdAt || ''));
-    groups.push({ city, lists });
+    lists = lists.map(lb => {
+      let rows = lb.rows.slice();
+      rows.forEach(r => { r.maturity = _prospectMaturity(r.prospect); });
+      if (_matFilter) rows = rows.filter(r => _matFilter.has(r.maturity));
+      _sortRows(rows);
+      return { list: lb.list, rows };
+    }).filter(lb => lb.rows.length);
+    if (lists.length) groups.push({ city, lists });
   }
 
   const _locArr = (m) => Array.from(m.entries()).map(e => ({ value: e[0], count: e[1] })).sort((a, b) => a.value.localeCompare(b.value));
@@ -33483,7 +33999,15 @@ function _buildListFilterPanel(cfg) {
   const statusHtml = _LIST_STATUS_FACETS.map(([f, label]) =>
     `<button type="button" class="lf-chip${status.has(f) ? ' is-active' : ''}" onclick="${pre}Status('${f}')">${label} <span class="lf-chip-n">${fc[f] || 0}</span></button>`).join('');
   const revN = (cfg.facetCounts && cfg.facetCounts.revisit) ? cfg.facetCounts.revisit : null;
+  const sortVal = cfg.sort || 'city';
+  const sortHtml = [['city', 'City (A\u2013Z)'], ['type', 'Business type (A\u2013Z)'], ['score', 'Practice score (high\u2192low)']]
+    .map(([v, label]) => `<button type="button" class="lf-chip${sortVal === v ? ' is-active' : ''}" onclick="${pre}Sort('${v}')">${label}</button>`).join('');
+  const mat = cfg.maturity || new Set();
+  const matHtml = [['none', 'No aesthetics'], ['cash', 'Cash-pay only'], ['device', 'Has devices']]
+    .map(([v, label]) => `<button type="button" class="lf-chip${mat.has(v) ? ' is-active' : ''}" onclick="${pre}Maturity('${v}')">${label}</button>`).join('');
   return `<div class="lf-panel">
+    <div class="lf-section"><div class="lf-section-h">Sort by</div><div class="lf-chips">${sortHtml}</div></div>
+    <div class="lf-section"><div class="lf-section-h">Aesthetic maturity</div><div class="lf-chips">${matHtml}</div></div>
     <div class="lf-section"><div class="lf-section-h">Location</div>${locHtml}</div>
     <div class="lf-section"><div class="lf-section-h">Status</div><div class="lf-chips">${statusHtml}</div></div>
     <div class="lf-section"><div class="lf-section-h">Include set-aside</div>
@@ -42255,6 +42779,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   function _mmrRenderSide(demo){
     const sr=document.getElementById('mmr-side-rad');if(sr)sr.textContent='within '+demo.radius+' mi';
     const d=document.getElementById('mmr-demo');
+    if(!(_mmrName&&_mmrName.trim())&&!(_mmrAddr&&_mmrAddr.trim())){ if(d)d.innerHTML='<div style="padding:24px 12px;text-align:center;color:var(--tm);font-size:12.5px;line-height:1.5;">Enter a practice or address to model the local market.</div>'; return; }
     if(d){
       const n=v=>v.toLocaleString('en-US');
       const head=[['Total population',n(demo.population)],['Adults 35–64',n(demo.adults35_64)],['Women 35–64',n(demo.women35_64)],['Households &gt; $100k',n(demo.hhOver100k)]]
@@ -42276,7 +42801,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     const set=(id,v)=>{const e=document.getElementById(id);if(e&&document.activeElement!==e)e.value=v;};
     set('mmr-name',_mmrName);set('mmr-addr',_mmrAddr);set('mmr-radius',_mmrRadius);set('mmr-conv',_mmrConv);
     const ms=document.getElementById('mmr-mult');if(ms)ms.value=_mmrMultPct;const mt=(_mmrMultPct>=0?'+':'')+_mmrMultPct+'%';['mmr-mult-val','mmr-mult-cur'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=mt;});
-    if(!_mmrLines.length)mmrAddLine();else _mmrRender();
+    _mmrRender();
   }
   window.renderMarketReportMob=renderMarketReportMob;
   // ── PDF export — builds a standalone print document and opens it ──
@@ -45741,6 +46266,8 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   let _mobGlIncludeRevisit = true;  // master list: revisit is part of the set (shown by default)
   let _mobGlIncludeRemoved = false;
   let _mobGlCityDropOpen = false;
+  let _mobGlSort = 'city';           // 'city' | 'type' | 'score'
+  let _mobGlMaturity = new Set();    // aesthetic-maturity filter: subset of 'none'|'cash'|'device'
 
   // Tag/election words for a row, so the search box also matches on the
   // prospect's status + allocation tags (route, calls, push, revisit,
@@ -45770,7 +46297,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     const esc = (typeof escapeHtmlText === 'function') ? escapeHtmlText : (s => String(s == null ? '' : s));
     const gpv = window.getProspectsForListsView;
     const data = (typeof gpv === 'function')
-      ? gpv({ masterMode: true, statusFilter: _mobGlStatusFilter, locationFilter: _mobGlLocFilter, includeRevisit: _mobGlIncludeRevisit, includeRemoved: _mobGlIncludeRemoved })
+      ? gpv({ masterMode: true, statusFilter: _mobGlStatusFilter, locationFilter: _mobGlLocFilter, includeRevisit: _mobGlIncludeRevisit, includeRemoved: _mobGlIncludeRemoved, sortBy: _mobGlSort, maturityFilter: _mobGlMaturity })
       : { groups: [], totalShown: 0, totalHidden: 0, removedCount: 0 };
 
     // Mobile search filter — narrows the rendered rows by name / practice type /
@@ -45795,7 +46322,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
 
     const _mobRemovedN = data.removedCount || 0;
     const _mobGlLocCount = _mobGlLocFilter.states.size + _mobGlLocFilter.cities.size + _mobGlLocFilter.neighborhoods.size;
-    const _mobGlActiveCount = _mobGlStatusFilter.size + _mobGlLocCount + (_mobGlIncludeRevisit ? 0 : 1) + (_mobGlIncludeRemoved ? 1 : 0);
+    const _mobGlActiveCount = _mobGlStatusFilter.size + _mobGlLocCount + (_mobGlIncludeRevisit ? 0 : 1) + (_mobGlIncludeRemoved ? 1 : 0) + _mobGlMaturity.size;
     // Stash latest facet data so the open filter sheet can re-render with live counts.
     _mobGlFilterData = data;
     // Header — count strip + a single Filter button opening the filter sheet.
@@ -45967,6 +46494,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
         ${tags ? `<div class="mob-gl-tags">${tags}</div>` : ''}
         ${isTerminal ? '' : action}
         <div class="mob-gl-acts" style="margin-top:6px;">
+          <button class="mob-gl-act" onclick="event.stopPropagation();openPracticeSummary('${idArg}')">\u{1F4CB} Practice summary</button>
           <button class="mob-gl-act" onclick="event.stopPropagation();openProspectEditModal('${idArg}')">✎ Edit details</button>
         </div>
       </div>
@@ -46072,7 +46600,8 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     body.innerHTML = window._buildListFilterPanel({
       prefix: '_mobGlFilt', status: _mobGlStatusFilter, loc: _mobGlLocFilter,
       includeRevisit: _mobGlIncludeRevisit, includeRemoved: _mobGlIncludeRemoved, cityDropOpen: _mobGlCityDropOpen,
-      facetCounts: d.facetCounts || {}, locationFacets: d.locationFacets, removedCount: d.removedCount || 0
+      facetCounts: d.facetCounts || {}, locationFacets: d.locationFacets, removedCount: d.removedCount || 0,
+      sort: _mobGlSort, maturity: _mobGlMaturity
     });
   }
   function _mobGlOpenFilter() {
@@ -46105,9 +46634,14 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     _mobGlStatusFilter.clear();
     _mobGlLocFilter.states.clear(); _mobGlLocFilter.cities.clear(); _mobGlLocFilter.neighborhoods.clear();
     _mobGlIncludeRevisit = true; _mobGlIncludeRemoved = false;
+    _mobGlMaturity.clear();
     _mobGlAfterFilterChange();
   }
   window._mobGlFiltClear = _mobGlFiltClear;
+  function _mobGlFiltSort(v) { _mobGlSort = (v === 'type' || v === 'score') ? v : 'city'; _mobGlAfterFilterChange(); }
+  window._mobGlFiltSort = _mobGlFiltSort;
+  function _mobGlFiltMaturity(m) { if (_mobGlMaturity.has(m)) _mobGlMaturity.delete(m); else _mobGlMaturity.add(m); _mobGlAfterFilterChange(); }
+  window._mobGlFiltMaturity = _mobGlFiltMaturity;
 
   // Mobile general-lists search. The field lives in the view markup (outside the
   // re-rendered #mob-gl-groups), so focus survives each keystroke.
@@ -46832,6 +47366,8 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
 
     // Today's route + call list, folded into two roll-ups below the meetings.
     _renderTodayRollups();
+    // Today's Suggested Stops (shared, body-level logic; renders into #today-suggested-mobile).
+    if (typeof window._suggRenderInto === 'function') window._suggRenderInto('mobile');
   }
 
   function collectTodaysMeetings() {
@@ -58988,7 +59524,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     { device:'Device T', indications:[
       {id:'t_hair', name:'Hair Restoration', demand:0.0038, price:2700} ]}
   ];
-  let _mrName='Bella Aesthetics Group', _mrAddr='1180 Peachtree St NE, Atlanta, GA 30309', _mrRadius=10, _mrConv=10, _mrMultPct=0, _mrLines=[], _mrLinkedOppId=null, _mrEditingReportId=null, _mrUid=1, _mrDemoCache=null, _mrDemoKey='';
+  let _mrName='', _mrAddr='', _mrRadius=10, _mrConv=10, _mrMultPct=0, _mrLines=[], _mrLinkedOppId=null, _mrEditingReportId=null, _mrUid=1, _mrDemoCache=null, _mrDemoKey='';
   function _mrCat(){ return window.mrCatalog||[]; }
   function _mrHash(str){let h=2166136261>>>0;str=String(str||'');for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
   function _mrRng(seed){let t=seed>>>0;return function(){t=(t+0x6D2B79F5)>>>0;let x=Math.imul(t^(t>>>15),1|t);x=(x+Math.imul(x^(x>>>7),61|x))>>>0;return ((x^(x>>>14))>>>0)/4294967296;};}
@@ -59204,6 +59740,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   function _mrRenderSide(demo){
     const sr=document.getElementById('mr-side-rad');if(sr)sr.textContent='within '+demo.radius+' mi';
     const d=document.getElementById('mr-demo');
+    if(!(_mrName&&_mrName.trim())&&!(_mrAddr&&_mrAddr.trim())){ if(d)d.innerHTML='<div style="padding:28px 14px;text-align:center;color:var(--tm);font-size:13px;line-height:1.5;">Enter a practice or address to model the local market.</div>'; return; }
     if(d){
       const n=v=>v.toLocaleString('en-US');
       const head=[['Total population',n(demo.population)],['Adults 35–64',n(demo.adults35_64)],['Women 35–64',n(demo.women35_64)],['Households &gt; $100k',n(demo.hhOver100k)]]
@@ -59226,7 +59763,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     set('mr-name',_mrName);set('mr-addr',_mrAddr);set('mr-radius',_mrRadius);set('mr-conv',_mrConv);
     set('mr-radius-slider',_mrRadius);set('mr-conv-slider',_mrConv);
     const ms=document.getElementById('mr-mult');if(ms)ms.value=_mrMultPct;const mt=(_mrMultPct>=0?'+':'')+_mrMultPct+'%';['mr-mult-val','mr-mult-cur'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=mt;});
-    if(!_mrLines.length){const cat=_mrCat();for(let i=0;i<Math.min(3,cat.length);i++){const ind=(cat[i].indications||[])[0];if(ind)_mrLines.push({id:'ml'+(_mrUid++),deviceIdx:i,indId:ind.id,price:ind.price});}if(!_mrLines.length)mrAddLine();else _mrRender();}else _mrRender();
+    _mrRender();
   }
   window.renderMarketReportDesk=renderMarketReportDesk;
   function mrExportPdf(){
@@ -59550,6 +60087,8 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   let _lvIncludeRemoved = false;     // include removed prospects
   let _lvFilterOpen = false;         // filter popover open state
   let _lvCityDropOpen = false;       // city multi-select dropdown open state
+  let _lvSort = 'city';              // 'city' | 'type' | 'score'
+  let _lvMaturity = new Set();       // aesthetic-maturity filter: subset of 'none'|'cash'|'device'
 
   function _lvFormatPlannedDate(iso) {
     if (!iso) return '';
@@ -59568,7 +60107,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     const container = document.getElementById('plx-groups');
     if (!container) return;
     const data = (typeof getProspectsForListsView === 'function')
-      ? getProspectsForListsView({ masterMode: true, statusFilter: _lvStatusFilter, locationFilter: _lvLocFilter, includeRevisit: _lvIncludeRevisit, includeRemoved: _lvIncludeRemoved })
+      ? getProspectsForListsView({ masterMode: true, statusFilter: _lvStatusFilter, locationFilter: _lvLocFilter, includeRevisit: _lvIncludeRevisit, includeRemoved: _lvIncludeRemoved, sortBy: _lvSort, maturityFilter: _lvMaturity })
       : { groups: [], totalShown: 0, totalHidden: 0, facetCounts: {} };
 
     // Live in-page search — narrows the rendered prospects as the rep types in the
@@ -59592,11 +60131,12 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
 
     const fc = data.facetCounts || {};
     const _lvLocCount = _lvLocFilter.states.size + _lvLocFilter.cities.size + _lvLocFilter.neighborhoods.size;
-    const _lvActiveCount = _lvStatusFilter.size + _lvLocCount + (_lvIncludeRevisit ? 0 : 1) + (_lvIncludeRemoved ? 1 : 0);
+    const _lvActiveCount = _lvStatusFilter.size + _lvLocCount + (_lvIncludeRevisit ? 0 : 1) + (_lvIncludeRemoved ? 1 : 0) + _lvMaturity.size;
     const _lvPanelHtml = (typeof _buildListFilterPanel === 'function') ? _buildListFilterPanel({
       prefix: 'lvFilt', status: _lvStatusFilter, loc: _lvLocFilter,
       includeRevisit: _lvIncludeRevisit, includeRemoved: _lvIncludeRemoved, cityDropOpen: _lvCityDropOpen,
-      facetCounts: fc, locationFacets: data.locationFacets, removedCount: data.removedCount || 0
+      facetCounts: fc, locationFacets: data.locationFacets, removedCount: data.removedCount || 0,
+      sort: _lvSort, maturity: _lvMaturity
     }) : '';
 
     // Header — count strip + consolidated Filters button (popover) + export.
@@ -59805,6 +60345,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
       <div class="pc-det">${detHtml}</div>
       <div class="pc-tags">${tagsHtml}</div>
       <div class="pc-edit-row" style="margin-top:8px;">
+        <button class="ab" style="background:var(--white);color:var(--blue);border-color:#C9DDF7;font-weight:600;" onclick="openPracticeSummary('${escapeAttr(prospect.id)}')">\u{1F4CB} Practice summary</button>
         <button class="ab" style="background:var(--white);color:var(--blue);border-color:#C9DDF7;font-weight:600;" onclick="openProspectEditModal('${escapeAttr(prospect.id)}')">✎ Edit details</button>
       </div>
       ${(typeof prospectLockedByMyActiveOpp === 'function' && prospectLockedByMyActiveOpp(prospect))
@@ -59983,9 +60524,14 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     _lvStatusFilter.clear();
     _lvLocFilter.states.clear(); _lvLocFilter.cities.clear(); _lvLocFilter.neighborhoods.clear();
     _lvIncludeRevisit = true; _lvIncludeRemoved = false;
+    _lvMaturity.clear();
     renderListsView();
   }
   window.lvFiltClear = lvFiltClear;
+  function lvFiltSort(v) { _lvSort = (v === 'type' || v === 'score') ? v : 'city'; renderListsView(); }
+  window.lvFiltSort = lvFiltSort;
+  function lvFiltMaturity(m) { if (_lvMaturity.has(m)) _lvMaturity.delete(m); else _lvMaturity.add(m); renderListsView(); }
+  window.lvFiltMaturity = lvFiltMaturity;
   // Back-compat aliases (older callers / search-clear paths reference these).
   function lvToggleStatusFilter(facet) { lvFiltStatus(facet); }
   window.lvToggleStatusFilter = lvToggleStatusFilter;
@@ -62467,6 +63013,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     if (fuCount) fuCount.textContent = todayFollowUps.length;
     const statFu = document.getElementById('th-stat-fu');
     if (statFu) statFu.textContent = todayFollowUps.length;
+    if (typeof window._suggRenderInto === 'function') window._suggRenderInto('desktop');
   }
 
   function markDone(id) {
