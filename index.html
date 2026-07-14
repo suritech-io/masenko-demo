@@ -7444,6 +7444,8 @@ body.app-ops #shell-ops { display: block; }
   .adoc-acct-main{ flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; }
   .adoc-acct-name{ font-size:14px; font-weight:700; color:var(--tp); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .adoc-acct-sub{ font-size:12px; color:var(--ts); }
+  .adoc-acct-owner{ font-size:12px; color:var(--tm); margin-top:1px; }
+  .adoc-acct-won{ display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--green); background:var(--green-soft,#EAF4EC); border:1px solid #BFE0CE; padding:1px 7px; border-radius:9px; margin-left:8px; vertical-align:middle; }
   .adoc-count{ display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; padding:0 7px; border-radius:11px; background:var(--green); color:#fff; font-size:12px; font-weight:700; }
   .adoc-count-0{ background:#EAEEF3; color:var(--tm); }
   .adoc-acct-chev{ color:var(--tm); font-size:18px; }
@@ -7477,28 +7479,75 @@ body.app-ops #shell-ops { display: block; }
   .adoc-oppsec-btn-alt:hover{ background:#EAF2FB; }
 
   /* Account Documents — desktop inline detail (Option B: table) */
-  #acct-docs-desk-detail .adoc-detail{ max-width:900px; }
-  .adoc-detail .dfc-back{ margin-bottom:14px; }
-  .adoc-detail-head{ display:flex; align-items:flex-start; gap:14px; margin-bottom:18px; }
-  .adoc-detail-avatar{ width:44px; height:44px; border-radius:12px; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; flex:none; }
-  .adoc-detail-name{ font-size:19px; font-weight:800; color:var(--navy); }
-  .adoc-detail-sub{ font-size:12.5px; color:var(--ts); margin-top:2px; }
-  .adoc-detail-toolbar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:16px; }
-  .adoc-detail-toolbar .adoc-type-sel{ flex:0 0 auto; min-width:230px; }
-  .adoc-detail-note{ font-size:11.5px; color:var(--tm); font-style:italic; margin-left:auto; max-width:280px; text-align:right; }
-  table.adoc-tbl{ width:100%; border-collapse:collapse; font-size:13.5px; }
-  .adoc-tbl thead th{ text-align:left; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--tm); padding:9px 12px; border-bottom:1.5px solid var(--border); }
+  #acct-docs-desk-detail .adoc-detail{ max-width:960px; }
+  .adoc-detail .dfc-back{ margin-bottom:16px; }
+  .adoc-detail-head{ display:flex; align-items:center; gap:16px; margin-bottom:26px; }
+  .adoc-detail-avatar{ width:48px; height:48px; border-radius:13px; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:17px; flex:none; }
+  .adoc-detail-name{ font-size:21px; font-weight:800; color:var(--navy); letter-spacing:-.01em; }
+  .adoc-detail-sub{ font-size:13px; color:var(--ts); margin-top:3px; }
+  .adoc-detail-toolbar{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:22px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
+  .adoc-detail-toolbar .adoc-type-sel{ flex:0 0 auto; min-width:240px; }
+  .adoc-detail-note{ font-size:11.5px; color:var(--tm); font-style:italic; margin-left:auto; max-width:300px; text-align:right; line-height:1.4; }
+  .adoc-tbl-card{ background:#fff; border:1px solid var(--border); border-radius:14px; padding:6px 24px; box-shadow:0 1px 3px rgba(14,27,44,.05); }
+  table.adoc-tbl{ width:100%; border-collapse:collapse; font-size:14px; }
+  .adoc-tbl thead th{ text-align:left; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--tm); padding:16px 14px 12px; border-bottom:1.5px solid var(--border); }
   .adoc-tbl thead th.r{ text-align:right; }
-  .adoc-tbl tbody td{ padding:12px; border-bottom:1px solid var(--border); vertical-align:middle; color:var(--ts); }
+  .adoc-tbl tbody td{ padding:16px 14px; border-bottom:1px solid var(--border); vertical-align:middle; color:var(--ts); line-height:1.5; }
+  .adoc-tbl tbody tr:last-child td{ border-bottom:none; }
   .adoc-tbl tbody td.r{ text-align:right; }
   .adoc-tbl tbody tr:hover{ background:#FAFBFC; }
   .adoc-tbl tbody tr.adoc-tr-mkt{ background:var(--green-soft,#EAF4EC); }
   .adoc-tbl tbody tr.adoc-tr-mkt:hover{ background:#E1F0E7; }
   .adoc-td-type{ font-weight:700; color:var(--navy); }
   .adoc-td-file .fn{ color:var(--navy); font-weight:600; }
-  .adoc-tbadge{ display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:11px; background:var(--green); color:#fff; margin-left:6px; vertical-align:middle; }
-  .adoc-td-acts{ display:flex; gap:6px; justify-content:flex-end; }
+  .adoc-tbadge{ display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:11px; background:var(--green); color:#fff; margin-left:8px; vertical-align:middle; }
+  .adoc-td-acts{ display:flex; gap:8px; justify-content:flex-end; }
   .adoc-tbl .adoc-empty{ border:none; }
+
+  /* The desktop shell applies `#shell-desktop * { padding:0; margin:0 }`, which
+     (carrying an id) outranks plain .adoc-* class rules and strips all spacing.
+     Re-assert every padding/margin under two ids so it wins decisively. */
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-search{ margin:16px 0 12px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-search input{ padding:11px 14px 11px 38px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-acct{ padding:18px 20px; margin-bottom:10px; gap:14px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-acct-name{ font-size:15.5px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-acct-sub{ font-size:12.5px; margin-top:2px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-acct-owner{ font-size:12.5px; margin-top:2px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-acct-won{ padding:1px 7px; margin-left:8px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-count{ padding:0 7px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-empty{ padding:24px 12px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-detail .dfc-back{ margin-bottom:16px; padding:0; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-detail-head{ margin-bottom:26px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-detail-name{ margin:0; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-detail-sub{ margin-top:3px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-detail-toolbar{ padding:14px 16px; margin-bottom:22px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-type-sel{ padding:9px 10px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-file-btn{ padding:9px 16px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-tbl-card{ padding:6px 24px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-tbl thead th{ padding:16px 14px 12px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-tbl tbody td{ padding:16px 14px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-tbadge{ padding:2px 8px; margin-left:8px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-doc-act{ padding:6px 12px; }
+  body.app-desktop #shell-desktop #view-tools-docs .adoc-detail-note{ margin-left:auto; }
+
+  /* Desktop calendar options popup (☰) */
+  body.app-desktop #shell-desktop .deskcal-menu-btn{ display:inline-flex; align-items:center; gap:6px; }
+  body.app-desktop #shell-desktop .deskcal-menu-backdrop{ position:fixed; inset:0; background:rgba(14,27,44,.42); z-index:9000; display:none; }
+  body.app-desktop #shell-desktop .deskcal-menu{ position:fixed; top:0; right:0; height:100%; width:344px; max-width:92vw; background:#fff; box-shadow:-10px 0 40px rgba(14,27,44,.20); z-index:9001; display:none; flex-direction:column; font-family:'Geist',system-ui,sans-serif; }
+  body.app-desktop #shell-desktop .deskcal-menu-h{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--border); flex:none; }
+  body.app-desktop #shell-desktop .deskcal-menu-title{ font-size:17px; font-weight:800; color:var(--tp); }
+  body.app-desktop #shell-desktop .deskcal-menu-x{ background:none; border:none; font-size:18px; color:var(--ts); cursor:pointer; padding:4px 6px; line-height:1; }
+  body.app-desktop #shell-desktop .deskcal-menu-x:hover{ color:var(--tp); }
+  body.app-desktop #shell-desktop .deskcal-menu-body{ padding:20px; overflow-y:auto; flex:1; }
+  body.app-desktop #shell-desktop .deskcal-menu-sec-label{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--tm); margin:0 0 12px; }
+  body.app-desktop #shell-desktop .deskcal-menu-div{ height:1px; background:var(--border); margin:18px 0; }
+  body.app-desktop #shell-desktop .deskcal-view-toggle{ display:inline-flex; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:3px; gap:3px; }
+  body.app-desktop #shell-desktop .deskcal-view-toggle .cal-view-btn{ padding:7px 13px; font-size:12.5px; }
+  body.app-desktop #shell-desktop .deskcal-toggle-wrap{ display:flex; gap:8px; flex-wrap:wrap; }
+  body.app-desktop #shell-desktop .deskcal-toggle-wrap .cal-today-btn{ font-size:12.5px; padding:8px 14px; }
+  body.app-desktop #shell-desktop .deskcal-filters{ display:flex; flex-wrap:wrap; gap:8px; }
+  body.app-desktop #shell-desktop .deskcal-filters .cal-chip,
+  body.app-desktop #shell-desktop .deskcal-filters .mgmt-cal-chip{ font-size:12px; }
   body.app-desktop #shell-desktop .mgmt-page-hdr{
     display: flex;
     justify-content: space-between;
@@ -19641,6 +19690,22 @@ body.app-ops #shell-ops { display: block; }
   body.app-desktop #shell-desktop .cal-row{ display: grid; border-top: 1px solid #B0BAC5; min-height: 60px; }
   body.app-desktop #shell-desktop .cal-row.week{ grid-template-columns: 60px repeat(7, 1fr); }
   body.app-desktop #shell-desktop .cal-row.day{ grid-template-columns: 60px 1fr; }
+  body.app-desktop #shell-desktop .cal-grid-head.weekday{ grid-template-columns: 60px repeat(5, 1fr); }
+  body.app-desktop #shell-desktop .cal-row.weekday{ grid-template-columns: 60px repeat(5, 1fr); }
+  /* Agenda (list) view — rep + mgmt desktop calendars */
+  body.app-desktop #shell-desktop .cal-agenda-list{ display:flex; flex-direction:column; padding:4px 2px 20px; }
+  body.app-desktop #shell-desktop .cal-agenda-day{ margin-bottom:20px; }
+  body.app-desktop #shell-desktop .cal-agenda-date{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--ts); padding:6px 0 10px; border-bottom:2px solid var(--border); margin-bottom:10px; }
+  body.app-desktop #shell-desktop .cal-agenda-day.today .cal-agenda-date{ color:var(--blue); border-bottom-color:var(--blue); }
+  body.app-desktop #shell-desktop .cal-agenda-item{ display:flex; gap:14px; align-items:flex-start; width:100%; text-align:left; background:var(--white); border:1px solid var(--border); border-left:4px solid var(--blue); border-radius:9px; padding:11px 14px; margin-bottom:8px; cursor:pointer; font-family:inherit; transition:box-shadow .12s; }
+  body.app-desktop #shell-desktop .cal-agenda-item:hover{ box-shadow:0 3px 10px rgba(14,27,44,.09); }
+  body.app-desktop #shell-desktop .cal-agenda-item.killed{ opacity:.6; }
+  body.app-desktop #shell-desktop .cal-agenda-item.killed .cal-agenda-name{ text-decoration:line-through; }
+  body.app-desktop #shell-desktop .cal-agenda-time{ font-size:12.5px; font-weight:700; color:var(--tp); min-width:76px; flex:none; padding-top:1px; }
+  body.app-desktop #shell-desktop .cal-agenda-body{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+  body.app-desktop #shell-desktop .cal-agenda-name{ font-size:13.5px; font-weight:600; color:var(--tp); }
+  body.app-desktop #shell-desktop .cal-agenda-meta{ font-size:12px; color:var(--ts); }
+  body.app-desktop #shell-desktop .cal-agenda-empty{ padding:44px 20px; text-align:center; color:var(--tm); font-size:13px; }
   body.app-desktop #shell-desktop .cal-row:last-child{ border-bottom: 1px solid #B0BAC5; }
   body.app-desktop #shell-desktop .cal-row.half-hour{ border-top-style: dashed; border-top-color: #F4F8FC; min-height: 26px; }
   /* Hour label is visually anchored to the row's TOP border (the hour boundary line).
@@ -23511,17 +23576,56 @@ body.app-ops #shell-ops { display: block; }
           <button class="search-clear" id="calendar-search-clear" onclick="clearCalendarSearch()">×</button>
           <div class="search-results" id="calendar-search-results"></div>
         </div>
-        <div class="cal-view-toggle">
-          <button class="cal-view-btn active" id="cal-view-week" onclick="setCalView('week')">Week</button>
-          <button class="cal-view-btn" id="cal-view-day" onclick="setCalView('day')">Day</button>
-        </div>
-        <button class="cal-today-btn" id="cal-killed-toggle" style="display:none;" onclick="toggleKilledInCalendar()">Show killed</button>
-        <button class="cal-today-btn" id="cal-closedwon-toggle" style="display:none;" onclick="toggleClosedWonInCalendar()">Hide won</button>
-        <div class="cal-filters" id="cal-rep-filters"></div>
+        <button class="cal-today-btn deskcal-menu-btn" onclick="openDeskCalMenu('rep')" aria-label="Calendar views, filters and people" title="Views, filters &amp; people">☰ Views &amp; filters</button>
         <button class="cal-add-mtg" onclick="openManualMeetingModal()">+ Add Meeting Manually</button>
       </div>
     </div>
     <div id="cal-list"></div>
+  </div>
+</div>
+
+<!-- ═══════ Desktop calendar options popup (☰) — moved week/day, killed/won,
+     and rep/team visibility out of the toolbars into a mobile-style menu.
+     Kept inside #shell-desktop so the moved controls inherit their existing
+     shell-scoped styling; ids preserved so existing render/toggle logic works. -->
+<div class="deskcal-menu-backdrop" id="deskcal-menu-backdrop" onclick="closeDeskCalMenu()"></div>
+<div class="deskcal-menu" id="deskcal-menu-rep" role="dialog" aria-label="Calendar views, filters and people">
+  <div class="deskcal-menu-h"><div class="deskcal-menu-title">Views &amp; filters</div><button class="deskcal-menu-x" onclick="closeDeskCalMenu()" aria-label="Close">✕</button></div>
+  <div class="deskcal-menu-body">
+    <div class="deskcal-menu-sec-label">View</div>
+    <div class="cal-view-toggle deskcal-view-toggle">
+      <button class="cal-view-btn active" id="cal-view-week" onclick="setCalView('week')">Week</button>
+      <button class="cal-view-btn" id="cal-view-weekday" onclick="setCalView('weekday')">Weekday</button>
+      <button class="cal-view-btn" id="cal-view-day" onclick="setCalView('day')">Day</button>
+      <button class="cal-view-btn" id="cal-view-agenda" onclick="setCalView('agenda')">Agenda</button>
+    </div>
+    <div class="deskcal-menu-div"></div>
+    <div class="deskcal-menu-sec-label">Show on calendar</div>
+    <div class="deskcal-toggle-wrap">
+      <button class="cal-today-btn" id="cal-killed-toggle" style="display:none;" onclick="toggleKilledInCalendar()">Show killed</button>
+      <button class="cal-today-btn" id="cal-closedwon-toggle" style="display:none;" onclick="toggleClosedWonInCalendar()">Hide won</button>
+    </div>
+    <div class="deskcal-menu-div"></div>
+    <div class="deskcal-menu-sec-label">Reps shown</div>
+    <div class="cal-filters deskcal-filters" id="cal-rep-filters"></div>
+  </div>
+</div>
+<div class="deskcal-menu" id="deskcal-menu-mgmt" role="dialog" aria-label="Calendar views, teams and reps">
+  <div class="deskcal-menu-h"><div class="deskcal-menu-title">Views &amp; filters</div><button class="deskcal-menu-x" onclick="closeDeskCalMenu()" aria-label="Close">✕</button></div>
+  <div class="deskcal-menu-body">
+    <div class="deskcal-menu-sec-label">View</div>
+    <div class="cal-view-toggle deskcal-view-toggle">
+      <button class="cal-view-btn active" id="mgmt-cal-view-week" onclick="mgmtCalSetView('week')">Week</button>
+      <button class="cal-view-btn" id="mgmt-cal-view-weekday" onclick="mgmtCalSetView('weekday')">Weekday</button>
+      <button class="cal-view-btn" id="mgmt-cal-view-day" onclick="mgmtCalSetView('day')">Day</button>
+      <button class="cal-view-btn" id="mgmt-cal-view-agenda" onclick="mgmtCalSetView('agenda')">Agenda</button>
+    </div>
+    <div class="deskcal-menu-div"></div>
+    <div class="deskcal-menu-sec-label">Team</div>
+    <div class="mgmt-cal-chip-row deskcal-filters" id="mgmt-cal-team-chips"></div>
+    <div class="deskcal-menu-div"></div>
+    <div class="deskcal-menu-sec-label">Rep</div>
+    <div class="mgmt-cal-chip-row deskcal-filters" id="mgmt-cal-rep-chips"></div>
   </div>
 </div>
 
@@ -24146,10 +24250,7 @@ body.app-ops #shell-ops { display: block; }
         <button class="cal-today-btn" onclick="mgmtCalGoToday()">Today</button>
       </div>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <div class="cal-view-toggle">
-          <button class="cal-view-btn active" id="mgmt-cal-view-week" onclick="mgmtCalSetView('week')">Week</button>
-          <button class="cal-view-btn" id="mgmt-cal-view-day" onclick="mgmtCalSetView('day')">Day</button>
-        </div>
+        <button class="cal-today-btn deskcal-menu-btn" onclick="openDeskCalMenu('mgmt')" aria-label="Calendar views, teams and reps" title="Views, teams &amp; reps">☰ Views &amp; filters</button>
         <!-- Pass 6b — Add Meeting button. Opens a modal that lets the
              manager schedule a meeting on behalf of a rep in their reach,
              tied to an existing opportunity. -->
@@ -24158,17 +24259,8 @@ body.app-ops #shell-ops { display: block; }
     </div>
     <!-- Persona context strip — explains whose calendar this is -->
     <div class="mgmt-cal-context" id="mgmt-cal-context"></div>
-    <!-- Team / rep filter chips — populated from the persona's reach -->
-    <div class="mgmt-cal-filter-row">
-      <div class="mgmt-cal-filter-group">
-        <div class="mgmt-cal-filter-label">Team</div>
-        <div class="mgmt-cal-chip-row" id="mgmt-cal-team-chips"></div>
-      </div>
-      <div class="mgmt-cal-filter-group">
-        <div class="mgmt-cal-filter-label">Rep</div>
-        <div class="mgmt-cal-chip-row" id="mgmt-cal-rep-chips"></div>
-      </div>
-    </div>
+    <!-- Team / rep filter chips moved into the ☰ Views & filters popup
+         (#deskcal-menu-mgmt); their id containers live there now. -->
     <!-- Grid container — populated by renderMgmtCalendar() -->
     <div id="mgmt-cal-grid-host"></div>
   </div>
@@ -24861,8 +24953,8 @@ body.app-ops #shell-ops { display: block; }
         </div>
         <button class="dfc-back" onclick="switchView('tools')">‹ Tools</button>
       </div>
-      <div class="adoc-search" style="max-width:520px;"><input type="text" placeholder="Search accounts" autocomplete="off" oninput="_acctSetSearch('desktop', this.value)"></div>
-      <div id="acct-docs-list-desktop" style="max-width:640px;"></div>
+      <div class="adoc-search" style="max-width:900px;"><input type="text" placeholder="Search by practice, city, state, or owner" autocomplete="off" oninput="_acctSetSearch('desktop', this.value)"></div>
+      <div id="acct-docs-list-desktop" style="max-width:900px;"></div>
     </div>
     <div id="acct-docs-desk-detail" style="display:none;"></div>
   </div>
@@ -30461,9 +30553,22 @@ function _acctTerritory(){
   (typeof opportunities!=='undefined'?opportunities:[]).forEach(o=>{
     if(!o || o.killed) return;
     const id=_acctSlug(o.name);
-    if(!map[id]) map[id]={ id, name:o.name||'\u2014', addr:o.addr||'', type:o.type||'', oppIds:[], closed:false };
+    if(!map[id]){
+      // Parse city/state from the address ("Street, City, ST"); state is a
+      // trailing 2-letter code when present.
+      let city='', state='';
+      const parts=String(o.addr||'').split(',').map(s=>s.trim()).filter(Boolean);
+      if(parts.length>=2){
+        const last=parts[parts.length-1];
+        if(/^[A-Za-z]{2}$/.test(last)){ state=last.toUpperCase(); city=parts[parts.length-2]||''; }
+        else { city=last; }
+      }
+      const cat=String(o.type||'').split('\u00b7')[0].trim();
+      map[id]={ id, name:o.name||'\u2014', addr:o.addr||'', type:o.type||'', cat, owner:o.owner||'', city, state, oppIds:[], closed:false };
+    }
     map[id].oppIds.push(o.id);
     if(o.closed) map[id].closed=true;
+    if(!map[id].owner && o.owner) map[id].owner=o.owner;
   });
   return Object.values(map).sort((a,b)=>a.name.localeCompare(b.name));
 }
@@ -30559,12 +30664,25 @@ function _acctRenderList(shell){
   const esc=(typeof escapeAttr==='function')?escapeAttr:(s=>String(s==null?'':s));
   const q=(_acctSearch[shell]||'').trim().toLowerCase();
   let accts=_acctTerritory();
-  if(q) accts=accts.filter(a=>a.name.toLowerCase().indexOf(q)>=0 || (a.type||'').toLowerCase().indexOf(q)>=0 || (a.addr||'').toLowerCase().indexOf(q)>=0);
+  if(q) accts=accts.filter(a=>
+    a.name.toLowerCase().indexOf(q)>=0 ||
+    (a.type||'').toLowerCase().indexOf(q)>=0 ||
+    (a.addr||'').toLowerCase().indexOf(q)>=0 ||
+    (a.owner||'').toLowerCase().indexOf(q)>=0 ||
+    (a.city||'').toLowerCase().indexOf(q)>=0 ||
+    (a.state||'').toLowerCase().indexOf(q)>=0
+  );
   if(!accts.length){ el.innerHTML='<div class="adoc-empty">'+(q?'No accounts match your search.':'No accounts in this territory yet.')+'</div>'; return; }
   el.innerHTML=accts.map(a=>{
     const n=_acctDocCount(a.id);
+    const loc=[a.city, a.state].filter(Boolean).join(', ');
+    const line1=[a.cat||a.type, loc].filter(Boolean).join(' \u00b7 ');
     return `<button type="button" class="adoc-acct" onclick="openAccountDocs('${esc(a.id)}')">
-      <span class="adoc-acct-main"><span class="adoc-acct-name">${esc(a.name)}</span><span class="adoc-acct-sub">${esc(a.type||'Account')}${a.closed?' \u00b7 Closed Won':''}</span></span>
+      <span class="adoc-acct-main">
+        <span class="adoc-acct-name">${esc(a.name)}${a.closed?'<span class="adoc-acct-won">Closed Won</span>':''}</span>
+        ${line1?`<span class="adoc-acct-sub">${esc(line1)}</span>`:''}
+        ${a.owner?`<span class="adoc-acct-owner">${esc(a.owner)}</span>`:''}
+      </span>
       <span class="adoc-count${n?'':' adoc-count-0'}">${n}</span><span class="adoc-acct-chev">\u203a</span>
     </button>`;
   }).join('');
@@ -30623,10 +30741,12 @@ function _acctDeskDetailHTML(acct){
       <label class="adoc-file-btn">\u2b06 Choose file &amp; upload<input type="file" style="display:none" onchange="_acctUploadDesk('${esc(acct.id)}',this)"></label>
       <span class="adoc-detail-note">Demo \u2014 record (type, filename, date) is stored; the file itself isn't retained.</span>
     </div>
-    <table class="adoc-tbl">
-      <thead><tr><th>Type</th><th>Document</th><th>Added</th><th class="r">Size</th><th class="r"></th></tr></thead>
-      <tbody>${bodyRows}</tbody>
-    </table>
+    <div class="adoc-tbl-card">
+      <table class="adoc-tbl">
+        <thead><tr><th>Type</th><th>Document</th><th>Added</th><th class="r">Size</th><th class="r"></th></tr></thead>
+        <tbody>${bodyRows}</tbody>
+      </table>
+    </div>
   </div>`;
 }
 function showBusinessDocsForOpp(oppId){
@@ -30653,6 +30773,22 @@ function _oppBizDocsSection(oppId){
   </div>`;
 }
 window._oppBizDocsSection=_oppBizDocsSection;
+
+// Desktop calendar options popup (☰) — shared open/close for rep + mgmt views.
+window.openDeskCalMenu=function(which){
+  var bd=document.getElementById('deskcal-menu-backdrop');
+  var rep=document.getElementById('deskcal-menu-rep');
+  var mg=document.getElementById('deskcal-menu-mgmt');
+  if(bd) bd.style.display='block';
+  if(rep) rep.style.display=(which==='rep')?'flex':'none';
+  if(mg) mg.style.display=(which==='mgmt')?'flex':'none';
+};
+window.closeDeskCalMenu=function(){
+  var bd=document.getElementById('deskcal-menu-backdrop'); if(bd) bd.style.display='none';
+  var rep=document.getElementById('deskcal-menu-rep'); if(rep) rep.style.display='none';
+  var mg=document.getElementById('deskcal-menu-mgmt'); if(mg) mg.style.display='none';
+};
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') { try{ window.closeDeskCalMenu(); }catch(_){} } });
 
 // A Masenko-owned construct for tracking pipeline an account is expected to
 // close AT an event rather than in the field. In production this maps to a
@@ -70903,12 +71039,14 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
 
   function setCalView(view) {
     calView = view;
-    document.getElementById('cal-view-week').classList.toggle('active', view === 'week');
-    document.getElementById('cal-view-day').classList.toggle('active', view === 'day');
+    ['week','weekday','day','agenda'].forEach(function(v){
+      var b = document.getElementById('cal-view-' + v);
+      if (b) b.classList.toggle('active', view === v);
+    });
     renderCalendar();
   }
   function calNav(dir) {
-    const inc = calView === 'week' ? 7 : 1;
+    const inc = calView === 'day' ? 1 : 7;
     calAnchorDate.setDate(calAnchorDate.getDate() + inc * dir);
     renderCalendar();
   }
@@ -71034,14 +71172,16 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     const container = document.getElementById('cal-list');
     if (!container) return;
 
-    const days = calView === 'week' ? getWeekDays(calAnchorDate) : [new Date(calAnchorDate)];
+    const days = (calView === 'week' || calView === 'agenda') ? getWeekDays(calAnchorDate)
+      : calView === 'weekday' ? getWeekDays(calAnchorDate).slice(0, 5)
+      : [new Date(calAnchorDate)];
     const todayIso = dateToISO(new Date());
 
     // Range label
     const rangeLabel = document.getElementById('cal-range-label');
     if (rangeLabel) {
-      if (calView === 'week') {
-        const first = days[0], last = days[6];
+      if (calView === 'week' || calView === 'weekday' || calView === 'agenda') {
+        const first = days[0], last = days[days.length - 1];
         const sameMonth = first.getMonth() === last.getMonth();
         rangeLabel.textContent = sameMonth
           ? `${first.toLocaleDateString('en-US',{month:'long'})} ${first.getDate()}–${last.getDate()}, ${last.getFullYear()}`
@@ -71074,6 +71214,40 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
       cwBtn.style.display = cwCount > 0 ? 'inline-flex' : 'none';
       cwBtn.classList.toggle('active', showClosedWonInCalendar);
       cwBtn.innerHTML = `${showClosedWonInCalendar ? 'Hide won' : 'Show won'} <span style="background:#0F7E54;color:white;padding:1px 6px;border-radius:20px;font-size:10px;font-weight:700;margin-left:4px;">${cwCount}</span>`;
+    }
+
+    // Agenda (list) view — chronological list grouped by day, reusing the
+    // week's `days` and the already-filtered `evts`. Returns before the grid.
+    if (calView === 'agenda') {
+      const _agStartMin = e => { const p=(e.time||'00:00').split(':'); return parseInt(p[0],10)*60+parseInt(p[1]||'0',10); };
+      const _agTimeLbl = e => { const p=(e.time||'00:00').split(':'); let h=parseInt(p[0],10); const m=(p[1]||'00'); const ap=h<12?'AM':'PM'; const h12=(h%12===0)?12:h%12; return h12+':'+m+' '+ap; };
+      const _esc = (typeof escapeAttr==='function') ? escapeAttr : (s=>String(s==null?'':s));
+      let ah = '<div class="cal-agenda-list">';
+      let anyEvt = false;
+      days.forEach(d => {
+        const iso = dateToISO(d);
+        const dayEvts = evts.filter(e => e.date === iso).sort((a,b)=>_agStartMin(a)-_agStartMin(b));
+        if (!dayEvts.length) return;
+        anyEvt = true;
+        const isToday = iso === todayIso;
+        ah += `<div class="cal-agenda-day${isToday?' today':''}"><div class="cal-agenda-date">${d.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'})}${isToday?' \u00b7 Today':''}</div>`;
+        dayEvts.forEach(e => {
+          const color = e.killed ? '#B0BAC5' : repColor(e.rep);
+          const onclick = e.mgmtMtgId ? `openInternalMeetingDetail('${e.mgmtMtgId}')`
+            : e.opportunityId ? `openDrawer('${e.opportunityId}','${e.meetingId || ''}')`
+            : e.prospectId ? `openList('${e.listId}')` : `showToast('Teammate meeting \u00b7 ${_esc(e.rep)}')`;
+          const cov = (!e.killed && e.coveredBy) ? ` \u00b7 covered by ${_esc(e.coveredBy)}` : '';
+          ah += `<button class="cal-agenda-item${e.killed?' killed':''}" style="border-left-color:${color};" onclick="${onclick}">
+            <span class="cal-agenda-time">${_agTimeLbl(e)}</span>
+            <span class="cal-agenda-body"><span class="cal-agenda-name">${_esc(e.name||'Meeting')}</span><span class="cal-agenda-meta">${_esc(e.stage||'')}${e.stage?' \u00b7 ':''}${_esc(e.rep||'')}${cov}</span></span>
+          </button>`;
+        });
+        ah += '</div>';
+      });
+      if (!anyEvt) ah += '<div class="cal-agenda-empty">No meetings scheduled this week.</div>';
+      ah += '</div>';
+      container.innerHTML = ah;
+      return;
     }
 
     // Build head
@@ -72823,16 +72997,16 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
 
   function mgmtCalSetView(view) {
     _mgmtCalView = view;
-    const wk = document.getElementById('mgmt-cal-view-week');
-    const dy = document.getElementById('mgmt-cal-view-day');
-    if (wk) wk.classList.toggle('active', view === 'week');
-    if (dy) dy.classList.toggle('active', view === 'day');
+    ['week','weekday','day','agenda'].forEach(function(v){
+      var b = document.getElementById('mgmt-cal-view-' + v);
+      if (b) b.classList.toggle('active', view === v);
+    });
     renderMgmtCalendar();
   }
   window.mgmtCalSetView = mgmtCalSetView;
 
   function mgmtCalNav(dir) {
-    const inc = _mgmtCalView === 'week' ? 7 : 1;
+    const inc = _mgmtCalView === 'day' ? 1 : 7;
     _mgmtCalAnchorDate.setDate(_mgmtCalAnchorDate.getDate() + inc * dir);
     renderMgmtCalendar();
   }
@@ -72914,7 +73088,9 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     // ── Merge in the manager's own organized meetings (standalone, not
     // opp-tied). These belong to the manager, so they show regardless of the
     // rep/team scope filters above. Recurrence is expanded across the view. ──
-    const _rangeDays = _mgmtCalView === 'week' ? getWeekDays(_mgmtCalAnchorDate) : [new Date(_mgmtCalAnchorDate)];
+    const _rangeDays = (_mgmtCalView === 'week' || _mgmtCalView === 'agenda') ? getWeekDays(_mgmtCalAnchorDate)
+      : _mgmtCalView === 'weekday' ? getWeekDays(_mgmtCalAnchorDate).slice(0, 5)
+      : [new Date(_mgmtCalAnchorDate)];
     const _rangeStart = dateToISO(_rangeDays[0]);
     const _rangeEnd = dateToISO(_rangeDays[_rangeDays.length - 1]);
     const _mtgEvts = (typeof getMgmtMeetingEventsInRange === 'function')
@@ -80138,9 +80314,9 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   function _renderMgmtCalRangeLabel() {
     const el = document.getElementById('mgmt-cal-range-label');
     if (!el) return;
-    if (_mgmtCalView === 'week') {
-      const days = getWeekDays(_mgmtCalAnchorDate);
-      const start = days[0], end = days[6];
+    if (_mgmtCalView === 'week' || _mgmtCalView === 'agenda' || _mgmtCalView === 'weekday') {
+      const days = _mgmtCalView === 'weekday' ? getWeekDays(_mgmtCalAnchorDate).slice(0, 5) : getWeekDays(_mgmtCalAnchorDate);
+      const start = days[0], end = days[days.length - 1];
       const fmt = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       const yr = end.getFullYear();
       el.textContent = `${fmt(start)} – ${fmt(end)}, ${yr}`;
@@ -80213,7 +80389,9 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   // existing .cal-grid CSS so tile positioning is identical to what reps see.
   function _renderMgmtCalGrid(host, evts, reachReps) {
     // Days in view
-    const days = _mgmtCalView === 'week' ? getWeekDays(_mgmtCalAnchorDate) : [new Date(_mgmtCalAnchorDate)];
+    const days = (_mgmtCalView === 'week' || _mgmtCalView === 'agenda') ? getWeekDays(_mgmtCalAnchorDate)
+      : _mgmtCalView === 'weekday' ? getWeekDays(_mgmtCalAnchorDate).slice(0, 5)
+      : [new Date(_mgmtCalAnchorDate)];
     const todayIso = dateToISO(new Date());
 
     // Index reps by name for quick team lookup at render time
@@ -80262,6 +80440,40 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
       const totalCols = maxCol + 1;
       dayEvts.forEach(ev => { ev.totalCols = totalCols; });
     });
+
+    // Agenda (list) view — chronological list grouped by day, reusing
+    // evtsByDay. Returns before the hourly grid.
+    if (_mgmtCalView === 'agenda') {
+      const _esc = (typeof escapeAttr==='function') ? escapeAttr : (s=>String(s==null?'':s));
+      const _tl = e => { const p=(e.time||'00:00').split(':'); let h=parseInt(p[0],10); const m=(p[1]||'00'); const ap=h<12?'AM':'PM'; const h12=(h%12===0)?12:h%12; return h12+':'+m+' '+ap; };
+      let ah = '<div class="cal-agenda-list">';
+      let any = false;
+      days.forEach(d => {
+        const iso = dateToISO(d);
+        const dayEvts = (evtsByDay[iso] || []).slice().sort((a,b)=>a.startMin-b.startMin);
+        if (!dayEvts.length) return;
+        any = true;
+        const isToday = iso === todayIso;
+        ah += `<div class="cal-agenda-day${isToday?' today':''}"><div class="cal-agenda-date">${d.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'})}${isToday?' \u00b7 Today':''}</div>`;
+        dayEvts.forEach(ev => {
+          const rep = repByName[ev.rep] || null;
+          const palette = (rep && TEAM_PALETTE[rep.teamId]) || TEAM_PALETTE.__other;
+          const color = ev._mgmtMtg ? '#4F46E5' : palette.color;
+          let onclick;
+          if (ev._mgmtMtg) { const mmId=String(ev.mgmtMtgId||'').replace(/'/g,'&apos;'); onclick=`event.stopPropagation(); openMgmtMtgPopover('${mmId}', event.currentTarget)`; }
+          else { const oppId=String(ev.opportunityId).replace(/'/g,'&apos;'); const mtgId=String(ev.meetingId||'').replace(/'/g,'&apos;'); onclick=`event.stopPropagation(); openMgmtCalPopover('${oppId}', '${mtgId}', event.currentTarget)`; }
+          ah += `<button class="cal-agenda-item" style="border-left-color:${color};" onclick="${onclick}">
+            <span class="cal-agenda-time">${_tl(ev)}</span>
+            <span class="cal-agenda-body"><span class="cal-agenda-name">${_esc(ev.name||'Meeting')}</span><span class="cal-agenda-meta">${_esc(ev.stage||'')}${ev.stage?' \u00b7 ':''}${_esc(ev.rep||'')}</span></span>
+          </button>`;
+        });
+        ah += '</div>';
+      });
+      if (!any) ah += '<div class="cal-agenda-empty">No meetings scheduled in this range for the current filter.</div>';
+      ah += '</div>';
+      host.innerHTML = ah;
+      return;
+    }
 
     // ── BODY ──
     let body = '<div class="cal-grid-body">';
