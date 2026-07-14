@@ -1057,10 +1057,10 @@ body.app-ops #shell-ops { display: block; }
     /* Frosted-glass capsule — translucent gradient + backdrop blur so content
        scrolls softly underneath, the way Instagram's floating tab bar reads.
        Falls back to a solid dark fill where backdrop-filter is unsupported. */
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.55));
-    -webkit-backdrop-filter: saturate(160%) blur(30px);
-    backdrop-filter: saturate(160%) blur(30px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.38));
+    -webkit-backdrop-filter: saturate(170%) blur(34px);
+    backdrop-filter: saturate(170%) blur(34px);
+    border: 1px solid rgba(255, 255, 255, 0.55);
     border-radius: 32px;
     height: var(--tab-bar-h);
     padding: 0 6px;
@@ -6340,6 +6340,7 @@ body.app-ops #shell-ops { display: block; }
   body.app-desktop #view-tools .dtools-wrap, body.app-desktop #view-tools-library .dtools-wrap, body.app-desktop #view-tools-finance .dfc-wrap{ max-width:1080px; margin:0 auto; padding:24px 28px 60px; }
   /* ════════ Unified Tools styling — modeled on the marketing Content Library ════════ */
   body.app-desktop #view-tools-library .page-wrap{ max-width:1180px;margin:0 auto;padding:26px 32px 68px; }
+  body.app-desktop #view-tools-docs .page-wrap{ max-width:1180px;margin:0 auto;padding:26px 32px 68px; }
   body.app-desktop #shell-desktop .page-hdr{ display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:2px; }
   body.app-desktop #shell-desktop .page-title{ font-size:23px;font-weight:750;color:var(--tp);letter-spacing:-.01em;line-height:1.15; }
   body.app-desktop #shell-desktop .page-sub{ font-size:13px;color:var(--ts);margin-top:5px;max-width:720px;line-height:1.5; }
@@ -7431,6 +7432,73 @@ body.app-ops #shell-ops { display: block; }
   .sugg-blanket-btn{ flex:1; min-width:120px; padding:9px 12px; border:1px solid var(--border); border-radius:9px; background:var(--surface,#F4F6F9); color:var(--tp); font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer; }
   .sugg-blanket-btn.is-danger{ color:#8A2F23; border-color:#E8B0A8; background:#FBE6E3; }
   .sugg-list{ display:flex; flex-direction:column; gap:10px; }
+
+  /* Account Documents — list rows live inside each shell's Tools view; the
+     detail/upload modal is body-level, so these selectors are un-scoped. */
+  .adoc-search{ position:relative; margin-bottom:12px; }
+  .adoc-search input{ width:100%; box-sizing:border-box; padding:11px 14px 11px 38px; border:1px solid var(--border); border-radius:10px; font-size:14px; font-family:inherit; color:var(--tp); background:var(--white); }
+  .adoc-search input:focus{ outline:none; border-color:var(--blue,#2E86C1); }
+  .adoc-search::before{ content:'\1F50D'; position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:14px; opacity:.6; }
+  .adoc-acct{ width:100%; display:flex; align-items:center; gap:10px; padding:13px 14px; background:var(--white); border:1px solid var(--border); border-radius:12px; margin-bottom:8px; cursor:pointer; font-family:inherit; text-align:left; }
+  .adoc-acct:hover{ border-color:#C9DDF7; }
+  .adoc-acct-main{ flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .adoc-acct-name{ font-size:14px; font-weight:700; color:var(--tp); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .adoc-acct-sub{ font-size:12px; color:var(--ts); }
+  .adoc-count{ display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; padding:0 7px; border-radius:11px; background:var(--green); color:#fff; font-size:12px; font-weight:700; }
+  .adoc-count-0{ background:#EAEEF3; color:var(--tm); }
+  .adoc-acct-chev{ color:var(--tm); font-size:18px; }
+  .adoc-empty{ padding:24px 12px; text-align:center; color:var(--tm); font-size:13px; line-height:1.5; }
+  .adoc-backdrop{ position:fixed; inset:0; background:rgba(14,27,44,.55); z-index:100000; display:none; align-items:center; justify-content:center; padding:20px; }
+  .adoc-panel{ background:#fff; border-radius:16px; max-width:560px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:0 24px 60px rgba(14,27,44,.35); font-family:'Geist',system-ui,-apple-system,sans-serif; }
+  .adoc-head{ position:sticky; top:0; background:#fff; display:flex; align-items:flex-start; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #E5E9EF; z-index:1; gap:12px; }
+  .adoc-title{ font-size:17px; font-weight:700; color:#0E1B2C; }
+  .adoc-sub{ font-size:12.5px; color:#6B7785; margin-top:2px; }
+  .adoc-x{ background:none; border:none; font-size:24px; line-height:1; color:#6B7785; cursor:pointer; padding:0 4px; }
+  .adoc-body{ padding:16px 20px 20px; }
+  .adoc-upload{ background:#F4F6F9; border:1px solid #E5E9EF; border-radius:12px; padding:14px; margin-bottom:16px; }
+  .adoc-upload-h{ font-size:12px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#6B7785; margin-bottom:10px; }
+  .adoc-upload-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .adoc-type-sel{ flex:1; min-width:170px; padding:9px 10px; border:1px solid #D5DCE5; border-radius:9px; font-size:13px; font-family:inherit; color:#0E1B2C; background:#fff; }
+  .adoc-file-btn{ display:inline-flex; align-items:center; padding:9px 16px; border-radius:9px; background:#0F7E54; color:#fff; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; }
+  .adoc-file-btn:hover{ background:#0c6a47; }
+  .adoc-upload-note{ font-size:11px; color:#99A2AE; margin-top:8px; font-style:italic; }
+  .adoc-doc-list{ display:flex; flex-direction:column; gap:8px; }
+  .adoc-doc{ display:flex; align-items:center; gap:11px; padding:11px 12px; border:1px solid #E5E9EF; border-radius:10px; }
+  .adoc-doc-ic{ font-size:18px; }
+  .adoc-doc-main{ flex:1; min-width:0; }
+  .adoc-doc-name{ font-size:13.5px; font-weight:600; color:#0E1B2C; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .adoc-doc-meta{ font-size:11.5px; color:#6B7785; margin-top:1px; }
+  .adoc-doc-act{ background:#fff; border:1px solid #C9DDF7; color:#1F5F8A; font-size:12px; font-weight:600; padding:6px 12px; border-radius:8px; cursor:pointer; }
+  .adoc-doc-rm{ border-color:#E8B0A8; color:#8A2F23; }
+  .adoc-oppsec-btns{ display:flex; gap:8px; flex-wrap:wrap; }
+  .adoc-oppsec-btn{ flex:1; min-width:150px; padding:11px 12px; border:1px solid #0F7E54; border-radius:10px; background:#0F7E54; color:#fff; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; }
+  .adoc-oppsec-btn:hover{ background:#0c6a47; }
+  .adoc-oppsec-btn-alt{ background:#fff; color:#1F5F8A; border-color:#C9DDF7; }
+  .adoc-oppsec-btn-alt:hover{ background:#EAF2FB; }
+
+  /* Account Documents — desktop inline detail (Option B: table) */
+  #acct-docs-desk-detail .adoc-detail{ max-width:900px; }
+  .adoc-detail .dfc-back{ margin-bottom:14px; }
+  .adoc-detail-head{ display:flex; align-items:flex-start; gap:14px; margin-bottom:18px; }
+  .adoc-detail-avatar{ width:44px; height:44px; border-radius:12px; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; flex:none; }
+  .adoc-detail-name{ font-size:19px; font-weight:800; color:var(--navy); }
+  .adoc-detail-sub{ font-size:12.5px; color:var(--ts); margin-top:2px; }
+  .adoc-detail-toolbar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:16px; }
+  .adoc-detail-toolbar .adoc-type-sel{ flex:0 0 auto; min-width:230px; }
+  .adoc-detail-note{ font-size:11.5px; color:var(--tm); font-style:italic; margin-left:auto; max-width:280px; text-align:right; }
+  table.adoc-tbl{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  .adoc-tbl thead th{ text-align:left; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--tm); padding:9px 12px; border-bottom:1.5px solid var(--border); }
+  .adoc-tbl thead th.r{ text-align:right; }
+  .adoc-tbl tbody td{ padding:12px; border-bottom:1px solid var(--border); vertical-align:middle; color:var(--ts); }
+  .adoc-tbl tbody td.r{ text-align:right; }
+  .adoc-tbl tbody tr:hover{ background:#FAFBFC; }
+  .adoc-tbl tbody tr.adoc-tr-mkt{ background:var(--green-soft,#EAF4EC); }
+  .adoc-tbl tbody tr.adoc-tr-mkt:hover{ background:#E1F0E7; }
+  .adoc-td-type{ font-weight:700; color:var(--navy); }
+  .adoc-td-file .fn{ color:var(--navy); font-weight:600; }
+  .adoc-tbadge{ display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:11px; background:var(--green); color:#fff; margin-left:6px; vertical-align:middle; }
+  .adoc-td-acts{ display:flex; gap:6px; justify-content:flex-end; }
+  .adoc-tbl .adoc-empty{ border:none; }
   body.app-desktop #shell-desktop .mgmt-page-hdr{
     display: flex;
     justify-content: space-between;
@@ -20357,7 +20425,21 @@ body.app-ops #shell-ops { display: block; }
         <span class="tools-home-txt"><span class="tools-home-title">Market Report</span><span class="tools-home-sub">Addressable market &amp; demographics by practice</span></span>
         <span class="tools-home-chev">›</span>
       </button>
+      <button type="button" class="tools-home-row" onclick="showToolsView('account-docs')">
+        <span class="tools-home-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg>
+        </span>
+        <span class="tools-home-txt"><span class="tools-home-title">Account Documents</span><span class="tools-home-sub">Business &amp; financing docs by account</span></span>
+        <span class="tools-home-chev">›</span>
+      </button>
     </div>
+  </div>
+</div>
+
+<div class="view" id="view-account-docs">
+  <div class="view-pad">
+    <div class="adoc-search"><input type="text" placeholder="Search accounts" autocomplete="off" oninput="_acctSetSearch('mobile', this.value)"></div>
+    <div id="acct-docs-list-mobile"></div>
   </div>
 </div>
 
@@ -24760,7 +24842,29 @@ body.app-ops #shell-ops { display: block; }
         <span class="dtools-card-txt"><span class="dtools-card-title">Market Report</span><span class="dtools-card-sub">Addressable market &amp; demographics by practice</span></span>
         <span class="dtools-card-chev">›</span>
       </button>
+      <button type="button" class="dtools-card" onclick="_acctDeskHome()">
+        <span class="dtools-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg></span>
+        <span class="dtools-card-txt"><span class="dtools-card-title">Account Documents</span><span class="dtools-card-sub">Business &amp; financing docs by account</span></span>
+        <span class="dtools-card-chev">›</span>
+      </button>
     </div>
+  </div>
+</div>
+
+<div class="view" id="view-tools-docs">
+  <div class="page-wrap">
+    <div id="acct-docs-desk-list">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Account Documents</div>
+          <div class="page-sub">Business &amp; financing documents stored by account · Credit apps, quotes, lease docs, market reports &amp; more.</div>
+        </div>
+        <button class="dfc-back" onclick="switchView('tools')">‹ Tools</button>
+      </div>
+      <div class="adoc-search" style="max-width:520px;"><input type="text" placeholder="Search accounts" autocomplete="off" oninput="_acctSetSearch('desktop', this.value)"></div>
+      <div id="acct-docs-list-desktop" style="max-width:640px;"></div>
+    </div>
+    <div id="acct-docs-desk-detail" style="display:none;"></div>
   </div>
 </div>
 
@@ -30337,6 +30441,218 @@ function mktDeleteReport(id, oppId){
   try{ if(window.showToast) window.showToast('Report deleted'); }catch(e){}
 }
 window.mktDeleteReport=mktDeleteReport;
+
+// ═══════════════ Account Documents ═══════════════
+// In-memory per-account document store (no backend in this prototype).
+// Accounts are derived from opportunities (active + Closed Won, excluding
+// killed), keyed by a slug of the practice name so multiple opps for the same
+// practice share one document set. Market Reports (mktReports) linked to an
+// opp surface here too — merged in (not duplicated) as "Market Report" entries
+// that reopen the saved report. Three entry points write here: this Tools
+// view, the opportunity pop-up, and the Closed Won — in-fulfillment area.
+const ACCT_DOC_TYPES = ['Credit Application','Bank Statements','Device Quote','Lease Documents','Proof of Funds','Credit Report','Proof of Delivery','ACH Form','Referral Form','CC Authorization Form','Other Business Document'];
+let accountDocuments = {};
+let _acctDocsOpenId = null;
+let _acctDeskOpenId = null;
+let _acctSearch = { mobile:'', desktop:'' };
+function _acctSlug(name){ return String(name==null?'':name).trim().toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/(^-+|-+$)/g,'') || 'unknown'; }
+function _acctTerritory(){
+  const map = {};
+  (typeof opportunities!=='undefined'?opportunities:[]).forEach(o=>{
+    if(!o || o.killed) return;
+    const id=_acctSlug(o.name);
+    if(!map[id]) map[id]={ id, name:o.name||'\u2014', addr:o.addr||'', type:o.type||'', oppIds:[], closed:false };
+    map[id].oppIds.push(o.id);
+    if(o.closed) map[id].closed=true;
+  });
+  return Object.values(map).sort((a,b)=>a.name.localeCompare(b.name));
+}
+window._acctTerritory=_acctTerritory;
+function _acctFind(id){ return _acctTerritory().find(a=>a.id===id) || null; }
+function _acctIdForOpp(oppId){ const o=(typeof opportunities!=='undefined')?opportunities.find(x=>x.id===oppId):null; return o?_acctSlug(o.name):null; }
+window._acctIdForOpp=_acctIdForOpp;
+function _acctMktReports(accountId){ if(typeof mktReports==='undefined') return []; return mktReports.filter(r=>r && r.oppId && _acctIdForOpp(r.oppId)===accountId); }
+function _acctDocList(accountId){
+  const uploaded=(accountDocuments[accountId]||[]).map(d=>Object.assign({kind:'file'},d));
+  const reports=_acctMktReports(accountId).map(r=>({ kind:'market', id:'mkt_'+r.id, type:'Market Report', name:r.name||'Market Report', uploadedAt:r.savedAt||'', _report:r }));
+  return reports.concat(uploaded);
+}
+function _acctDocCount(accountId){ return (accountDocuments[accountId]||[]).length + _acctMktReports(accountId).length; }
+window._acctDocCount=_acctDocCount;
+function _acctAddDoc(accountId, type, fileName, fileSize){
+  if(!accountId) return;
+  if(!accountDocuments[accountId]) accountDocuments[accountId]=[];
+  accountDocuments[accountId].unshift({ id:'doc_'+Date.now()+'_'+Math.floor(Math.random()*1e4), type:type||'Other Business Document', name:fileName||'Untitled', size:fileSize||null, uploadedAt:new Date().toLocaleString('en-US') });
+}
+
+function openAccountDocs(accountId){
+  const acct=_acctFind(accountId);
+  if(!acct){ if(window.showToast) showToast('Account not found'); return; }
+  if(document.body.classList.contains('app-desktop')){
+    _acctDeskOpenId=accountId;
+    if(typeof switchView==='function'){ try{ switchView('tools-docs'); }catch(e){} }
+    _acctRenderDesk();
+    return;
+  }
+  _acctDocsOpenId=accountId;
+  let m=document.getElementById('acct-docs-modal');
+  if(!m){ m=document.createElement('div'); m.id='acct-docs-modal'; m.className='adoc-backdrop'; m.addEventListener('click',e=>{ if(e.target===m) closeAccountDocs(); }); document.body.appendChild(m); }
+  m.innerHTML=_acctDocsModalHTML(acct);
+  m.style.display='flex'; document.body.style.overflow='hidden';
+}
+window.openAccountDocs=openAccountDocs;
+function closeAccountDocs(){ const m=document.getElementById('acct-docs-modal'); if(m)m.style.display='none'; document.body.style.overflow=''; _acctDocsOpenId=null; }
+window.closeAccountDocs=closeAccountDocs;
+function _acctDocsRefresh(){ if(_acctDocsOpenId){ const m=document.getElementById('acct-docs-modal'); const a=_acctFind(_acctDocsOpenId); if(m&&a) m.innerHTML=_acctDocsModalHTML(a); } if(_acctDeskOpenId){ _acctRenderDesk(); } _acctRenderList('mobile'); _acctRenderList('desktop'); }
+function _acctDocsModalHTML(acct){
+  const esc=(typeof escapeAttr==='function')?escapeAttr:(s=>String(s==null?'':s));
+  const docs=_acctDocList(acct.id);
+  const typeOpts=ACCT_DOC_TYPES.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
+  const rows = docs.length ? docs.map(d=>{
+    const icon = d.kind==='market' ? '\uD83D\uDCCA' : '\uD83D\uDCC4';
+    const meta = d.kind==='market' ? ('Market Report'+(d.uploadedAt?' \u00b7 '+esc(d.uploadedAt):'')) : (esc(d.type)+(d.uploadedAt?' \u00b7 '+esc(d.uploadedAt):''));
+    const act = d.kind==='market' ? `<button class="adoc-doc-act" onclick="_acctOpenReport('${esc(d._report.id)}')">View</button>` : `<button class="adoc-doc-act adoc-doc-rm" onclick="_acctRemoveDoc('${esc(acct.id)}','${esc(d.id)}')">Remove</button>`;
+    return `<div class="adoc-doc"><span class="adoc-doc-ic">${icon}</span><div class="adoc-doc-main"><div class="adoc-doc-name">${esc(d.name)}</div><div class="adoc-doc-meta">${meta}</div></div>${act}</div>`;
+  }).join('') : `<div class="adoc-empty">No documents stored yet for this account.</div>`;
+  return `<div class="adoc-panel" role="dialog" aria-modal="true">
+    <div class="adoc-head"><div><div class="adoc-title">${esc(acct.name)}</div><div class="adoc-sub">${esc(acct.type||'Account')} \u00b7 ${docs.length} document${docs.length===1?'':'s'}</div></div><button class="adoc-x" onclick="closeAccountDocs()" aria-label="Close">\u00d7</button></div>
+    <div class="adoc-body">
+      <div class="adoc-upload">
+        <div class="adoc-upload-h">Upload a document</div>
+        <div class="adoc-upload-row">
+          <select id="adoc-type-sel" class="adoc-type-sel">${typeOpts}</select>
+          <label class="adoc-file-btn">Choose file\u2026<input type="file" id="adoc-file-input" style="display:none" onchange="_acctUploadFromInput('${esc(acct.id)}',this)"></label>
+        </div>
+        <div class="adoc-upload-note">Demo \u2014 the record (type, filename, date) is stored; the file itself isn't retained without a backend.</div>
+      </div>
+      <div class="adoc-doc-list">${rows}</div>
+    </div>
+  </div>`;
+}
+function _acctUploadFromInput(accountId, input){
+  const sel=document.getElementById('adoc-type-sel');
+  const type=sel?sel.value:'Other Business Document';
+  const f=input && input.files && input.files[0];
+  if(!f) return;
+  _acctAddDoc(accountId, type, f.name, f.size);
+  if(window.showToast) showToast('Uploaded \u00b7 '+type);
+  _acctDocsRefresh();
+}
+window._acctUploadFromInput=_acctUploadFromInput;
+function _acctRemoveDoc(accountId, docId){ if(accountDocuments[accountId]) accountDocuments[accountId]=accountDocuments[accountId].filter(d=>d.id!==docId); _acctDocsRefresh(); if(window.showToast) showToast('Document removed'); }
+window._acctRemoveDoc=_acctRemoveDoc;
+function _acctOpenReport(reportId){
+  const r=(typeof mktReports!=='undefined')?mktReports.find(x=>x.id===reportId):null;
+  if(!r){ if(window.showToast)showToast('Report not found'); return; }
+  closeAccountDocs();
+  const isMobile=document.body.classList.contains('app-mobile');
+  if(isMobile){ if(typeof window._mmrLoadSaved==='function')window._mmrLoadSaved(r); if(typeof window.showToolsView==='function')window.showToolsView('market-report'); if(typeof window.renderMarketReportMob==='function')window.renderMarketReportMob(); }
+  else { if(typeof window._mrLoadSaved==='function')window._mrLoadSaved(r); if(typeof window.switchView==='function')window.switchView('tools-market'); if(typeof window.renderMarketReportDesk==='function')window.renderMarketReportDesk(); }
+  if(window.showToast) showToast('Opened market report');
+}
+window._acctOpenReport=_acctOpenReport;
+
+function _acctSetSearch(shell, v){ _acctSearch[shell]=v||''; _acctRenderList(shell); }
+window._acctSetSearch=_acctSetSearch;
+function _acctRenderList(shell){
+  const el=document.getElementById('acct-docs-list-'+shell); if(!el) return;
+  const esc=(typeof escapeAttr==='function')?escapeAttr:(s=>String(s==null?'':s));
+  const q=(_acctSearch[shell]||'').trim().toLowerCase();
+  let accts=_acctTerritory();
+  if(q) accts=accts.filter(a=>a.name.toLowerCase().indexOf(q)>=0 || (a.type||'').toLowerCase().indexOf(q)>=0 || (a.addr||'').toLowerCase().indexOf(q)>=0);
+  if(!accts.length){ el.innerHTML='<div class="adoc-empty">'+(q?'No accounts match your search.':'No accounts in this territory yet.')+'</div>'; return; }
+  el.innerHTML=accts.map(a=>{
+    const n=_acctDocCount(a.id);
+    return `<button type="button" class="adoc-acct" onclick="openAccountDocs('${esc(a.id)}')">
+      <span class="adoc-acct-main"><span class="adoc-acct-name">${esc(a.name)}</span><span class="adoc-acct-sub">${esc(a.type||'Account')}${a.closed?' \u00b7 Closed Won':''}</span></span>
+      <span class="adoc-count${n?'':' adoc-count-0'}">${n}</span><span class="adoc-acct-chev">\u203a</span>
+    </button>`;
+  }).join('');
+}
+window._acctRenderList=_acctRenderList;
+
+// ── Desktop: full-width inline detail (Option B — document table) ──
+function _acctRenderDesk(){
+  const listEl=document.getElementById('acct-docs-desk-list');
+  const detEl=document.getElementById('acct-docs-desk-detail');
+  if(!listEl||!detEl) return;
+  const acct=_acctDeskOpenId?_acctFind(_acctDeskOpenId):null;
+  if(acct){ listEl.style.display='none'; detEl.style.display=''; detEl.innerHTML=_acctDeskDetailHTML(acct); }
+  else { detEl.style.display='none'; detEl.innerHTML=''; listEl.style.display=''; _acctRenderList('desktop'); }
+}
+window._acctRenderDesk=_acctRenderDesk;
+function _acctDeskHome(){ _acctDeskOpenId=null; if(typeof switchView==='function'){ try{ switchView('tools-docs'); }catch(e){} } _acctRenderDesk(); }
+window._acctDeskHome=_acctDeskHome;
+function _acctCloseDesk(){ _acctDeskOpenId=null; _acctRenderDesk(); }
+window._acctCloseDesk=_acctCloseDesk;
+function _acctUploadDesk(accountId, input){
+  const sel=document.getElementById('adoc-desk-type-sel');
+  const type=sel?sel.value:'Other Business Document';
+  const f=input && input.files && input.files[0];
+  if(!f) return;
+  _acctAddDoc(accountId, type, f.name, f.size);
+  if(window.showToast) showToast('Uploaded \u00b7 '+type);
+  _acctDocsRefresh();
+}
+window._acctUploadDesk=_acctUploadDesk;
+function _acctFmtSize(b){ if(b==null) return '\u2014'; if(b<1024) return b+' B'; if(b<1048576) return (b/1024).toFixed(0)+' KB'; return (b/1048576).toFixed(1)+' MB'; }
+function _acctDeskDetailHTML(acct){
+  const esc=(typeof escapeAttr==='function')?escapeAttr:(s=>String(s==null?'':s));
+  const docs=_acctDocList(acct.id);
+  const initials=(acct.name||'?').split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+  const typeOpts=ACCT_DOC_TYPES.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
+  let bodyRows;
+  if(docs.length){
+    bodyRows=docs.map(d=>{
+      if(d.kind==='market'){
+        return `<tr class="adoc-tr-mkt"><td class="adoc-td-type">Market Report<span class="adoc-tbadge">Linked</span></td><td class="adoc-td-file"><span class="fn">${esc(d.name)}</span></td><td>${esc(d.uploadedAt||'\u2014')}</td><td class="r num">\u2014</td><td class="r"><div class="adoc-td-acts"><button class="adoc-doc-act" onclick="_acctOpenReport('${esc(d._report.id)}')">View</button></div></td></tr>`;
+      }
+      return `<tr><td class="adoc-td-type">${esc(d.type)}</td><td class="adoc-td-file"><span class="fn">${esc(d.name)}</span></td><td>${esc(d.uploadedAt||'\u2014')}</td><td class="r num">${_acctFmtSize(d.size)}</td><td class="r"><div class="adoc-td-acts"><button class="adoc-doc-act adoc-doc-rm" onclick="_acctRemoveDoc('${esc(acct.id)}','${esc(d.id)}')">Remove</button></div></td></tr>`;
+    }).join('');
+  } else {
+    bodyRows=`<tr><td colspan="5"><div class="adoc-empty">No documents stored yet for this account. Upload one above to get started.</div></td></tr>`;
+  }
+  return `<div class="adoc-detail">
+    <button class="dfc-back" onclick="_acctCloseDesk()">\u2039 All accounts</button>
+    <div class="adoc-detail-head">
+      <div class="adoc-detail-avatar">${esc(initials)}</div>
+      <div><div class="adoc-detail-name">${esc(acct.name)}</div><div class="adoc-detail-sub">${esc(acct.type||'Account')}${acct.closed?' \u00b7 Closed Won':''} \u00b7 ${docs.length} document${docs.length===1?'':'s'}</div></div>
+    </div>
+    <div class="adoc-detail-toolbar">
+      <select id="adoc-desk-type-sel" class="adoc-type-sel">${typeOpts}</select>
+      <label class="adoc-file-btn">\u2b06 Choose file &amp; upload<input type="file" style="display:none" onchange="_acctUploadDesk('${esc(acct.id)}',this)"></label>
+      <span class="adoc-detail-note">Demo \u2014 record (type, filename, date) is stored; the file itself isn't retained.</span>
+    </div>
+    <table class="adoc-tbl">
+      <thead><tr><th>Type</th><th>Document</th><th>Added</th><th class="r">Size</th><th class="r"></th></tr></thead>
+      <tbody>${bodyRows}</tbody>
+    </table>
+  </div>`;
+}
+function showBusinessDocsForOpp(oppId){
+  const accountId=_acctIdForOpp(oppId); if(!accountId){ if(window.showToast)showToast('No account for this opportunity'); return; }
+  const isMobile=document.body.classList.contains('app-mobile');
+  try { if(isMobile && typeof window.showToolsView==='function') window.showToolsView('account-docs'); else if(typeof window.switchView==='function') window.switchView('tools-docs'); } catch(e){}
+  _acctRenderList(isMobile?'mobile':'desktop');
+  setTimeout(function(){ openAccountDocs(accountId); }, 70);
+}
+window.showBusinessDocsForOpp=showBusinessDocsForOpp;
+function uploadBusinessDocsForOpp(oppId){ const accountId=_acctIdForOpp(oppId); if(!accountId){ if(window.showToast)showToast('No account for this opportunity'); return; } openAccountDocs(accountId); }
+window.uploadBusinessDocsForOpp=uploadBusinessDocsForOpp;
+function _oppBizDocsSection(oppId){
+  const esc=(typeof escapeAttr==='function')?escapeAttr:(s=>String(s==null?'':s));
+  const accountId=_acctIdForOpp(oppId);
+  const n=accountId?_acctDocCount(accountId):0;
+  const oid=esc(oppId);
+  return `<div class="adoc-oppsec" style="padding:14px 16px 16px;border-top:1px solid var(--border,#E5E9EF);margin-top:10px;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ts,#6B7785);margin-bottom:10px;">Business documents${n?' \u00b7 '+n+' on file':''}</div>
+    <div class="adoc-oppsec-btns">
+      <button type="button" class="adoc-oppsec-btn" onclick="uploadBusinessDocsForOpp('${oid}')">\u2b06 Upload Business Documents</button>
+      <button type="button" class="adoc-oppsec-btn adoc-oppsec-btn-alt" onclick="showBusinessDocsForOpp('${oid}')">\uD83D\uDCC2 Show Business Documents</button>
+    </div>
+  </div>`;
+}
+window._oppBizDocsSection=_oppBizDocsSection;
 
 // A Masenko-owned construct for tracking pipeline an account is expected to
 // close AT an event rather than in the field. In production this maps to a
@@ -40288,6 +40604,17 @@ function getStaleOpps(repName, thresholdDays) {
 }
 window.getStaleOpps = getStaleOpps;
 
+// Canonical "stale deals as the pipeline currently shows them" — getStaleOpps
+// for the current rep at the active day-threshold, then the same pipeline
+// scope filter the Stale tab applies. Every stale surface (tab count, banner,
+// and the Clear-all sheet) uses this so they never disagree.
+function _staleOppsScoped() {
+  const days = (typeof _staleDays === 'function') ? _staleDays() : 3;
+  const base = (typeof getStaleOpps === 'function') ? getStaleOpps(CURRENT_REP, days) : [];
+  return (typeof _filterOppsByPipelineScope === 'function') ? _filterOppsByPipelineScope(base) : base;
+}
+window._staleOppsScoped = _staleOppsScoped;
+
 // ── Desktop Management → Today digest (parity with mobile renderMobMgmtToday) ──
 function renderMgmtToday(){
   const persona = (typeof getCurrentManagerPersona==='function') ? getCurrentManagerPersona() : null;
@@ -42547,16 +42874,20 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   // ── Tools hub — opens to a landing page (Library / Finance Calculator).
   // The landing has no ☰; the ☰ appears only inside Finance Calculator and
   // opens the saved-calculations manager (groupings + comparison).
-  const _TOOLS_VIEWS = ['tools-home', 'library', 'finance-calc', 'market-report'];
+  const _TOOLS_VIEWS = ['tools-home', 'library', 'finance-calc', 'market-report', 'account-docs'];
   const _TOOLS_LABELS = { 'tools-home': 'Tools', 'library': 'Library', 'finance-calc': 'Finance Calculator', 'market-report': 'Market Report' };
   function showToolsView(v) {
     const tab = (v === 'finance' || v === 'finance-calc') ? 'finance-calc'
       : (v === 'library') ? 'library'
       : (v === 'market' || v === 'market-report') ? 'market-report'
+      : (v === 'account-docs' || v === 'docs') ? 'account-docs'
       : 'tools-home';
     switchTab(tab);
     if (tab === 'market-report' && typeof window.renderMarketReportMob === 'function') {
       try { window.renderMarketReportMob(); } catch (e) {}
+    }
+    if (tab === 'account-docs' && typeof window._acctRenderList === 'function') {
+      try { window._acctRenderList('mobile'); } catch (e) {}
     }
   }
   window.showToolsView = showToolsView;
@@ -45792,7 +46123,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   let _mobStaleArmed = false;
   function renderMobStaleKill() {
     _mobStaleArmed = false;
-    const opps = (typeof getStaleOpps === 'function') ? getStaleOpps(CURRENT_REP, _staleDays()) : [];
+    const opps = (typeof _staleOppsScoped === 'function') ? _staleOppsScoped() : [];
     const sub = document.getElementById('mob-stalekill-sub');
     const list = document.getElementById('mob-stalekill-list');
     const allBtn = document.getElementById('mob-stalekill-all-btn');
@@ -45846,7 +46177,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   window.mobStaleKillOne = mobStaleKillOne;
 
   function mobStaleKillAllPrompt() {
-    const opps = (typeof getStaleOpps === 'function') ? getStaleOpps(CURRENT_REP, _staleDays()) : [];
+    const opps = (typeof _staleOppsScoped === 'function') ? _staleOppsScoped() : [];
     if (!opps.length) { closeSheet('stalekill'); return; }
     if (!_mobStaleArmed) {
       _mobStaleArmed = true;
@@ -53855,6 +54186,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
         <div class="mwd-card-footer-actions">
           <button class="cw-deal-open-btn" onclick="event.stopPropagation(); openDeliverySheet('${opp.id}')">📦 Schedule delivery</button>
           <button class="cw-deal-open-btn" onclick="event.stopPropagation(); openMobCloseDetailsView('${opp.id}')">📄 View close details</button>
+          <button class="cw-deal-open-btn" onclick="event.stopPropagation(); uploadBusinessDocsForOpp('${opp.id}')">🗂 Business documents</button>
           ${isBooked
             ? `<button class="cw-deal-open-btn" onclick="event.stopPropagation(); openMobClosingDocsSheet('${opp.id}','referral_form')">📎 Upload Other Docs</button>`
             : `<button class="cw-deal-open-btn" onclick="event.stopPropagation(); openMobClosingDocsSheet('${opp.id}')">📎 Upload closing docs</button>`}
@@ -55356,6 +55688,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     // subsection has anything to show.
     try{ container.insertAdjacentHTML('beforeend', _mktMobileSection(o.id)); }catch(e){}
     _renderMobOppMarketingSection(o);
+    try{ container.insertAdjacentHTML('beforeend', (typeof _oppBizDocsSection==='function') ? _oppBizDocsSection(o.id) : ''); }catch(e){}
   }
   window.renderOppDetail = renderOppDetail;
 
@@ -59236,7 +59569,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     // Phase 5 Session 1 added the ops-* and mgmt-* groups. The standalone Map
     // rep nav tab was removed in Phase 7 Pass 25 (map folded into Prospects),
     // so calendar/revenue shift down one index.
-    const repMap = { today:0, prospects:1, routing:2, pipeline:3, accounts:4, calendar:5, dashboards:6, tools:7, 'tools-finance':7, 'tools-library':7, 'tools-market':7 };
+    const repMap = { today:0, prospects:1, routing:2, pipeline:3, accounts:4, calendar:5, dashboards:6, tools:7, 'tools-finance':7, 'tools-library':7, 'tools-market':7, 'tools-docs':7 };
     const opsMap = { 'ops-booking':0, 'ops-inventory':1, 'ops-shipments':2, 'ops-payments':3, 'ops-payouts':4, 'ops-catalog':5, 'ops-approvals':6 };
     // Pass 11 — mgmt-calendar was added to the DOM in Pass 6a (index 1)
     // but this map was never updated, so every tab after it activated the
@@ -59358,6 +59691,9 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     }
     if (v === 'tools-market' && typeof window.renderMarketReportDesk === 'function') {
       try { window.renderMarketReportDesk(); } catch (e) {}
+    }
+    if (v === 'tools-docs' && typeof window._acctRenderDesk === 'function') {
+      try { window._acctRenderDesk(); } catch (e) {}
     }
   }
 
@@ -63506,6 +63842,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
             ? `📄 Closing docs (${docCount})${hasSignedQuote ? ' ✓' : ' — signed quote missing'}`
             : '📄 Upload closing docs';
           actionsHtml += `<button class="acct-dev-action ${hasSignedQuote ? '' : 'is-required'}" onclick="event.stopPropagation();repOpenClosingDocsModal('${escapeAttr(opp.id)}')">${label}</button>`;
+          actionsHtml += `<button class="acct-dev-action" onclick="event.stopPropagation();uploadBusinessDocsForOpp('${escapeAttr(opp.id)}')">🗂 Business documents</button>`;
 
           // Pricing approval pill for below-floor devices
           if (typeof getDevicePricingApprovalState === 'function') {
@@ -65927,6 +66264,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     // Campaign history). Additive to the existing template literal above;
     // skipped silently if neither subsection has anything to show.
     _renderDrawerMarketingSection(a);
+    try{ document.getElementById('drawer-body').insertAdjacentHTML('beforeend', (typeof _oppBizDocsSection==='function') ? _oppBizDocsSection(a.id) : ''); }catch(e){}
 
     // Pass 8 — belt-and-suspenders for view-only mode. When the manager is
     // viewing a rep's pipeline in scope, every .drawer-task-add button must
@@ -67096,7 +67434,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     _staleKillConfirmArmed = false;
   }
   function renderStaleKillModal() {
-    const opps = (typeof getStaleOpps === 'function') ? getStaleOpps(CURRENT_REP, _staleDays()) : [];
+    const opps = (typeof _staleOppsScoped === 'function') ? _staleOppsScoped() : [];
     const sub = document.getElementById('stale-kill-sub');
     const list = document.getElementById('stale-kill-list');
     const allBtn = document.getElementById('stale-kill-all-btn');
@@ -67142,7 +67480,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     renderPipelineList();
   }
   function staleKillAllPrompt() {
-    const opps = (typeof getStaleOpps === 'function') ? getStaleOpps(CURRENT_REP, _staleDays()) : [];
+    const opps = (typeof _staleOppsScoped === 'function') ? _staleOppsScoped() : [];
     if (!opps.length) { closeStaleKillModal(); return; }
     if (!_staleKillConfirmArmed) {
       // First click arms the confirm; second click executes.
@@ -82738,6 +83076,61 @@ window.toggleAccountExpand = function() { const ns = document.body.classList.con
 // legacy nextMtg / nextMtgTime scalar fields. Runs after both IIFEs have
 // finished populating opportunities.
 seedMeetingsFromLegacyFields();
+// Keep each opp's derived nextMtg/firstMtg in lockstep with its meetings[]
+// (the source of truth). Without this, a seeded opp can carry a phantom future
+// "next meeting" label that disagrees with its real meeting history — which is
+// what made stale deals show a future date on the pipeline card while the
+// Clear-all sheet showed the true last meeting.
+(function syncAllDerivedMeetingFields(){
+  try { if (typeof opportunities !== 'undefined' && typeof syncDerivedMeetingFields === 'function') opportunities.forEach(o => { try { syncDerivedMeetingFields(o); } catch (e) {} }); } catch (e) {}
+})();
+// Demo seed: drop a realistic spread of business documents onto a mix of
+// accounts so the Account Documents UI shows populated states (full financing
+// packages, mid-stage, early) while ~1 in 3 accounts stays empty to show the
+// zero state. Deterministic; layered on top of any market reports already
+// linked to the account.
+(function seedAccountDocuments(){
+  try{
+    if (typeof _acctTerritory !== 'function' || typeof accountDocuments === 'undefined') return;
+    const accts = _acctTerritory();
+    if (!accts.length) return;
+    const fileFor = {
+      'Credit Application':'credit-application-signed.pdf',
+      'Bank Statements':'bank-statements-q1-2026.pdf',
+      'Device Quote':'device-quote.pdf',
+      'Lease Documents':'equipment-lease-agreement.pdf',
+      'Proof of Funds':'proof-of-funds-letter.pdf',
+      'Credit Report':'experian-credit-report.pdf',
+      'Proof of Delivery':'proof-of-delivery-signed.pdf',
+      'ACH Form':'ach-authorization-form.pdf',
+      'Referral Form':'referral-form.pdf',
+      'CC Authorization Form':'cc-authorization-form.pdf',
+      'Other Business Document':'w9-and-business-license.pdf'
+    };
+    const sets = [
+      ['Credit Application','Bank Statements','Device Quote','Proof of Funds','Credit Report','ACH Form','Proof of Delivery'],
+      ['Device Quote','Credit Application','Bank Statements'],
+      ['Device Quote','Referral Form'],
+      ['Device Quote','Lease Documents','CC Authorization Form','Bank Statements'],
+      ['Device Quote'],
+    ];
+    const stamp = (daysAgo)=>{ const d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toLocaleString('en-US'); };
+    accts.forEach((a, i)=>{
+      if (i % 3 === 2) return;                    // ~1 in 3 accounts left empty
+      const set = sets[i % sets.length];
+      if (!accountDocuments[a.id]) accountDocuments[a.id] = [];
+      set.forEach((type, j)=>{
+        accountDocuments[a.id].push({
+          id:'seed_'+a.id+'_'+j,
+          type:type,
+          name:fileFor[type] || 'document.pdf',
+          size: 90000 + ((i*7 + j*13) % 12) * 45000,
+          uploadedAt: stamp(i*2 + j*3 + 1)
+        });
+      });
+    });
+  }catch(e){}
+})();
 // Seed cross-rep coverage demo: A. Martinez generated a_cov1; Andreas Suri covers its meeting.
 (function seedCoverageDemo(){
   try {
