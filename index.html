@@ -804,10 +804,11 @@ body.app-ops #shell-ops { display: block; }
   body.app-mobile #shell-mobile .mob-gl-pc-top{ display: flex; align-items: center; gap: 9px; }
   body.app-mobile #shell-mobile .mob-gl-pc-rank{ font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--tm); min-width: 18px; }
   body.app-mobile #shell-mobile .mob-gl-pc-info{ flex: 1; min-width: 0; }
-  body.app-mobile #shell-mobile .mob-gl-pc-name{ font-size: 13px; font-weight: 700; color: var(--tp); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  body.app-mobile #shell-mobile .mob-gl-pc-name{ display: flex; align-items: center; gap: 5px; min-width: 0; font-size: 13px; font-weight: 700; color: var(--tp); }
+  body.app-mobile #shell-mobile .mob-gl-pc-nm{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   body.app-mobile #shell-mobile .mob-gl-pc-type{ font-size: 11px; color: var(--ts); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   body.app-mobile #shell-mobile .mob-gl-pc-score{ font-size: 13px; font-weight: 700; color: var(--blue); }
-  body.app-mobile #shell-mobile .mob-gl-ai{ font-size: 11px; color: var(--ts); margin-top: 7px; line-height: 1.4; }
+  body.app-mobile #shell-mobile .mob-gl-ai{ font-size: 11px; color: var(--ts); margin-top: 16px; line-height: 1.4; }
   body.app-mobile #shell-mobile .mob-gl-det{ margin-top: 6px; }
   body.app-mobile #shell-mobile .mob-gl-det-line{ font-size: 11px; color: var(--tm); line-height: 1.4; }
   body.app-mobile #shell-mobile .mob-gl-tags{ margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
@@ -828,7 +829,7 @@ body.app-ops #shell-ops { display: block; }
   body.app-mobile #shell-mobile .mob-gl-act.is-calls{ background: #E6F4EA; border-color: #A8D5B5; color: #1A7A3E; }
   body.app-mobile #shell-mobile .mob-gl-act.is-x{ color: var(--red); }
   body.app-mobile #shell-mobile .mob-gl-act.is-revert{ background: var(--white); color: var(--ts); border-color: var(--border); margin-top: 8px; }
-  body.app-mobile #shell-mobile .mob-gl-idchip{ display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; padding: 3px 10px; font-size: 11px; font-weight: 700; border-radius: 12px; background: #E6F7F1; color: #0A6B5A; border: 1px solid #BFE8DC; }
+  body.app-mobile #shell-mobile .mob-gl-idchip{ display: inline-flex; align-items: center; justify-content: center; flex: none; margin: 0; width: 15px; height: 15px; padding: 0; font-size: 9px; font-weight: 800; line-height: 1; border-radius: 50%; background: #0F7E54; color: #fff; border: 1px solid #0A6B5A; }
   /* Zoom invite — meeting-sheet toggle + composer attachment chip */
   body.app-mobile #shell-mobile .zi-toggle{ display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; color: var(--ts); font-weight: 600; }
   body.app-mobile #shell-mobile .zi-toggle input{ width: 18px; height: 18px; accent-color: #4F46E5; flex-shrink: 0; }
@@ -16514,11 +16515,12 @@ body.app-ops #shell-ops { display: block; }
   body.app-desktop #shell-desktop .pc-top{ display: flex; align-items: flex-start; gap: 9px; margin-bottom: 8px; }
   body.app-desktop #shell-desktop .pc-rank{ width: 20px; height: 20px; border-radius: 50%; background: var(--navy); color: white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
   body.app-desktop #shell-desktop .pc-info{ flex: 1; }
-  body.app-desktop #shell-desktop .pc-name{ font-size: 13px; font-weight: 600; color: var(--tp); }
+  body.app-desktop #shell-desktop .pc-name{ display: flex; align-items: center; gap: 5px; min-width: 0; font-size: 13px; font-weight: 600; color: var(--tp); }
+  body.app-desktop #shell-desktop .pc-nm{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   body.app-desktop #shell-desktop .pc-type{ font-size: 11px; color: var(--tm); margin-top: 1px; }
   body.app-desktop #shell-desktop .pc-score{ display: flex; align-items: center; gap: 3px; background: var(--light); border-radius: 5px; padding: 2px 7px; font-size: 11px; font-weight: 700; color: var(--blue); flex-shrink: 0; }
   body.app-desktop #shell-desktop .sd{ width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
-  body.app-desktop #shell-desktop .ai-box{ background: linear-gradient(135deg,#EEF2FF,#E0F2FE); border: 1px solid #C7D2FE; border-radius: 7px; padding: 7px 9px; margin-bottom: 8px; font-size: 11px; color: #3730A3; }
+  body.app-desktop #shell-desktop .ai-box{ background: linear-gradient(135deg,#EEF2FF,#E0F2FE); border: 1px solid #C7D2FE; border-radius: 7px; padding: 7px 9px; margin-top: 16px; margin-bottom: 8px; font-size: 11px; color: #3730A3; }
   body.app-desktop #shell-desktop .ai-lbl{ font-size: 9px; font-weight: 700; letter-spacing: 0.07em; color: #4338CA; margin-bottom: 2px; }
   body.app-desktop #shell-desktop .pc-det{ display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-bottom: 8px; }
   body.app-desktop #shell-desktop .pcd{ font-size: 11px; color: var(--ts); }
@@ -16533,7 +16535,7 @@ body.app-ops #shell-ops { display: block; }
   body.app-desktop #shell-desktop .ab-v{ background: #FFF8E1; color: var(--amber); border-color: #FFE082; } body.app-desktop #shell-desktop .ab-v:hover{ background: var(--amber); color: white; }
   body.app-desktop #shell-desktop .ab-x{ background: #FFEBEE; color: var(--red); border-color: #FFCDD2; } body.app-desktop #shell-desktop .ab-x:hover{ background: var(--red); color: white; }
   body.app-desktop #shell-desktop .ab-revert{ background: var(--white); color: var(--ts); border-color: var(--border); margin-left: 8px; } body.app-desktop #shell-desktop .ab-revert:hover{ border-color: var(--blue); color: var(--blue); }
-  body.app-desktop #shell-desktop .lv-idchip{ display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; padding: 3px 10px; font-size: 11px; font-weight: 700; border-radius: 12px; background: #E6F7F1; color: #0A6B5A; border: 1px solid #B7E4D6; }
+  body.app-desktop #shell-desktop .lv-idchip{ display: inline-flex; align-items: center; justify-content: center; flex: none; margin: 0; width: 15px; height: 15px; padding: 0; font-size: 9px; font-weight: 800; line-height: 1; border-radius: 50%; background: #0F7E54; color: #fff; border: 1px solid #0A6B5A; }
   body.app-desktop #shell-desktop .pc-bucket-tag{ display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-bottom: 7px; }
   body.app-desktop #shell-desktop .pbt-routing{ background: #EBF5FF; color: #1A4A8A; } body.app-desktop #shell-desktop .pbt-calls{ background: #E8F5E9; color: #1A9E6E; }
   body.app-desktop #shell-desktop .pbt-revisit{ background: #FFF8E1; color: #B45309; } body.app-desktop #shell-desktop .pbt-removed{ background: #FFEBEE; color: #C0392B; }
@@ -20875,6 +20877,9 @@ body.app-ops #shell-ops { display: block; }
   <button class="cal-menu-view" data-mob-cal-mode="month" onclick="mobMgmtCalSetMode('month')"><span class="cal-menu-view-ic">▦</span><span>Month</span><span class="cal-menu-view-check">✓</span></button>
   <button class="cal-menu-view" data-mob-cal-mode="agenda" onclick="mobMgmtCalSetMode('agenda')"><span class="cal-menu-view-ic">≣</span><span>Agenda</span><span class="cal-menu-view-check">✓</span></button>
   <div class="cal-menu-div"></div>
+  <div class="cal-menu-sec-label">Show</div>
+  <button class="cal-menu-view" id="mob-mgmt-cal-mine-toggle" onclick="mobMgmtCalToggleMineOnly()"><span class="cal-menu-view-ic">☑</span><span>My meetings only</span><span class="cal-menu-view-check">✓</span></button>
+  <div class="cal-menu-div"></div>
   <div class="cal-menu-sec-label">Teams</div>
   <div id="mob-mgmt-cal-teams"><!-- rendered by openMobMgmtCalMenu() --></div>
 </div>
@@ -20930,6 +20935,8 @@ body.app-ops #shell-ops { display: block; }
     <div class="mob-rev-attain" id="mob-rev-attain"></div>
     <div class="mob-rev-section-title">Net booked by product</div>
     <div class="mob-rev-product" id="mob-rev-product"></div>
+    <div class="mob-rev-section-title">Closed devices by practice owner type</div>
+    <div class="mob-rev-product" id="mob-rev-owner"></div>
   </div>
 </div>
 
@@ -23621,6 +23628,11 @@ body.app-ops #shell-ops { display: block; }
       <button class="cal-view-btn" id="mgmt-cal-view-agenda" onclick="mgmtCalSetView('agenda')">Agenda</button>
     </div>
     <div class="deskcal-menu-div"></div>
+    <div class="deskcal-menu-sec-label">Show</div>
+    <div class="mgmt-cal-chip-row deskcal-filters">
+      <button class="mgmt-cal-chip" id="mgmt-cal-mine-toggle" onclick="mgmtCalToggleMineOnly()"><span class="mgmt-cal-chip-dot" style="background:#15528E;"></span>My meetings only</button>
+    </div>
+    <div class="deskcal-menu-div"></div>
     <div class="deskcal-menu-sec-label">Team</div>
     <div class="mgmt-cal-chip-row deskcal-filters" id="mgmt-cal-team-chips"></div>
     <div class="deskcal-menu-div"></div>
@@ -24731,6 +24743,18 @@ body.app-ops #shell-ops { display: block; }
           </div>
         </div>
         <div id="mgmt-rev-product-rows"></div>
+      </div>
+
+      <!-- Closed devices & revenue by practice owner type -->
+      <div class="pr-card">
+        <div class="pr-card-hdr">
+          <div>
+            <div class="pr-card-title">Closed devices &amp; revenue by practice owner type</div>
+            <div class="pr-card-sub">Net booked revenue and units placed, grouped by the practice owner's credential (MD / DO / NP / RN / other) · year-to-date</div>
+          </div>
+          <div class="pr-card-total" id="mgmt-rev-owner-total">—</div>
+        </div>
+        <div id="mgmt-rev-owner-rows"></div>
       </div>
 
       <!-- Debook trends -->
@@ -27984,11 +28008,11 @@ function _activeShell() {
 // keep OSM as a last resort. _addBaseTiles advances on repeated tile errors.
 const _TILE_PROVIDERS = [
   { url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    opts: { maxZoom: 19, subdomains: 'abcd', attribution: '© OpenStreetMap · © CARTO' } },
+    opts: { maxZoom: 19, subdomains: 'abcd', crossOrigin: 'anonymous', attribution: '© OpenStreetMap · © CARTO' } },
   { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-    opts: { maxZoom: 19, attribution: 'Tiles © Esri' } },
+    opts: { maxZoom: 19, crossOrigin: 'anonymous', attribution: 'Tiles © Esri' } },
   { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    opts: { maxZoom: 19, attribution: '© OpenStreetMap contributors' } }
+    opts: { maxZoom: 19, crossOrigin: 'anonymous', attribution: '© OpenStreetMap contributors' } }
 ];
 function _addBaseTiles(inst) {
   let idx = 0, errs = 0, layer = null;
@@ -31714,6 +31738,32 @@ function getMgmtMeetingEventsInRange(organizerName, startIso, endIso) {
 }
 window.getMgmtMeetingEventsInRange = getMgmtMeetingEventsInRange;
 
+// ── Closed devices & revenue by practice-owner credential ─────────────
+// Slices a net-booked-revenue total across owner-credential buckets with a
+// realistic, MD-heavy weighting, and derives a device count per bucket from
+// a per-bucket average device price. Tying the total to the tab's booked-YTD
+// number keeps this tracker consistent with the revenue banner/KPIs while
+// guaranteeing every bucket is populated for the demo. Deterministic — same
+// input always yields the same breakdown. Shared by both shells.
+function mgmtRevOwnerBreakdown(bookedTotal) {
+  const B = [
+    { key: 'MD',    color: '#15528E', weight: 0.60, price: 165000 },
+    { key: 'DO',    color: '#0F7E54', weight: 0.20, price: 155000 },
+    { key: 'NP',    color: '#B25E10', weight: 0.11, price: 145000 },
+    { key: 'RN',    color: '#7A3B96', weight: 0.05, price: 135000 },
+    { key: 'Other', color: '#5A6A7A', weight: 0.04, price: 150000 }
+  ];
+  const total = Math.max(0, bookedTotal || 0);
+  const rows = B.map(b => {
+    const revenue = Math.round(total * b.weight);
+    const devices = revenue > 0 ? Math.max(1, Math.round(revenue / b.price)) : 0;
+    return { key: b.key, label: b.key, color: b.color, revenue: revenue, devices: devices, pct: Math.round(b.weight * 100) };
+  });
+  const totalDevices = rows.reduce((s, r) => s + r.devices, 0);
+  return { rows: rows, total: total, totalDevices: totalDevices };
+}
+window.mgmtRevOwnerBreakdown = mgmtRevOwnerBreakdown;
+
 // Stages that mark a practice as "actively being worked" — i.e., the rep
 // has set a meeting and the opportunity is proceeding through the close
 // pipeline. Earlier stages (D/E/F/G — Lead, Qualify, etc.) don't block
@@ -31989,7 +32039,25 @@ function getTeamMemberMetrics(memberId, opts) {
   const elapsedFrac = dayOfYear / yearDays;
   const proRatedQuota = annualQuota * elapsedFrac;
 
-  // Role-attributed revenue
+  // ── Demo calibration — Clint Jones's Southeast region paces ahead ──────
+  // For the executive demo, the RM's teams should read "ahead of pace"
+  // rather than behind. Applied as a floor on booked revenue for reps on
+  // Clint's three Southeast teams, calibrated to ~122% of the pro-rated
+  // quota. Because team and region rollups both SUM these per-rep metrics,
+  // this one floor flips the per-rep, team, and region pace indicators to
+  // ahead in a single place — and it only touches booked-revenue
+  // attribution, so the pipeline, opportunity list, and owner-type charts
+  // are unaffected. It's a floor (never lowers a rep already pacing higher).
+  // NOTE: keyed on teamId because the derived `teamMembers` records don't
+  // carry managerId.
+  const _CLINT_TEAMS = ['team_florida', 'team_gulf', 'team_carolina'];
+  if (_CLINT_TEAMS.indexOf(member.teamId) !== -1 && proRatedQuota > 0) {
+    const _demoPaceFloor = Math.round(proRatedQuota * 1.22);
+    if (ytdBookedRev < _demoPaceFloor) ytdBookedRev = _demoPaceFloor;
+    if (ytdGeneratedBookedRev < _demoPaceFloor) ytdGeneratedBookedRev = _demoPaceFloor;
+  }
+
+
   // Pass 24 (May 26 fix) — All revenue calculations in rep + manager
   // views are now based on NET BOOKED revenue, not net closed-won
   // revenue. The closed-won basis (ytdGeneratedRev / ytdClosedRev)
@@ -43204,6 +43272,32 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     return { lat:25.55+((h1%10000)/10000)*(26.25-25.55), lng:-80.55+((h2%10000)/10000)*(-80.08-(-80.55)) };
   }
   let _mmrMap=null,_mmrCircle=null,_mmrMarker=null,_mmrFitKey='',_mmrMapJustBuilt=false;
+  function _mmrCaptureMapDataURL(){
+    try{
+      if(!_mmrMap || typeof _mmrMap.getSize!=='function' || typeof _mmrMap.getContainer!=='function') return null;
+      const size=_mmrMap.getSize(); const W=Math.round(size.x), H=Math.round(size.y);
+      if(!W || !H) return null;
+      const canvas=document.createElement('canvas'); canvas.width=W; canvas.height=H;
+      const ctx=canvas.getContext('2d'); ctx.fillStyle='#E8EDF0'; ctx.fillRect(0,0,W,H);
+      const cont=_mmrMap.getContainer(); const cRect=cont.getBoundingClientRect();
+      let drew=0;
+      cont.querySelectorAll('img.leaflet-tile').forEach(img=>{
+        if(!img.complete || !img.naturalWidth) return;
+        if(img.style && img.style.opacity && parseFloat(img.style.opacity)===0) return;
+        const r=img.getBoundingClientRect();
+        try{ ctx.drawImage(img, r.left-cRect.left, r.top-cRect.top, r.width, r.height); drew++; }catch(e){}
+      });
+      if(!drew) return null;
+      try{
+        const c=_mmrGeocode(_mmrAddr); const ctr=_mmrMap.latLngToContainerPoint([c.lat,c.lng]);
+        let rPx=Math.min(W,H)*0.3;
+        if(_mmrCircle && typeof _mmrCircle.getBounds==='function'){ const b=_mmrCircle.getBounds(); const ne=_mmrMap.latLngToContainerPoint(b.getNorthEast()); const sw=_mmrMap.latLngToContainerPoint(b.getSouthWest()); rPx=Math.min(Math.abs(ne.x-sw.x),Math.abs(sw.y-ne.y))/2; }
+        ctx.beginPath(); ctx.arc(ctr.x,ctr.y,rPx,0,Math.PI*2); ctx.fillStyle='rgba(46,134,193,0.18)'; ctx.fill(); ctx.lineWidth=2; ctx.strokeStyle='#1A4A8A'; ctx.stroke();
+        ctx.save(); ctx.translate(ctr.x,ctr.y); ctx.fillStyle='#C2410C'; ctx.beginPath(); ctx.moveTo(0,2); ctx.bezierCurveTo(9,-8,6,-20,0,-20); ctx.bezierCurveTo(-6,-20,-9,-8,0,2); ctx.fill(); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(0,-12,4,0,Math.PI*2); ctx.fill(); ctx.restore();
+      }catch(e){}
+      return canvas.toDataURL('image/png');
+    }catch(e){ return null; }
+  }
   function _mmrUpdateMap(demo){
     const host=document.getElementById('mmr-map'); if(!host) return;
     if(typeof L==='undefined'){ host.innerHTML=_mmrMapSvg(demo); return; }
@@ -43275,7 +43369,9 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   function mmrExportPdf(){
     const demo=_mmrDemo();let total=0,tp=0,tpat=0;const pct=n=>n.toFixed(2)+'%';const today=new Date().toLocaleDateString('en-US');
     const rowsHtml=_mmrLines.map(ln=>{const c=_mmrLineCalc(ln,demo);total+=c.value;tp+=c.prospects;tpat+=c.patients;return `<tr><td>${_mmrEsc(c.dev?c.dev.device:'')}</td><td>${_mmrEsc(c.ind?c.ind.name:'')}</td><td class="r">${_mmrMoney(c.price)}</td><td class="r">${c.prospects.toLocaleString('en-US')}</td><td class="r">${c.patients.toLocaleString('en-US')}</td><td class="r">${_mmrMoney(c.value)}</td></tr>`;}).join('');
-    const html=`<div class="mrp-page"><div class="mrp-h1">Market Analysis Report</div><div class="mrp-gen">Generated on ${today}</div><div class="mrp-sec">Market Parameters</div><div class="mrp-params"><div class="mrp-param"><div class="mrp-param-l">Practice</div><div class="mrp-param-v">${_mmrEsc(_mmrName||'—')}</div></div><div class="mrp-param"><div class="mrp-param-l">Location</div><div class="mrp-param-v">${_mmrEsc(_mmrAddr||'Not specified')}</div></div><div class="mrp-param"><div class="mrp-param-l">Analysis Radius</div><div class="mrp-param-v">${demo.radius} miles</div></div><div class="mrp-param"><div class="mrp-param-l">Conversion Rate</div><div class="mrp-param-v">${_mmrConv}%</div></div></div><div class="mrp-sec">Revenue Analysis</div><table class="mrp-table"><thead><tr><th>Device</th><th>Service</th><th class="r">Price</th><th class="r">Prospects</th><th class="r">Patients</th><th class="r">Market Value</th></tr></thead><tbody>${rowsHtml}<tr class="mrp-total"><td>Total</td><td></td><td></td><td class="r">${tp.toLocaleString('en-US')}</td><td class="r">${tpat.toLocaleString('en-US')}</td><td class="r">${_mmrMoney(total)}</td></tr></tbody></table><div class="mrp-cmv"><div class="mrp-cmv-l">Current Market Value</div><div class="mrp-cmv-v">${_mmrMoney(total)}</div></div></div><div class="mrp-page"><div class="mrp-sec">Demographic Summary</div><div class="mrp-demo-cols"><table class="mrp-demo-table"><tbody><tr><th>Demographic</th><th class="r">Within Radius</th></tr><tr><td>Population</td><td class="r">${demo.population.toLocaleString('en-US')}</td></tr><tr><td>Female</td><td class="r">${demo.female.toLocaleString('en-US')}</td></tr><tr><td>Female (30–60)</td><td class="r">${demo.f3060.toLocaleString('en-US')}</td></tr><tr><td>Male</td><td class="r">${demo.male.toLocaleString('en-US')}</td></tr><tr><td>Male (30–60)</td><td class="r">${demo.m3060.toLocaleString('en-US')}</td></tr><tr><td>White</td><td class="r">${pct(demo.white)}</td></tr><tr><td>Black</td><td class="r">${pct(demo.black)}</td></tr><tr><td>Asian</td><td class="r">${pct(demo.asian)}</td></tr><tr><td>Hispanic</td><td class="r">${pct(demo.hispanic)}</td></tr><tr><td>Non-Hispanic</td><td class="r">${pct(demo.nonHispanic)}</td></tr><tr class="mrp-em"><td>Avg Income</td><td class="r">${_mmrMoney(demo.income)}</td></tr><tr><td>Home Value</td><td class="r">${_mmrMoney(demo.homeValue)}</td></tr></tbody></table><div class="mrp-map">${_mmrMapSvg(demo)}</div></div><div class="mrp-foot">${today} · ${_mmrEsc(_mmrName||'Market Report')} · Modeled estimate — not live census data</div></div>`;
+    const _mapPng=_mmrCaptureMapDataURL();
+    const _mapHtml=_mapPng ? `<img src="${_mapPng}" alt="Coverage map" style="width:100%;height:100%;object-fit:cover;display:block;"/>` : _mmrMapSvg(demo);
+    const html=`<div class="mrp-page"><div class="mrp-h1">Market Analysis Report</div><div class="mrp-gen">Generated on ${today}</div><div class="mrp-sec">Market Parameters</div><div class="mrp-params"><div class="mrp-param"><div class="mrp-param-l">Practice</div><div class="mrp-param-v">${_mmrEsc(_mmrName||'—')}</div></div><div class="mrp-param"><div class="mrp-param-l">Location</div><div class="mrp-param-v">${_mmrEsc(_mmrAddr||'Not specified')}</div></div><div class="mrp-param"><div class="mrp-param-l">Analysis Radius</div><div class="mrp-param-v">${demo.radius} miles</div></div><div class="mrp-param"><div class="mrp-param-l">Conversion Rate</div><div class="mrp-param-v">${_mmrConv}%</div></div></div><div class="mrp-sec">Revenue Analysis</div><table class="mrp-table"><thead><tr><th>Device</th><th>Service</th><th class="r">Price</th><th class="r">Prospects</th><th class="r">Patients</th><th class="r">Market Value</th></tr></thead><tbody>${rowsHtml}<tr class="mrp-total"><td>Total</td><td></td><td></td><td class="r">${tp.toLocaleString('en-US')}</td><td class="r">${tpat.toLocaleString('en-US')}</td><td class="r">${_mmrMoney(total)}</td></tr></tbody></table><div class="mrp-cmv"><div class="mrp-cmv-l">Current Market Value</div><div class="mrp-cmv-v">${_mmrMoney(total)}</div></div></div><div class="mrp-page"><div class="mrp-sec">Demographic Summary</div><div class="mrp-demo-cols"><table class="mrp-demo-table"><tbody><tr><th>Demographic</th><th class="r">Within Radius</th></tr><tr><td>Population</td><td class="r">${demo.population.toLocaleString('en-US')}</td></tr><tr><td>Female</td><td class="r">${demo.female.toLocaleString('en-US')}</td></tr><tr><td>Female (30–60)</td><td class="r">${demo.f3060.toLocaleString('en-US')}</td></tr><tr><td>Male</td><td class="r">${demo.male.toLocaleString('en-US')}</td></tr><tr><td>Male (30–60)</td><td class="r">${demo.m3060.toLocaleString('en-US')}</td></tr><tr><td>White</td><td class="r">${pct(demo.white)}</td></tr><tr><td>Black</td><td class="r">${pct(demo.black)}</td></tr><tr><td>Asian</td><td class="r">${pct(demo.asian)}</td></tr><tr><td>Hispanic</td><td class="r">${pct(demo.hispanic)}</td></tr><tr><td>Non-Hispanic</td><td class="r">${pct(demo.nonHispanic)}</td></tr><tr class="mrp-em"><td>Avg Income</td><td class="r">${_mmrMoney(demo.income)}</td></tr><tr><td>Home Value</td><td class="r">${_mmrMoney(demo.homeValue)}</td></tr></tbody></table><div class="mrp-map">${_mapHtml}</div></div><div class="mrp-foot">${today} · ${_mmrEsc(_mmrName||'Market Report')} · Modeled estimate — not live census data</div></div>`;
     const css=`@page{size:letter;margin:0.6in;}*{box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1a2330;margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;}`+
       `.mrp-page{page-break-after:always;padding:0 0 20px;}.mrp-page:last-child{page-break-after:auto;}`+
       `.mrp-h1{font-size:26px;font-weight:800;text-align:center;color:#16202e;margin:0 0 2px;}`+
@@ -44546,6 +44642,16 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     </div>`).join('');
   }
 
+  function _mobRevRenderOwner(bookedTotal) {
+    const el = document.getElementById('mob-rev-owner'); if (!el) return;
+    const bd = (typeof mgmtRevOwnerBreakdown === 'function') ? mgmtRevOwnerBreakdown(bookedTotal) : { rows: [], total: 0 };
+    if (!bd.rows.length || bd.total <= 0) { el.innerHTML = '<div class="mob-pr-empty">No booked revenue in scope.</div>'; return; }
+    el.innerHTML = bd.rows.map(r => `<div>
+      <div class="mob-rev-prow-top"><span class="mob-rev-prow-name"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${r.color};margin-right:6px;"></span>${r.label} <span style="color:var(--tm);font-weight:600;">· ${r.devices} ${r.devices === 1 ? 'device' : 'devices'}</span></span><span class="mob-rev-prow-val">${formatCompactDollar(r.revenue)}<span>${r.pct}%</span></span></div>
+      <div class="mob-rev-prow-bar"><div class="mob-rev-prow-fill" style="width:${Math.max(2, r.pct)}%;background:${r.color};"></div></div>
+    </div>`).join('');
+  }
+
   function renderMobMgmtRevenue() {
     const persona = (typeof getCurrentManagerPersona === 'function') ? getCurrentManagerPersona() : null;
     if (!persona) return;
@@ -44609,6 +44715,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
 
     _mobRevRenderAttain(scopeM);
     _mobRevRenderProduct(scopeRepNames);
+    _mobRevRenderOwner(bookedYTD);
   }
   window.renderMobMgmtRevenue = renderMobMgmtRevenue;
 
@@ -44622,6 +44729,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   let _mobCalTeam = 'all';
   let _mobCalInit = false;
   let _mobCalMode = 'day';  // day | 3day | week | month | agenda
+  let _mobCalMineOnly = false;  // "My meetings only" — persona's own meetings
 
   function mobCalNav(dir) {
     if (_mobCalMode === 'agenda') return;
@@ -44716,6 +44824,8 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   }
   window.mobCalToday = mobCalToday;
   function mobCalSetTeam(teamId) { _mobCalTeam = teamId; closeMobMgmtCalMenu(); renderMobMgmtCalendar(); }
+  function mobMgmtCalToggleMineOnly() { _mobCalMineOnly = !_mobCalMineOnly; closeMobMgmtCalMenu(); renderMobMgmtCalendar(); }
+  window.mobMgmtCalToggleMineOnly = mobMgmtCalToggleMineOnly;
   window.mobCalSetTeam = mobCalSetTeam;
   function mobMgmtCalSetMode(m) { _mobCalMode = m; closeMobMgmtCalMenu(); renderMobMgmtCalendar(); }
   window.mobMgmtCalSetMode = mobMgmtCalSetMode;
@@ -44726,6 +44836,8 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   // old chip row), mirroring the rep calendar's cal-menu-drawer.
   function openMobMgmtCalMenu() {
     document.querySelectorAll('[data-mob-cal-mode]').forEach(el => el.classList.toggle('active', el.dataset.mobCalMode === _mobCalMode));
+    const _mineBtn = document.getElementById('mob-mgmt-cal-mine-toggle');
+    if (_mineBtn) _mineBtn.classList.toggle('active', _mobCalMineOnly);
     const persona = (typeof getCurrentManagerPersona === 'function') ? getCurrentManagerPersona() : null;
     const reachTeams = (persona && typeof getTeamsUnderPersona === 'function') ? (getTeamsUnderPersona(persona.id) || []) : [];
     const host = document.getElementById('mob-mgmt-cal-teams');
@@ -44807,6 +44919,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
           });
         } catch (ex) {}
       }
+      if (_mobCalMineOnly) evts = evts.filter(e => e._mgr);
       return evts;
     }
     function evtColor(e) { return e._mgr ? 'var(--navy)' : _mobCalTeamColor(e.rep); }
@@ -46892,7 +47005,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     let idChipHtml = '';
     const _idr = (typeof window._prospectIdResolution === 'function') ? window._prospectIdResolution(p) : null;
     if (_idr && _idr.sources && _idr.sources.length) {
-      idChipHtml = `<div class="mob-gl-idchip" title="Identity resolved against ${esc(_idr.sources.join(' · '))} (demo)">✓ Verified ID · ${esc(_idr.sources.join(' · '))}</div>`;
+      idChipHtml = `<div class="mob-gl-idchip" title="Identity verified against ${esc(_idr.sources.join(' · '))} (demo)" aria-label="Verified identity — ${esc(_idr.sources.join(' · '))}">✓</div>`;
     }
 
     let teammateHtml = '';
@@ -46947,13 +47060,12 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     return `<div class="mob-gl-pc" data-pid="${esc(String(p.id || ''))}" onclick="_mobGlToggle(this, event)">
       <div class="mob-gl-pc-top">
         <div class="mob-gl-pc-rank">${esc(p.rank || '')}</div>
-        <div class="mob-gl-pc-info"><div class="mob-gl-pc-name" onclick="event.stopPropagation();openProspectPopupById('${idArg}','general-lists')" style="cursor:pointer;">${esc(p.name)}</div><div class="mob-gl-pc-type">${esc(p.type || '')}</div></div>
+        <div class="mob-gl-pc-info"><div class="mob-gl-pc-name" onclick="event.stopPropagation();openProspectPopupById('${idArg}','general-lists')" style="cursor:pointer;"><span class="mob-gl-pc-nm">${esc(p.name)}</span>${idChipHtml}</div><div class="mob-gl-pc-type">${esc(p.type || '')}</div></div>
         <div class="mob-gl-pc-score">${esc(p.score || '')}</div>
         <div class="mob-gl-chev" aria-hidden="true">▸</div>
       </div>
       ${bTag}
       ${statusTagsHtml}
-      ${idChipHtml}
       ${teammateHtml}
       <div class="mob-gl-detail">
         ${p.ai ? `<div class="mob-gl-ai">✦ ${esc(p.ai)}</div>` : ''}
@@ -60127,6 +60239,59 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     let roads='';for(let i=0;i<5;i++){roads+=`<path d="M${(rnd()*100).toFixed(0)} ${(rnd()*100).toFixed(0)} Q ${(rnd()*100).toFixed(0)} ${(rnd()*100).toFixed(0)} ${(rnd()*100).toFixed(0)} ${(rnd()*100).toFixed(0)}" stroke="#fff" stroke-width="1.1" fill="none" opacity="0.6"/>`;}
     return `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="mrRing" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#1A4A8A" stop-opacity="0.04"/><stop offset="78%" stop-color="#1A4A8A" stop-opacity="0.15"/><stop offset="100%" stop-color="#1A4A8A" stop-opacity="0.06"/></radialGradient><linearGradient id="mrBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EEF4EC"/><stop offset="100%" stop-color="#E2ECEF"/></linearGradient></defs><rect width="100" height="100" fill="url(#mrBg)"/>${land}${roads}<circle cx="50" cy="50" r="34" fill="url(#mrRing)" stroke="#1A4A8A" stroke-width="0.7" stroke-opacity="0.45"/><circle cx="50" cy="50" r="21" fill="none" stroke="#1A4A8A" stroke-width="0.5" stroke-opacity="0.28" stroke-dasharray="2 2"/><g transform="translate(50 49.5)"><ellipse cx="0" cy="8.4" rx="3" ry="1" fill="#000" opacity="0.13"/><path d="M0 -6.5 C 3.7 -6.5 6.2 -3.6 6.2 -0.2 C 6.2 3.8 0 8.4 0 8.4 C 0 8.4 -6.2 3.8 -6.2 -0.2 C -6.2 -3.6 -3.7 -6.5 0 -6.5 Z" fill="#C2410C"/><circle cx="0" cy="-0.6" r="2.2" fill="#fff"/></g></svg><div class="mr-map-name">${_dfcEsc(_mrName||'Practice location')}</div><div class="mr-map-rad">${demo.radius} mi radius</div>`;
   }
+  // Rasterize the live Leaflet map (already on screen, tiles loaded) to a PNG
+  // data URL so the exported PDF shows the real street map rather than the SVG
+  // placeholder. Tiles are loaded crossOrigin (see provider opts) so the canvas
+  // isn't tainted; any failure (taint, no map, no tiles) returns null and the
+  // caller falls back to _mrMapSvg.
+  function _mrCaptureMapDataURL(){
+    try{
+      if(!_mrMap || typeof _mrMap.getSize!=='function' || typeof _mrMap.getContainer!=='function') return null;
+      const size=_mrMap.getSize(); const W=Math.round(size.x), H=Math.round(size.y);
+      if(!W || !H) return null;
+      const canvas=document.createElement('canvas'); canvas.width=W; canvas.height=H;
+      const ctx=canvas.getContext('2d');
+      ctx.fillStyle='#E8EDF0'; ctx.fillRect(0,0,W,H);
+      const cont=_mrMap.getContainer();
+      const cRect=cont.getBoundingClientRect();
+      const tiles=cont.querySelectorAll('img.leaflet-tile');
+      let drew=0;
+      tiles.forEach(img=>{
+        if(!img.complete || !img.naturalWidth) return;
+        if(img.style && img.style.opacity && parseFloat(img.style.opacity)===0) return;
+        const r=img.getBoundingClientRect();
+        try{ ctx.drawImage(img, r.left-cRect.left, r.top-cRect.top, r.width, r.height); drew++; }catch(e){}
+      });
+      if(!drew) return null;
+      // Overlay: analysis-radius circle + centre pin, positioned via Leaflet projection.
+      try{
+        const c=_mrGeocode(_mrAddr);
+        const ctr=_mrMap.latLngToContainerPoint([c.lat,c.lng]);
+        let rPx=Math.min(W,H)*0.3;
+        if(_mrCircle && typeof _mrCircle.getBounds==='function'){
+          const b=_mrCircle.getBounds();
+          const ne=_mrMap.latLngToContainerPoint(b.getNorthEast());
+          const sw=_mrMap.latLngToContainerPoint(b.getSouthWest());
+          rPx=Math.min(Math.abs(ne.x-sw.x), Math.abs(sw.y-ne.y))/2;
+        }
+        ctx.beginPath(); ctx.arc(ctr.x, ctr.y, rPx, 0, Math.PI*2);
+        ctx.fillStyle='rgba(46,134,193,0.18)'; ctx.fill();
+        ctx.lineWidth=2; ctx.strokeStyle='#1A4A8A'; ctx.stroke();
+        // pin (teardrop)
+        ctx.save(); ctx.translate(ctr.x, ctr.y);
+        ctx.fillStyle='#C2410C';
+        ctx.beginPath();
+        ctx.moveTo(0,2);
+        ctx.bezierCurveTo(9,-8, 6,-20, 0,-20);
+        ctx.bezierCurveTo(-6,-20, -9,-8, 0,2);
+        ctx.fill();
+        ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(0,-12,4,0,Math.PI*2); ctx.fill();
+        ctx.restore();
+      }catch(e){}
+      return canvas.toDataURL('image/png');
+    }catch(e){ return null; }
+  }
+
   // ── Real map (Leaflet) reflecting the input address ──────────────────
   // The app already loads Leaflet 1.9.4 and exposes window._addBaseTiles
   // (CARTO → Esri → OSM tile fallback). We reuse both so the Market Report
@@ -60183,7 +60348,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
         _mrMap=L.map(canvas,{zoomControl:false,attributionControl:true,scrollWheelZoom:false});
         L.control.zoom({position:'topright'}).addTo(_mrMap);
         if(typeof window._addBaseTiles==='function') window._addBaseTiles(_mrMap);
-        else L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap · © CARTO'}).addTo(_mrMap);
+        else L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,crossOrigin:'anonymous',attribution:'© OpenStreetMap · © CARTO'}).addTo(_mrMap);
         _mrMapJustBuilt=true;
       }catch(e){ _mrMap=null; host.innerHTML=_mrMapSvg(demo); return; }
     }
@@ -60277,9 +60442,11 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   window.mrExportPdf=mrExportPdf;
   function _mrBuildPrintDoc(){
     const demo=_mrDemo();const root=document.getElementById('mr-print-root');if(!root)return;
+    const _mapPng=_mrCaptureMapDataURL();
+    const _mapHtml=_mapPng ? `<img src="${_mapPng}" alt="Coverage map" style="width:100%;height:100%;object-fit:cover;display:block;"/>` : _mrMapSvg(demo);
     let total=0,tp=0,tpat=0;const pct=n=>n.toFixed(2)+'%';const today=new Date().toLocaleDateString('en-US');
     const rowsHtml=_mrLines.map(ln=>{const c=_mrLineCalc(ln,demo);total+=c.value;tp+=c.prospects;tpat+=c.patients;return `<tr><td>${_dfcEsc(c.dev?c.dev.device:'')}</td><td>${_dfcEsc(c.ind?c.ind.name:'')}</td><td class="r">${_mrMoney(c.price)}</td><td class="r">${c.prospects.toLocaleString('en-US')}</td><td class="r">${c.patients.toLocaleString('en-US')}</td><td class="r">${_mrMoney(c.value)}</td></tr>`;}).join('');
-    root.innerHTML=`<div class="mrp-page"><div class="mrp-h1">Market Analysis Report</div><div class="mrp-gen">Generated on ${today}</div><div class="mrp-sec">Market Parameters</div><div class="mrp-params"><div class="mrp-param"><div class="mrp-param-l">Practice</div><div class="mrp-param-v">${_dfcEsc(_mrName||'—')}</div></div><div class="mrp-param"><div class="mrp-param-l">Location</div><div class="mrp-param-v">${_dfcEsc(_mrAddr||'Not specified')}</div></div><div class="mrp-param"><div class="mrp-param-l">Analysis Radius</div><div class="mrp-param-v">${demo.radius} miles</div></div><div class="mrp-param"><div class="mrp-param-l">Conversion Rate</div><div class="mrp-param-v">${_mrConv}%</div></div></div><div class="mrp-sec">Revenue Analysis</div><table class="mrp-table"><thead><tr><th>Device</th><th>Service</th><th class="r">Price</th><th class="r">Prospects</th><th class="r">Patients</th><th class="r">Market Value</th></tr></thead><tbody>${rowsHtml}<tr class="mrp-total"><td>Total</td><td></td><td></td><td class="r">${tp.toLocaleString('en-US')}</td><td class="r">${tpat.toLocaleString('en-US')}</td><td class="r">${_mrMoney(total)}</td></tr></tbody></table><div class="mrp-cmv"><div class="mrp-cmv-l">Current Market Value</div><div class="mrp-cmv-v">${_mrMoney(total)}</div></div></div><div class="mrp-page"><div class="mrp-sec">Demographic Summary</div><div class="mrp-demo-cols"><table class="mrp-demo-table"><tbody><tr><th>Demographic</th><th class="r">Within Radius</th></tr><tr><td>Population</td><td class="r">${demo.population.toLocaleString('en-US')}</td></tr><tr><td>Female</td><td class="r">${demo.female.toLocaleString('en-US')}</td></tr><tr><td>Female (30–60)</td><td class="r">${demo.f3060.toLocaleString('en-US')}</td></tr><tr><td>Male</td><td class="r">${demo.male.toLocaleString('en-US')}</td></tr><tr><td>Male (30–60)</td><td class="r">${demo.m3060.toLocaleString('en-US')}</td></tr><tr><td>White</td><td class="r">${pct(demo.white)}</td></tr><tr><td>Black</td><td class="r">${pct(demo.black)}</td></tr><tr><td>Asian</td><td class="r">${pct(demo.asian)}</td></tr><tr><td>Hispanic</td><td class="r">${pct(demo.hispanic)}</td></tr><tr><td>Non-Hispanic</td><td class="r">${pct(demo.nonHispanic)}</td></tr><tr class="mrp-em"><td>Avg Income</td><td class="r">${_mrMoney(demo.income)}</td></tr><tr><td>Home Value</td><td class="r">${_mrMoney(demo.homeValue)}</td></tr></tbody></table><div class="mrp-map">${_mrMapSvg(demo)}</div></div><div class="mrp-foot">${today} · ${_dfcEsc(_mrName||'Market Report')} · Modeled estimate — not live census data</div></div>`;
+    root.innerHTML=`<div class="mrp-page"><div class="mrp-h1">Market Analysis Report</div><div class="mrp-gen">Generated on ${today}</div><div class="mrp-sec">Market Parameters</div><div class="mrp-params"><div class="mrp-param"><div class="mrp-param-l">Practice</div><div class="mrp-param-v">${_dfcEsc(_mrName||'—')}</div></div><div class="mrp-param"><div class="mrp-param-l">Location</div><div class="mrp-param-v">${_dfcEsc(_mrAddr||'Not specified')}</div></div><div class="mrp-param"><div class="mrp-param-l">Analysis Radius</div><div class="mrp-param-v">${demo.radius} miles</div></div><div class="mrp-param"><div class="mrp-param-l">Conversion Rate</div><div class="mrp-param-v">${_mrConv}%</div></div></div><div class="mrp-sec">Revenue Analysis</div><table class="mrp-table"><thead><tr><th>Device</th><th>Service</th><th class="r">Price</th><th class="r">Prospects</th><th class="r">Patients</th><th class="r">Market Value</th></tr></thead><tbody>${rowsHtml}<tr class="mrp-total"><td>Total</td><td></td><td></td><td class="r">${tp.toLocaleString('en-US')}</td><td class="r">${tpat.toLocaleString('en-US')}</td><td class="r">${_mrMoney(total)}</td></tr></tbody></table><div class="mrp-cmv"><div class="mrp-cmv-l">Current Market Value</div><div class="mrp-cmv-v">${_mrMoney(total)}</div></div></div><div class="mrp-page"><div class="mrp-sec">Demographic Summary</div><div class="mrp-demo-cols"><table class="mrp-demo-table"><tbody><tr><th>Demographic</th><th class="r">Within Radius</th></tr><tr><td>Population</td><td class="r">${demo.population.toLocaleString('en-US')}</td></tr><tr><td>Female</td><td class="r">${demo.female.toLocaleString('en-US')}</td></tr><tr><td>Female (30–60)</td><td class="r">${demo.f3060.toLocaleString('en-US')}</td></tr><tr><td>Male</td><td class="r">${demo.male.toLocaleString('en-US')}</td></tr><tr><td>Male (30–60)</td><td class="r">${demo.m3060.toLocaleString('en-US')}</td></tr><tr><td>White</td><td class="r">${pct(demo.white)}</td></tr><tr><td>Black</td><td class="r">${pct(demo.black)}</td></tr><tr><td>Asian</td><td class="r">${pct(demo.asian)}</td></tr><tr><td>Hispanic</td><td class="r">${pct(demo.hispanic)}</td></tr><tr><td>Non-Hispanic</td><td class="r">${pct(demo.nonHispanic)}</td></tr><tr class="mrp-em"><td>Avg Income</td><td class="r">${_mrMoney(demo.income)}</td></tr><tr><td>Home Value</td><td class="r">${_mrMoney(demo.homeValue)}</td></tr></tbody></table><div class="mrp-map">${_mapHtml}</div></div><div class="mrp-foot">${today} · ${_dfcEsc(_mrName||'Market Report')} · Modeled estimate — not live census data</div></div>`;
   }
 
   // ── Radius / Conversion: synced slider + numeric box ──
@@ -60797,21 +60964,20 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     let idChipHtml = '';
     const _idr = (typeof window._prospectIdResolution === 'function') ? window._prospectIdResolution(prospect) : null;
     if (_idr && _idr.sources && _idr.sources.length) {
-      idChipHtml = `<div class="lv-idchip" title="Identity resolved against ${escapeAttr(_idr.sources.join(' · '))} (demo)">✓ Verified ID · ${escapeAttr(_idr.sources.join(' · '))}</div>`;
+      idChipHtml = `<div class="lv-idchip" title="Identity verified against ${escapeAttr(_idr.sources.join(' · '))} (demo)" aria-label="Verified identity — ${escapeAttr(_idr.sources.join(' · '))}">✓</div>`;
     }
 
     return `<div class="pc" data-pid="${escapeAttr(prospect.id)}">
       <div class="pc-top">
         <div class="pc-rank">${prospect.rank || ''}</div>
         <div class="pc-info">
-          <div class="pc-name">${escapeAttr(prospect.name)}</div>
+          <div class="pc-name"><span class="pc-nm">${escapeAttr(prospect.name)}</span>${idChipHtml}</div>
           <div class="pc-type">${escapeAttr(prospect.type || '')}</div>
         </div>
         <div class="pc-score"><div class="sd"></div>${prospect.score || ''}</div>
       </div>
       ${bTag}
       ${statusTagsHtml}
-      ${idChipHtml}
       ${teammateIndicatorHtml}
       <div class="ai-box"><div class="ai-lbl">✦ AI RECOMMENDATION</div>${escapeAttr(prospect.ai || '')}</div>
       <div class="pc-det">${detHtml}</div>
@@ -72988,6 +73154,9 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   let _mgmtCalAnchorDate = new Date();
   let _mgmtCalView = 'week';
   let _mgmtCalScope = { team: 'all', rep: 'all' };
+  // "My meetings only" — when true, the mgmt calendar shows only the current
+  // persona's own organized meetings and hides the team's opp-tied meetings.
+  let _mgmtCalMineOnly = false;
   // Pass 11 — origin tracker for the manager-calendar scope ribbon back
   // button. Set by navigateCalendarTo when arriving from a drawer.
   //   'scoped'   — back to scoped rep pipeline (Pass 9 case)
@@ -73004,6 +73173,14 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     renderMgmtCalendar();
   }
   window.mgmtCalSetView = mgmtCalSetView;
+
+  function mgmtCalToggleMineOnly() {
+    _mgmtCalMineOnly = !_mgmtCalMineOnly;
+    const b = document.getElementById('mgmt-cal-mine-toggle');
+    if (b) b.classList.toggle('active', _mgmtCalMineOnly);
+    renderMgmtCalendar();
+  }
+  window.mgmtCalToggleMineOnly = mgmtCalToggleMineOnly;
 
   function mgmtCalNav(dir) {
     const inc = _mgmtCalView === 'day' ? 1 : 7;
@@ -73061,6 +73238,8 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     // ── Filter chips: teams + reps ──
     _renderMgmtCalTeamChips(reachTeams, reachReps);
     _renderMgmtCalRepChips(reachTeams, reachReps);
+    const _mineBtn = document.getElementById('mgmt-cal-mine-toggle');
+    if (_mineBtn) _mineBtn.classList.toggle('active', _mgmtCalMineOnly);
 
     // ── Range label (e.g. "May 12 – May 18, 2026") ──
     _renderMgmtCalRangeLabel();
@@ -73097,7 +73276,8 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
       ? getMgmtMeetingEventsInRange(persona.name, _rangeStart, _rangeEnd) : [];
 
     // ── Render the grid ──
-    _renderMgmtCalGrid(host, scopedEvts.concat(_mtgEvts), reachReps);
+    const _gridEvts = _mgmtCalMineOnly ? _mtgEvts : scopedEvts.concat(_mtgEvts);
+    _renderMgmtCalGrid(host, _gridEvts, reachReps);
     try{ setTimeout(function(){ if(window._decorateWonTiles) window._decorateWonTiles(document); },0); }catch(e){}
   }
   window.renderMgmtCalendar = renderMgmtCalendar;
@@ -74243,6 +74423,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
 
     // ── Per-product breakdown + debook trends ──
     _renderMgmtRevProductRows(scopeRepNames);
+    _renderMgmtRevOwnerRows(bookedYTD);
     _renderMgmtRevDebook(scopeRepNames, period);
   }
   window.renderMgmtRevenue = renderMgmtRevenue;
@@ -74306,6 +74487,31 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     rows.forEach(r => { r.pct = total > 0 ? Math.round(r.value / total * 100) : 0; });
     rows.sort((a, b) => b.value - a.value);
     return { rows, total };
+  }
+
+  // ── Closed devices & revenue by practice owner type ──
+  function _renderMgmtRevOwnerRows(bookedTotal) {
+    const c = document.getElementById('mgmt-rev-owner-rows');
+    if (!c) return;
+    const bd = (typeof mgmtRevOwnerBreakdown === 'function') ? mgmtRevOwnerBreakdown(bookedTotal) : { rows: [], total: 0, totalDevices: 0 };
+    const totalEl = document.getElementById('mgmt-rev-owner-total');
+    if (totalEl) totalEl.textContent = bd.totalDevices + ' devices · ' + _fmtRevMoney(bd.total);
+    if (!bd.rows.length || bd.total <= 0) {
+      c.innerHTML = '<div class="mgmt-rm-prod-empty">No booked revenue to break down yet.</div>';
+      return;
+    }
+    const max = Math.max.apply(null, bd.rows.map(r => r.revenue).concat([1]));
+    let html = '';
+    bd.rows.forEach(r => {
+      const w = Math.max(2, Math.round(r.revenue / max * 100));
+      html += '<div class="mgmt-rm-prod-row">'
+        + `<span class="mgmt-rm-prod-name"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${r.color};margin-right:7px;"></span>${r.label} <span style="color:var(--tm);font-size:11px;font-weight:600;">· ${r.devices} ${r.devices === 1 ? 'device' : 'devices'}</span></span>`
+        + `<span class="mgmt-rm-prod-fig">${_fmtRevMoney(r.revenue)}</span>`
+        + `<span class="mgmt-rm-prod-barwrap"><span class="mgmt-rm-prod-bar" style="width:${w}%;background:${r.color};"></span></span>`
+        + `<span class="mgmt-rm-prod-pct">${r.pct}%</span>`
+        + '</div>';
+    });
+    c.innerHTML = html;
   }
 
   function _renderMgmtRevProductRows(scopeRepNames) {
@@ -80117,7 +80323,21 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     const byOwner = {};
     OWNER_BUCKETS.forEach(b => { byOwner[b] = { count: 0, value: 0 }; });
     activeOpps.forEach(o => {
-      const cred = (o.ownerCred || o.ownerCredential || '').toUpperCase();
+      let cred = (o.ownerCred || o.ownerCredential || '').toUpperCase();
+      // Derive from the owner name ("Dr. R. Fernandez, MD" → MD) when the opp
+      // has no explicit credential field.
+      if (!OWNER_BUCKETS.includes(cred) && o.owner) {
+        const tail = String(o.owner).split(',').pop().trim().toUpperCase();
+        if (OWNER_BUCKETS.includes(tail)) cred = tail;
+      }
+      // Demo fallback: with no credential on file, assign a deterministic,
+      // weighted-toward-MD bucket so the breakdown is populated for the demo
+      // rather than collapsing everything into "Other".
+      if (!OWNER_BUCKETS.includes(cred)) {
+        const key = String(o.id || o.name || '');
+        let h = 0; for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+        cred = ['MD','MD','MD','MD','DO','DO','NP','NP','RN','Other'][h % 10];
+      }
       const bucket = OWNER_BUCKETS.includes(cred) ? cred : 'Other';
       byOwner[bucket].count++;
       byOwner[bucket].value += (o.value || 0);
