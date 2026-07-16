@@ -45986,6 +45986,24 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   function setMobActGroup(m) { _mobActGroup = (m === 'license') ? 'license' : 'rep'; renderMobActivity(); }
   window.setMobActGroup = setMobActGroup;
 
+  // Time-period parser (Pass 42c) — every chart is scoped to the selected
+  // window (to date): current week, month, quarter, or year.
+  let _mobActPeriod = 'month'; // 'week' | 'month' | 'quarter' | 'ytd'
+  function setMobActPeriod(p) { _mobActPeriod = ['week', 'month', 'quarter', 'ytd'].includes(p) ? p : 'week'; renderMobActivity(); }
+  window.setMobActPeriod = setMobActPeriod;
+  function _actPeriodStartISO() {
+    const iso = d => (typeof dateToISOLocal === 'function') ? dateToISOLocal(d) : d.toISOString().slice(0, 10);
+    const n = new Date();
+    if (_mobActPeriod === 'week') { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return iso(d); }
+    if (_mobActPeriod === 'month') { return iso(new Date(n.getFullYear(), n.getMonth(), 1)); }
+    if (_mobActPeriod === 'quarter') { return iso(new Date(n.getFullYear(), Math.floor(n.getMonth() / 3) * 3, 1)); }
+    return n.getFullYear() + '-01-01'; // ytd
+  }
+  function _actPeriodLabel() {
+    return _mobActPeriod === 'week' ? 'this week' : _mobActPeriod === 'month' ? 'this month'
+      : _mobActPeriod === 'quarter' ? 'this quarter' : 'year to date';
+  }
+
   const _ACT_LIC_ORDER = ['MD', 'DO', 'NP', 'PA', 'RN', 'OTHER'];
   const _ACT_LIC_LABEL = { MD: 'MD', DO: 'DO', NP: 'NP', PA: 'PA', RN: 'RN', OTHER: 'Other' };
   const _ACT_LIC_COLOR = { MD: '#15528E', DO: '#0F7E54', NP: '#B25E10', PA: '#7A3B96', RN: '#1F6F8B', OTHER: '#5A6A7A' };
@@ -46107,50 +46125,49 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     const numL = v => String(v);
 
     const log = _actEnsureData();
-    const wkS = _actWeekStartISO(), moS = _actMonthStartISO(), yrS = _actYearStartISO();
-    const inWk = e => e.date >= wkS, inMo = e => e.date >= moS, inYr = e => e.date >= yrS;
+    const startISO = _actPeriodStartISO();
     const gkey = e => keyRep ? e.rep : (e.ownerCred || 'OTHER');
     const cnt = (items, pred) => { const m = {}; items.forEach(e => { if (!pred || pred(e)) { const k = gkey(e); m[k] = (m[k] || 0) + 1; } }); return m; };
 
-    // ── Charts 1–4: meetings set + working opps created, this week / month ──
-    const c1 = cnt(log.filter(inWk));
-    const c2 = cnt(log.filter(inWk), e => e.working);
-    const c3 = cnt(log.filter(inMo));
-    const c4 = cnt(log.filter(inMo), e => e.working);
+    // Every metric is scoped to the selected period (meetings set in-window
+    // and their cohort outcomes), so the same five charts answer week /
+    // month / quarter / YTD.
+    const inP = log.filter(e => e.date >= startISO);
+    const meet = cnt(inP);                    // meetings set
+    const work = cnt(inP, e => e.working);    // working opps generated
+    const closd = cnt(inP, e => e.closed);    // closed won (cohort)
+    const rev = {};
+    inP.forEach(e => { if (e.revenue) { const k = gkey(e); rev[k] = (rev[k] || 0) + e.revenue; } });
 
-    // ── YTD rollups for the rate/ratio charts ──
-    const ytd = log.filter(inYr);
-    const mYtd = cnt(ytd);                  // meetings set
-    const wYtd = cnt(ytd, e => e.working);  // working opps generated
-    const clYtd = cnt(ytd, e => e.closed);  // closed won
-    const revYtd = {};
-    ytd.forEach(e => { if (e.revenue) { const k = gkey(e); revYtd[k] = (revYtd[k] || 0) + e.revenue; } });
+    // 1 Meetings set | 2 New opps | 3 Conversion% | 4 Closing ratio% | 5 $/meeting
+    const c1 = meet;
+    const c2 = work;
+    const c3 = {}; Object.keys(meet).forEach(k => { c3[k] = meet[k] ? 100 * (work[k] || 0) / meet[k] : 0; });
+    const c4 = {}; Object.keys(work).forEach(k => { c4[k] = work[k] ? Math.min(100, 100 * (closd[k] || 0) / work[k]) : 0; });
+    const c5 = {}; Object.keys(meet).forEach(k => { c5[k] = meet[k] ? (rev[k] || 0) / meet[k] : 0; });
 
-    // ── Chart 5: C-level conversion % YTD = working opps ÷ meetings set ──
-    const c5 = {}; Object.keys(mYtd).forEach(k => { c5[k] = mYtd[k] ? 100 * (wYtd[k] || 0) / mYtd[k] : 0; });
-    // ── Chart 6: closing ratio % YTD = closed won ÷ opportunities generated ──
-    const c6 = {}; Object.keys(wYtd).forEach(k => { c6[k] = wYtd[k] ? Math.min(100, 100 * (clYtd[k] || 0) / wYtd[k]) : 0; });
-    // ── Chart 7: $ per initial meeting YTD = closed revenue ÷ meetings set ──
-    const c7 = {}; Object.keys(mYtd).forEach(k => { c7[k] = mYtd[k] ? (revYtd[k] || 0) / mYtd[k] : 0; });
-
-    // ── Compose ──
-    const toggle = `<div class="mob-rev-toggles"><div class="mob-cl-groupby">
-        <button class="mob-cl-gb-btn${keyRep ? ' active' : ''}" onclick="setMobActGroup('rep')">By rep</button>
-        <button class="mob-cl-gb-btn${!keyRep ? ' active' : ''}" onclick="setMobActGroup('license')">By license type</button>
-      </div></div>`;
-    const intro = `<div class="act-intro">Team activity ${keyRep ? 'across the demo team' : 'by owner license type'} \u00b7 modeled demo data</div>`;
+    // -- Compose --
+    const periods = [['week', 'Week'], ['month', 'Month'], ['quarter', 'Quarter'], ['ytd', 'YTD']];
+    const periodPills = periods.map(([p, lbl]) =>
+      `<button class="mob-cl-gb-btn${_mobActPeriod === p ? ' active' : ''}" onclick="setMobActPeriod('${p}')">${lbl}</button>`).join('');
+    const toggles = `<div class="mob-rev-toggles">
+        <div class="mob-cl-groupby">${periodPills}</div>
+        <div class="mob-cl-groupby">
+          <button class="mob-cl-gb-btn${keyRep ? ' active' : ''}" onclick="setMobActGroup('rep')">By rep</button>
+          <button class="mob-cl-gb-btn${!keyRep ? ' active' : ''}" onclick="setMobActGroup('license')">By license type</button>
+        </div>
+      </div>`;
+    const intro = `<div class="act-intro">Team activity \u00b7 ${_actPeriodLabel()} \u00b7 ${keyRep ? 'by rep' : 'by owner license'} \u00b7 modeled demo data</div>`;
 
     const cards = [
-      _actCard('Meetings set \u00b7 this week', 'Initial meetings booked since Monday', _actBars(c1, numL)),
-      _actCard('New opportunities \u00b7 this week', 'Meetings that became working opps (devices + $)', _actBars(c2, numL)),
-      _actCard('Meetings set \u00b7 this month', 'Initial meetings booked this month', _actBars(c3, numL)),
-      _actCard('New opportunities \u00b7 this month', 'Working opps created this month', _actBars(c4, numL)),
-      _actCard('C-level conversion \u00b7 YTD', 'Initial meetings that became working opps', _actBars(c5, pctL), 100),
-      _actCard('Closing ratio \u00b7 YTD', 'Opportunities generated that closed won', _actBars(c6, pctL), 100),
-      _actCard('$ per initial meeting \u00b7 YTD', 'Closed revenue \u00f7 initial meetings set', _actBars(c7, fmt))
+      _actCard('Meetings set', 'Initial meetings booked in-period', _actBars(c1, numL)),
+      _actCard('New opportunities', 'Meetings that became working opps (devices + $)', _actBars(c2, numL)),
+      _actCard('C-level conversion', 'Initial meetings that became working opps', _actBars(c3, pctL), 100),
+      _actCard('Closing ratio', 'Opportunities generated that close won', _actBars(c4, pctL), 100),
+      _actCard('$ per initial meeting', 'Deal revenue \u00f7 initial meetings set', _actBars(c5, fmt))
     ].join('');
 
-    body.innerHTML = toggle + intro + `<div class="act-grid">${cards}</div>`;
+    body.innerHTML = toggles + intro + `<div class="act-grid">${cards}</div>`;
   }
   window.renderMobActivity = renderMobActivity;
 
