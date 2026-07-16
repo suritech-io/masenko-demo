@@ -925,6 +925,14 @@ body.app-ops #shell-ops { display: block; }
   body.app-mobile #shell-mobile .mob-rev-bar-track{ height: 7px; background: var(--bg); border-radius: 4px; overflow: hidden; }
   body.app-mobile #shell-mobile .mob-rev-bar-fill{ height: 100%; border-radius: 4px; min-width: 2px; }
   body.app-mobile #shell-mobile .mob-rev-empty{ text-align: center; padding: 20px; font-size: 13px; color: var(--tm); }
+  /* Activity dashboard (Business hub · Pass 42) */
+  body.app-mobile #shell-mobile .act-intro{ font-size: 12px; color: var(--tm); margin: 2px 2px 12px; }
+  body.app-mobile #shell-mobile .act-grid{ display: flex; flex-direction: column; gap: 12px; }
+  body.app-mobile #shell-mobile .act-card{ background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 14px 14px 6px; }
+  body.app-mobile #shell-mobile .act-card-hdr{ margin-bottom: 12px; }
+  body.app-mobile #shell-mobile .act-card-title{ font-size: 14px; font-weight: 700; color: var(--tp); }
+  body.app-mobile #shell-mobile .act-card-sub{ font-size: 11.5px; color: var(--tm); margin-top: 2px; }
+  body.app-mobile #shell-mobile .act-card-body{ padding-top: 2px; }
 
   /* ─── Mobile Pipeline Review (Phase 7 Pass 16) — stage stacks ─── */
   body.app-mobile #shell-mobile .mob-pr-legend{ display: flex; gap: 14px; margin: 0 2px 14px; }
@@ -20457,6 +20465,9 @@ body.app-ops #shell-ops { display: block; }
 <div class="view" id="view-mob-dashboard">
   <div class="view-pad"><div id="mob-dash-body"></div></div>
 </div>
+<div class="view" id="view-mob-activity">
+  <div class="view-pad"><div id="mob-activity-body"></div></div>
+</div>
 <div class="view" id="view-mob-events">
   <div class="view-pad"><div id="mob-events-body"></div></div>
 </div>
@@ -21023,6 +21034,11 @@ body.app-ops #shell-ops { display: block; }
     </button>
     <button class="lens-row" data-pipe="dashboard" onclick="showPipeLens('dashboard')">
       <span class="lens-row-label">Dashboard</span>
+      <span class="lens-row-tag">New</span>
+      <span class="lens-row-check">✓</span>
+    </button>
+    <button class="lens-row" data-pipe="activity" onclick="showPipeLens('activity')">
+      <span class="lens-row-label">Activity</span>
       <span class="lens-row-tag">New</span>
       <span class="lens-row-check">✓</span>
     </button>
@@ -43046,7 +43062,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   let _prospectReturnDay = null;
 
   // Map of tab -> default title
-  const TAB_TITLES = { today:'Today', prospects:'Prospects', routing:'Routing', pipeline:'Pipeline', map:'Map', calendar:'Calendar', library:'Library', 'mob-revenue':'Revenue', 'mob-review':'Pipeline Review', 'mob-closed':'Closed deals', 'mob-dashboard':'Dashboard', 'mob-events':'Events', 'mob-connections':'Connections' };
+  const TAB_TITLES = { today:'Today', prospects:'Prospects', routing:'Routing', pipeline:'Pipeline', map:'Map', calendar:'Calendar', library:'Library', 'mob-revenue':'Revenue', 'mob-review':'Pipeline Review', 'mob-closed':'Closed deals', 'mob-dashboard':'Dashboard', 'mob-activity':'Activity', 'mob-events':'Events', 'mob-connections':'Connections' };
   // Prospecting hub (Phase 7 Pass 5) — five lenses under one bottom tab.
   // Nav-only v1: selecting a lens shows it now; the tab remembers the last
   // lens. day/routing/prospmap map to existing views; general/routemap are
@@ -43069,8 +43085,8 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   // ── Pipeline hub (Phase 7 Pass 14) — Pipeline / Revenue / Review as views
   // under the Pipeline bottom tab, switched via a ☰ sheet (mirrors the
   // Prospecting hub). _pipeLens tracks the active sub-view (in-session).
-  const _PIPE_LENS_LABELS = { pipeline:'Pipeline', dashboard:'Dashboard', revenue:'Revenue', review:'Pipeline Review', closed:'Closed deals', contacts:'Contacts' };
-  const _PIPE_LENS_VIEW = { pipeline:'pipeline', dashboard:'mob-dashboard', revenue:'mob-revenue', review:'mob-review', closed:'mob-closed', events:'mob-events', contacts:'mob-contacts' };
+  const _PIPE_LENS_LABELS = { pipeline:'Pipeline', dashboard:'Dashboard', activity:'Activity', revenue:'Revenue', review:'Pipeline Review', closed:'Closed deals', contacts:'Contacts' };
+  const _PIPE_LENS_VIEW = { pipeline:'pipeline', dashboard:'mob-dashboard', activity:'mob-activity', revenue:'mob-revenue', review:'mob-review', closed:'mob-closed', events:'mob-events', contacts:'mob-contacts' };
   const _LENS_FOR_PIPE_VIEW = Object.fromEntries(Object.entries(_PIPE_LENS_VIEW).map(([k, v]) => [v, k]));
   const _PIPE_HUB_VIEWS = Object.values(_PIPE_LENS_VIEW);
   let _pipeLens = 'pipeline';
@@ -45953,6 +45969,191 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   }
   window.renderMobDashboard = renderMobDashboard;
 
+  // ════════════════════════════════════════════════════════════════════
+  // Activity dashboard (Business hub lens · Pass 42)
+  // Seven activity charts, each groupable By rep (the rep-shell demo team)
+  // or By owner license type (MD/DO/NP/PA/RN/Other). All figures derive
+  // from the shared data layer already used by the efficiency screens:
+  //   • window._efficiencyDiscoveryLog — dated first-meeting events, each
+  //     carrying {rep, date, ownerCred, outcome}. outcome==='opp_created'
+  //     marks a meeting that became a *working* opportunity (devices + a
+  //     dollar value assigned) as opposed to a bare C-level initial visit.
+  //   • opportunities[] + o.closed — closing ratio (won ÷ generated).
+  //   • getRevenueLineItems() — $ per initial meeting (revenue ÷ meetings).
+  // No persistence, no data-model mutation — read-only aggregations.
+  // ════════════════════════════════════════════════════════════════════
+  let _mobActGroup = 'rep'; // 'rep' | 'license'
+  function setMobActGroup(m) { _mobActGroup = (m === 'license') ? 'license' : 'rep'; renderMobActivity(); }
+  window.setMobActGroup = setMobActGroup;
+
+  const _ACT_LIC_ORDER = ['MD', 'DO', 'NP', 'PA', 'RN', 'OTHER'];
+  const _ACT_LIC_LABEL = { MD: 'MD', DO: 'DO', NP: 'NP', PA: 'PA', RN: 'RN', OTHER: 'Other' };
+  const _ACT_LIC_COLOR = { MD: '#15528E', DO: '#0F7E54', NP: '#B25E10', PA: '#7A3B96', RN: '#1F6F8B', OTHER: '#5A6A7A' };
+
+  function _actTeamNames() {
+    const p = (typeof REP_PALETTE !== 'undefined' && Array.isArray(REP_PALETTE)) ? REP_PALETTE : [];
+    return new Set(p.map(r => r.name));
+  }
+  function _actISO(d) { return (typeof dateToISOLocal === 'function') ? dateToISOLocal(d) : d.toISOString().slice(0, 10); }
+  function _actWeekStartISO() { const d = new Date(); const day = (d.getDay() + 6) % 7; d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - day); return _actISO(d); }
+  function _actMonthStartISO() { const d = new Date(); return _actISO(new Date(d.getFullYear(), d.getMonth(), 1)); }
+  function _actYearStartISO() { return new Date().getFullYear() + '-01-01'; }
+
+  // Discovery log scoped to the rep-shell demo team (same scope as Pipeline Review).
+  function _actDisc() {
+    const log = (typeof window !== 'undefined' && Array.isArray(window._efficiencyDiscoveryLog)) ? window._efficiencyDiscoveryLog : [];
+    const team = _actTeamNames();
+    return team.size ? log.filter(e => team.has(e.rep)) : log;
+  }
+  // Count discovery events into a {key: n} map, keyed by the active dimension.
+  function _actCount(items, keyIsRep) {
+    const m = {};
+    items.forEach(e => { const k = keyIsRep ? e.rep : (e.ownerCred || 'OTHER'); m[k] = (m[k] || 0) + 1; });
+    return m;
+  }
+
+  // Build bar rows from a value-map, in a stable order so a given rep/license
+  // keeps the same slot + color across all seven charts. valMap is keyed by
+  // rep name (rep mode) or license code (license mode).
+  function _actBars(valMap, fmtL) {
+    fmtL = fmtL || (v => String(v));
+    if (_mobActGroup === 'rep') {
+      const pal = (typeof REP_PALETTE !== 'undefined' && Array.isArray(REP_PALETTE)) ? REP_PALETTE : [];
+      return pal.map(r => ({
+        key: r.name, value: (valMap[r.name] || 0),
+        color: (typeof window.repColor === 'function') ? window.repColor(r.name) : r.color,
+        valLabel: fmtL(valMap[r.name] || 0)
+      }));
+    }
+    return _ACT_LIC_ORDER
+      .filter(k => Object.prototype.hasOwnProperty.call(valMap, k))
+      .map(k => ({ key: _ACT_LIC_LABEL[k], value: (valMap[k] || 0), color: _ACT_LIC_COLOR[k], valLabel: fmtL(valMap[k] || 0) }));
+  }
+
+  function _actCard(title, sub, rows, maxOverride) {
+    const bars = (rows && rows.length) ? _mobRevBars(rows, maxOverride) : '<div class="mob-rev-empty">No activity in this window.</div>';
+    return `<div class="act-card">
+      <div class="act-card-hdr">
+        <div class="act-card-title">${escapeHtmlText(title)}</div>
+        ${sub ? `<div class="act-card-sub">${escapeHtmlText(sub)}</div>` : ''}
+      </div>
+      <div class="act-card-body">${bars}</div>
+    </div>`;
+  }
+
+  // Rich, deterministic Activity dataset (Pass 42b). Built lazily + cached on
+  // window._actLog so re-renders are stable. Isolated PRNG + a Monday-aligned
+  // week grid (matches the dashboard's week filter), so it never touches the
+  // base seeders or any other screen. Models the real field cadence: reps are
+  // expected to SET ~25 initial meetings/week and the team is spread around
+  // that norm (one ahead, one on pace, one behind, one slacking). ~20% of set
+  // meetings become working opps (devices + $); ~40-50% of those close won YTD.
+  function _actEnsureData() {
+    if (window._actLog) return window._actLog;
+    let s = 0x5A17C0;
+    const rnd = () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+    const ri = (lo, hi) => lo + Math.floor(rnd() * (hi - lo + 1));
+    const pick = a => a[Math.floor(rnd() * a.length)];
+    const iso = d => (typeof dateToISOLocal === 'function') ? dateToISOLocal(d) : d.toISOString().slice(0, 10);
+    const pal = (typeof REP_PALETTE !== 'undefined' && Array.isArray(REP_PALETTE)) ? REP_PALETTE : [];
+    const reps = pal.length ? pal.map(r => r.name) : ['Andreas Suri', 'A. Martinez', 'M. Chen', 'S. Rivera'];
+    // Weekly meetings-SET target per rep (norm ~25): ahead / on-pace / behind / slacking.
+    const targets = [32, 25, 21, 13];
+    const skill = [{ conv: 1.15, close: 1.20 }, { conv: 1.05, close: 1.00 }, { conv: 1.00, close: 1.05 }, { conv: 0.90, close: 0.85 }];
+    const setTarget = {}, repMod = {};
+    reps.forEach((r, i) => { setTarget[r] = targets[i % targets.length]; repMod[r] = skill[i % skill.length]; });
+    const credBag = ['MD', 'MD', 'MD', 'MD', 'MD', 'DO', 'DO', 'NP', 'NP', 'NP', 'PA', 'RN', 'OTHER'];
+    const credConv = { MD: 1.15, DO: 1.05, NP: 0.95, PA: 0.90, RN: 0.85, OTHER: 0.80 };
+    const credClose = { MD: 1.15, DO: 1.05, NP: 0.95, PA: 0.92, RN: 0.88, OTHER: 0.85 };
+    const now = new Date();
+    const yearStart = new Date(now.getFullYear(), 0, 1);
+    const todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yrISO = iso(yearStart);
+    const grid = new Date(yearStart); grid.setDate(grid.getDate() - ((grid.getDay() + 6) % 7)); // back to Monday
+    const weeks = Math.floor((todayMid - grid) / (7 * 86400000)) + 1;
+    const BCONV = 0.20, BCLOSE = 0.42;
+    const log = [];
+    reps.forEach(r => {
+      const m = repMod[r];
+      for (let w = 0; w < weeks; w++) {
+        const ws = new Date(grid); ws.setDate(ws.getDate() + w * 7);
+        const n = Math.max(3, Math.round(setTarget[r]) + ri(-2, 2)); // meetings set that week
+        for (let k = 0; k < n; k++) {
+          const md = new Date(ws); md.setDate(md.getDate() + (k % 5)); // even Mon-Fri spread
+          if (md > todayMid) continue;
+          const mISO = iso(md); if (mISO < yrISO) continue;
+          const cred = pick(credBag);
+          const working = rnd() < Math.min(0.6, BCONV * m.conv * (credConv[cred] || 1));
+          let closed = false, revenue = 0;
+          if (working) {
+            const value = ri(6, 18) * 10000; // $60k–$180k device value
+            closed = rnd() < Math.min(0.85, BCLOSE * m.close * (credClose[cred] || 1));
+            if (closed) revenue = value;
+          }
+          log.push({ rep: r, date: mISO, ownerCred: cred, working, closed, revenue });
+        }
+      }
+    });
+    window._actLog = log;
+    return log;
+  }
+
+  function renderMobActivity() {
+    const body = document.getElementById('mob-activity-body');
+    if (!body) return;
+    const keyRep = _mobActGroup === 'rep';
+    const fmt = (typeof formatCompactDollar === 'function') ? formatCompactDollar : (n => '$' + Math.round(n));
+    const pctL = v => Math.round(v) + '%';
+    const numL = v => String(v);
+
+    const log = _actEnsureData();
+    const wkS = _actWeekStartISO(), moS = _actMonthStartISO(), yrS = _actYearStartISO();
+    const inWk = e => e.date >= wkS, inMo = e => e.date >= moS, inYr = e => e.date >= yrS;
+    const gkey = e => keyRep ? e.rep : (e.ownerCred || 'OTHER');
+    const cnt = (items, pred) => { const m = {}; items.forEach(e => { if (!pred || pred(e)) { const k = gkey(e); m[k] = (m[k] || 0) + 1; } }); return m; };
+
+    // ── Charts 1–4: meetings set + working opps created, this week / month ──
+    const c1 = cnt(log.filter(inWk));
+    const c2 = cnt(log.filter(inWk), e => e.working);
+    const c3 = cnt(log.filter(inMo));
+    const c4 = cnt(log.filter(inMo), e => e.working);
+
+    // ── YTD rollups for the rate/ratio charts ──
+    const ytd = log.filter(inYr);
+    const mYtd = cnt(ytd);                  // meetings set
+    const wYtd = cnt(ytd, e => e.working);  // working opps generated
+    const clYtd = cnt(ytd, e => e.closed);  // closed won
+    const revYtd = {};
+    ytd.forEach(e => { if (e.revenue) { const k = gkey(e); revYtd[k] = (revYtd[k] || 0) + e.revenue; } });
+
+    // ── Chart 5: C-level conversion % YTD = working opps ÷ meetings set ──
+    const c5 = {}; Object.keys(mYtd).forEach(k => { c5[k] = mYtd[k] ? 100 * (wYtd[k] || 0) / mYtd[k] : 0; });
+    // ── Chart 6: closing ratio % YTD = closed won ÷ opportunities generated ──
+    const c6 = {}; Object.keys(wYtd).forEach(k => { c6[k] = wYtd[k] ? Math.min(100, 100 * (clYtd[k] || 0) / wYtd[k]) : 0; });
+    // ── Chart 7: $ per initial meeting YTD = closed revenue ÷ meetings set ──
+    const c7 = {}; Object.keys(mYtd).forEach(k => { c7[k] = mYtd[k] ? (revYtd[k] || 0) / mYtd[k] : 0; });
+
+    // ── Compose ──
+    const toggle = `<div class="mob-rev-toggles"><div class="mob-cl-groupby">
+        <button class="mob-cl-gb-btn${keyRep ? ' active' : ''}" onclick="setMobActGroup('rep')">By rep</button>
+        <button class="mob-cl-gb-btn${!keyRep ? ' active' : ''}" onclick="setMobActGroup('license')">By license type</button>
+      </div></div>`;
+    const intro = `<div class="act-intro">Team activity ${keyRep ? 'across the demo team' : 'by owner license type'} \u00b7 modeled demo data</div>`;
+
+    const cards = [
+      _actCard('Meetings set \u00b7 this week', 'Initial meetings booked since Monday', _actBars(c1, numL)),
+      _actCard('New opportunities \u00b7 this week', 'Meetings that became working opps (devices + $)', _actBars(c2, numL)),
+      _actCard('Meetings set \u00b7 this month', 'Initial meetings booked this month', _actBars(c3, numL)),
+      _actCard('New opportunities \u00b7 this month', 'Working opps created this month', _actBars(c4, numL)),
+      _actCard('C-level conversion \u00b7 YTD', 'Initial meetings that became working opps', _actBars(c5, pctL), 100),
+      _actCard('Closing ratio \u00b7 YTD', 'Opportunities generated that closed won', _actBars(c6, pctL), 100),
+      _actCard('$ per initial meeting \u00b7 YTD', 'Closed revenue \u00f7 initial meetings set', _actBars(c7, fmt))
+    ].join('');
+
+    body.innerHTML = toggle + intro + `<div class="act-grid">${cards}</div>`;
+  }
+  window.renderMobActivity = renderMobActivity;
+
   // ── Edit-mode mutators (Pass 31) — all mutate _dashLayout + re-render ──
   function toggleDashEdit() { _dashEditMode = !_dashEditMode; renderMobDashboard(); }
   window.toggleDashEdit = toggleDashEdit;
@@ -47500,6 +47701,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     else if (currentTab === 'finance-calc') renderFinanceCalc();
     else if (currentTab === 'mob-revenue') renderMobRevenue();
     else if (currentTab === 'mob-dashboard') renderMobDashboard();
+    else if (currentTab === 'mob-activity') renderMobActivity();
     else if (currentTab === 'mob-events') renderMobEventsDashboard();
     else if (currentTab === 'mob-review') renderMobReview();
     else if (currentTab === 'mob-closed') renderMobClosed();
