@@ -29195,6 +29195,36 @@ function _mapSynthYearsInBiz(name) {
   const h = _mapStringHash01((name || '') + '|yib');
   return 1 + Math.floor(h * 24); // 1–25 years
 }
+// Owner's time licensed. A practice owner is licensed BEFORE (or when) the
+// practice opens, so this is always >= years-in-business: the practice's age
+// plus 0–15 years of prior clinical practice, capped at 42. Production will
+// read this off the state licensing board's original-issue date.
+function _mapSynthYearsLicensed(name) {
+  const yib = _mapSynthYearsInBiz(name);
+  const h = _mapStringHash01((name || '') + '|lic-yrs');
+  return Math.min(42, yib + Math.floor(h * 16)); // yib .. yib+15
+}
+// One call for every surface that shows practice/owner tenure, so the sidebar,
+// the mobile sheet, the hover popup and the side panel can't drift apart.
+// Returns years + the derived "since" year for each.
+function _mapTenure(name) {
+  const thisYear = new Date().getFullYear();
+  const yearsInBiz = _mapSynthYearsInBiz(name);
+  const yearsLicensed = _mapSynthYearsLicensed(name);
+  return {
+    yearsInBiz: yearsInBiz,
+    inBusinessSince: thisYear - yearsInBiz,
+    yearsLicensed: yearsLicensed,
+    licensedSince: thisYear - yearsLicensed,
+    license: _mapSynthLicense(name)
+  };
+}
+// "12 yrs (since 2014)" / "1 yr (since 2025)"
+function _mapTenureLabel(years, since) {
+  if (years == null) return '—';
+  return years + ' yr' + (years === 1 ? '' : 's') + ' (since ' + since + ')';
+}
+window._mapTenure = _mapTenure;
 
 function _mapSidebarStatus(pin) {
   switch (pin.state) {
@@ -29247,8 +29277,9 @@ function renderMapProspectSidebar() {
     const owner = intel.ownerName || '—';
     const addr = intel.address || '—';
     const phone = intel.phone || '—';
-    const lic = _mapSynthLicense(pin.name);
-    const yib = _mapSynthYearsInBiz(pin.name);
+    // Keyed off the resolved pin name — synthetic-pool pins carry the name on
+    // pin.prospect, so pin.name alone hashed the empty string for those rows.
+    const ten = _mapTenure(_mapPinName(pin));
     return `<button type="button" class="mps-row" onclick="focusMapSidebarRow(${i})" onmouseenter="mapSidebarHoverPin(${i})" onmouseleave="mapSidebarHoverPinOut()">
       <div class="mps-row-top">
         <span class="mps-row-name">${esc(_mapPinName(pin))}</span>
@@ -29256,7 +29287,8 @@ function renderMapProspectSidebar() {
       </div>
       <div class="mps-row-sub">${esc(_mapPinType(pin))} · ${esc(owner)}</div>
       <div class="mps-row-meta"><span>📍 ${esc(addr)}</span></div>
-      <div class="mps-row-meta"><span>📞 ${esc(phone)}</span><span>🪪 ${esc(lic)}</span><span>🏛 ${yib} yr${yib === 1 ? '' : 's'}</span></div>
+      <div class="mps-row-meta"><span>📞 ${esc(phone)}</span><span>🪪 ${esc(ten.license)}</span></div>
+      <div class="mps-row-meta"><span title="Owner time licensed">🎓 Lic. ${ten.yearsLicensed} yr${ten.yearsLicensed === 1 ? '' : 's'}</span><span title="Practice time in business">🏛 Open ${ten.yearsInBiz} yr${ten.yearsInBiz === 1 ? '' : 's'}</span></div>
     </button>`;
   }).join('');
 }
@@ -29355,6 +29387,7 @@ function renderMobMapList() {
       const st = _mapSidebarStatus(pin);
       const owner = intel.ownerName || '—';
       const addr = intel.address || '—';
+      const ten = _mapTenure(_mapPinName(pin));
       return `<button type="button" class="mls-row" onclick="mobMapListRowTap(${i})">
         <div class="mls-row-top">
           <span class="mls-name">${esc(_mapPinName(pin))}</span>
@@ -29362,6 +29395,7 @@ function renderMobMapList() {
         </div>
         <div class="mls-sub">${esc(_mapPinType(pin))} · ${esc(owner)}</div>
         <div class="mls-meta">📍 ${esc(addr)}</div>
+        <div class="mls-meta">🎓 Lic. ${ten.yearsLicensed} yr${ten.yearsLicensed === 1 ? '' : 's'} · 🏛 Open ${ten.yearsInBiz} yr${ten.yearsInBiz === 1 ? '' : 's'}</div>
       </button>`;
     }).join('');
   }
@@ -29408,7 +29442,11 @@ function mapSidebarHoverPin(i) {
     + `<div class="map-hoverpop-sub">${esc(_mapPinType(pin))} · <span class="map-hoverpop-status ${st.cls}">${esc(st.label)}</span></div>`
     + `<div class="map-hoverpop-row">👤 ${esc(owner)}</div>`
     + `<div class="map-hoverpop-row">📍 ${esc(addr)}</div>`
-    + `<div class="map-hoverpop-row">📞 ${esc(phone)}</div>`;
+    + `<div class="map-hoverpop-row">📞 ${esc(phone)}</div>`
+    + (() => {
+        const ten = _mapTenure(_mapPinName(pin));
+        return `<div class="map-hoverpop-row">🎓 Licensed ${ten.yearsLicensed} yr${ten.yearsLicensed === 1 ? '' : 's'} · 🏛 Open ${ten.yearsInBiz} yr${ten.yearsInBiz === 1 ? '' : 's'}</div>`;
+      })();
   try {
     // Highlight ring over the pin.
     if (_mapHoverRing) { try { inst.removeLayer(_mapHoverRing); } catch (e) {} _mapHoverRing = null; }
@@ -29704,6 +29742,7 @@ function _renderMapSidePanelContent(pin) {
   const p = pin.prospect || pin;
   const state = pin.state || 'brand_new';
   const intel = getPracticeIntel(p) || {};
+  const _tenure = _mapTenure(p.name || (pin && pin.name) || '');
   const nameAttr = (p.name || '').replace(/"/g, '&quot;').replace(/'/g, "\\'");
 
   // State pill
@@ -29827,6 +29866,9 @@ function _renderMapSidePanelContent(pin) {
       <div class="msp-section-hdr">Practice info</div>
       <div class="msp-intel-row"><span class="msp-intel-label">Address</span><span class="msp-intel-val">${escapeAttr(intel.address || '—')}</span></div>
       <div class="msp-intel-row"><span class="msp-intel-label">Owner</span><span class="msp-intel-val">${escapeAttr(intel.ownerName || '—')}</span></div>
+      <div class="msp-intel-row"><span class="msp-intel-label">Owner licensed</span><span class="msp-intel-val">${escapeAttr(_mapTenureLabel(_tenure.yearsLicensed, _tenure.licensedSince))}</span></div>
+      <div class="msp-intel-row"><span class="msp-intel-label">License #</span><span class="msp-intel-val">${escapeAttr(_tenure.license)}</span></div>
+      <div class="msp-intel-row"><span class="msp-intel-label">In business</span><span class="msp-intel-val">${escapeAttr(_mapTenureLabel(_tenure.yearsInBiz, _tenure.inBusinessSince))}</span></div>
       <div class="msp-intel-row"><span class="msp-intel-label">Phone</span><span class="msp-intel-val"><a href="tel:${phoneEsc.replace(/[^0-9+]/g, '')}">${phoneEsc}</a></span></div>
       <div class="msp-intel-row"><span class="msp-intel-label">Email</span><span class="msp-intel-val"><a href="mailto:${emailEsc}">${emailEsc}</a></span></div>
       <div class="msp-intel-row"><span class="msp-intel-label">Website</span><span class="msp-intel-val">${intel.website ? `<a href="${escapeAttr(intel.website)}" target="_blank" rel="noopener noreferrer">${escapeAttr(intel.website.replace(/^https?:\/\//, ''))}</a>` : '—'}</span></div>
