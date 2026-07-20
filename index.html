@@ -19882,6 +19882,252 @@ body.app-ops #shell-ops { display: block; }
   body.app-desktop #shell-desktop .xlp-act-btn{ padding: 4px 10px; font-size: 10px; font-weight: 700; border-radius: 5px; border: 1px solid; cursor: pointer; font-family: inherit; transition: all 0.12s; text-align: center; min-width: 75px; }
 
 
+  /* ════════════════════════════════════════════════════════════════════
+     COMMITS — weekly close commitments (submission flow + tracker)
+     Shared `cmt-` namespace: the semantic tokens (hit/miss/covered, the
+     variance colours, the locked banner) must read identically in both
+     shells, so they're defined once unscoped and the shells only override
+     sizing. Scoped `mcm-` (mobile) and `dcm-` (desktop) handle layout.
+     ════════════════════════════════════════════════════════════════════ */
+  .cmt-good{ color: var(--green); }
+  .cmt-bad{ color: var(--red); }
+  .cmt-neutral{ color: var(--ts); }
+
+  /* Status pills — one vocabulary across every commit surface. */
+  .cmt-pill{ display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700; letter-spacing:0.03em; padding:3px 8px; border-radius:999px; white-space:nowrap; }
+  .cmt-pill-hit{ background:#E4F4EC; color:#0F7E54; }
+  .cmt-pill-miss{ background:#FBE9E7; color:#B23A2D; }
+  .cmt-pill-open{ background:#EBF3FB; color:#1A4A8A; }
+  .cmt-pill-covered{ background:#FFF4E0; color:#A15C12; }
+  .cmt-pill-none{ background:var(--light); color:var(--tm); }
+  .cmt-pill-locked{ background:#EEF0F4; color:#6B7785; }
+
+  /* The immutability notice. Deliberately loud — it's the one thing in the
+     flow the rep must not miss, because the submission can't be undone. */
+  .cmt-lockbar{ display:flex; gap:9px; align-items:flex-start; background:#FFF6E5; border:1px solid #F0D8A8; border-radius:9px; padding:10px 12px; }
+  .cmt-lockbar-ico{ font-size:14px; line-height:1.2; flex-shrink:0; }
+  .cmt-lockbar-txt{ font-size:11.5px; line-height:1.5; color:#7A4F12; }
+  .cmt-lockbar-txt b{ color:#5E3C0B; }
+
+  /* Commit-vs-actual bar: committed number is the track, actual is the fill.
+     Overfill (actual > commit) turns green and caps visually at 100%. */
+  .cmt-bar{ height:7px; border-radius:4px; background:var(--light); overflow:hidden; display:flex; }
+  .cmt-bar-fill{ height:100%; border-radius:4px 0 0 4px; transition:width .3s; }
+  .cmt-bar-fill.is-committed{ background:var(--green); }
+  .cmt-bar-fill.is-uncommitted{ background:#E8A33D; }
+  .cmt-bar-fill.is-short{ background:var(--red); }
+
+  /* ── MOBILE ─────────────────────────────────────────────────────── */
+  /* Submit-commits CTA at the top of the Business tab. */
+  body.app-mobile #shell-mobile .mcm-cta{ width:100%; display:flex; align-items:center; gap:10px; background:linear-gradient(135deg,#15325C,#1A4A8A); color:#fff; border:none; border-radius:12px; padding:13px 14px; margin-bottom:12px; font-family:inherit; text-align:left; cursor:pointer; box-shadow:0 2px 8px rgba(20,50,92,0.18); }
+  body.app-mobile #shell-mobile .mcm-cta:active{ transform:scale(0.99); }
+  body.app-mobile #shell-mobile .mcm-cta-ico{ font-size:19px; flex-shrink:0; }
+  body.app-mobile #shell-mobile .mcm-cta-txt{ flex:1; min-width:0; }
+  body.app-mobile #shell-mobile .mcm-cta-title{ display:block; font-size:13.5px; font-weight:700; letter-spacing:-0.01em; }
+  body.app-mobile #shell-mobile .mcm-cta-sub{ display:block; font-size:11px; opacity:0.72; margin-top:2px; }
+  body.app-mobile #shell-mobile .mcm-cta-chev{ font-size:17px; opacity:0.55; flex-shrink:0; }
+  body.app-mobile #shell-mobile .mcm-cta.is-done{ background:var(--white); color:var(--tp); border:1px solid var(--border); box-shadow:none; }
+  body.app-mobile #shell-mobile .mcm-cta.is-done .mcm-cta-sub{ opacity:1; color:var(--ts); }
+  body.app-mobile #shell-mobile .mcm-cta.is-done .mcm-cta-chev{ color:var(--tm); }
+
+  /* Full-screen submission flow. Sits above the tab bar; its own footer
+     owns the step advance so the flow can't be half-completed by a stray
+     tab tap. */
+  body.app-mobile #shell-mobile .mcm-flow{ position:fixed; inset:0; z-index:1400; background:var(--surface); display:none; flex-direction:column; }
+  body.app-mobile #shell-mobile .mcm-flow.open{ display:flex; }
+  body.app-mobile #shell-mobile .mcm-flow-hd{ background:var(--white); border-bottom:1px solid var(--border); padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 11px; flex-shrink:0; }
+  body.app-mobile #shell-mobile .mcm-flow-hd-top{ display:flex; align-items:center; gap:10px; }
+  body.app-mobile #shell-mobile .mcm-flow-x{ background:none; border:none; font-size:20px; color:var(--ts); padding:0 2px; cursor:pointer; font-family:inherit; line-height:1; }
+  body.app-mobile #shell-mobile .mcm-flow-title{ flex:1; font-size:15px; font-weight:700; color:var(--tp); letter-spacing:-0.01em; }
+  body.app-mobile #shell-mobile .mcm-flow-step{ font-size:10.5px; font-weight:700; color:var(--tm); letter-spacing:0.05em; }
+  body.app-mobile #shell-mobile .mcm-steps{ display:flex; gap:4px; margin-top:10px; }
+  body.app-mobile #shell-mobile .mcm-step-seg{ flex:1; height:3px; border-radius:2px; background:var(--light); }
+  body.app-mobile #shell-mobile .mcm-step-seg.is-on{ background:var(--blue); }
+  body.app-mobile #shell-mobile .mcm-flow-body{ flex:1; overflow-y:auto; padding:14px; -webkit-overflow-scrolling:touch; }
+  body.app-mobile #shell-mobile .mcm-flow-ft{ background:var(--white); border-top:1px solid var(--border); padding:11px 14px calc(env(safe-area-inset-bottom,0px) + 12px); display:flex; gap:9px; align-items:center; flex-shrink:0; }
+  body.app-mobile #shell-mobile .mcm-ft-meta{ flex:1; min-width:0; }
+  body.app-mobile #shell-mobile .mcm-ft-l{ font-size:9.5px; color:var(--tm); font-weight:700; letter-spacing:0.05em; }
+  body.app-mobile #shell-mobile .mcm-ft-v{ font-size:16px; font-weight:700; color:var(--tp); letter-spacing:-0.02em; }
+  body.app-mobile #shell-mobile .mcm-btn{ border:none; border-radius:9px; padding:11px 18px; font-size:13px; font-weight:700; font-family:inherit; cursor:pointer; }
+  body.app-mobile #shell-mobile .mcm-btn-primary{ background:var(--blue); color:#fff; }
+  body.app-mobile #shell-mobile .mcm-btn-primary:disabled{ background:var(--light); color:var(--tm); cursor:default; }
+  body.app-mobile #shell-mobile .mcm-btn-ghost{ background:var(--white); color:var(--ts); border:1px solid var(--border-strong); }
+  body.app-mobile #shell-mobile .mcm-btn-danger{ background:#B23A2D; color:#fff; }
+  body.app-mobile #shell-mobile .mcm-btn-danger:disabled{ background:var(--light); color:var(--tm); cursor:default; }
+
+  body.app-mobile #shell-mobile .mcm-sec{ margin-bottom:16px; }
+  body.app-mobile #shell-mobile .mcm-sec-t{ font-size:10.5px; font-weight:700; color:var(--tm); letter-spacing:0.07em; text-transform:uppercase; margin-bottom:8px; }
+  body.app-mobile #shell-mobile .mcm-weekpick{ display:flex; flex-direction:column; gap:8px; }
+  body.app-mobile #shell-mobile .mcm-week{ display:flex; align-items:center; gap:10px; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:12px; cursor:pointer; font-family:inherit; text-align:left; width:100%; }
+  body.app-mobile #shell-mobile .mcm-week.is-sel{ border-color:var(--blue); background:#F5F9FE; }
+  body.app-mobile #shell-mobile .mcm-week-radio{ width:17px; height:17px; border-radius:50%; border:2px solid var(--border-strong); flex-shrink:0; position:relative; }
+  body.app-mobile #shell-mobile .mcm-week.is-sel .mcm-week-radio{ border-color:var(--blue); }
+  body.app-mobile #shell-mobile .mcm-week.is-sel .mcm-week-radio::after{ content:''; position:absolute; inset:3px; border-radius:50%; background:var(--blue); }
+  body.app-mobile #shell-mobile .mcm-week-txt{ flex:1; min-width:0; }
+  body.app-mobile #shell-mobile .mcm-week-l{ font-size:13px; font-weight:700; color:var(--tp); }
+  body.app-mobile #shell-mobile .mcm-week-s{ font-size:11px; color:var(--ts); margin-top:2px; }
+
+  /* Deal picker rows */
+  body.app-mobile #shell-mobile .mcm-deal{ display:flex; align-items:flex-start; gap:10px; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:11px 12px; margin-bottom:7px; cursor:pointer; font-family:inherit; text-align:left; width:100%; }
+  body.app-mobile #shell-mobile .mcm-deal.is-sel{ border-color:var(--blue); background:#F5F9FE; }
+  body.app-mobile #shell-mobile .mcm-deal-box{ width:18px; height:18px; border-radius:5px; border:2px solid var(--border-strong); flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff; }
+  body.app-mobile #shell-mobile .mcm-deal.is-sel .mcm-deal-box{ background:var(--blue); border-color:var(--blue); }
+  body.app-mobile #shell-mobile .mcm-deal-body{ flex:1; min-width:0; }
+  body.app-mobile #shell-mobile .mcm-deal-name{ font-size:13px; font-weight:600; color:var(--tp); }
+  body.app-mobile #shell-mobile .mcm-deal-meta{ font-size:11px; color:var(--ts); margin-top:2px; }
+  body.app-mobile #shell-mobile .mcm-deal-val{ font-size:13px; font-weight:700; color:var(--tp); flex-shrink:0; }
+
+  /* Per-deal detail cards (step 2) */
+  body.app-mobile #shell-mobile .mcm-dcard{ background:var(--white); border:1px solid var(--border); border-radius:11px; padding:12px; margin-bottom:10px; }
+  body.app-mobile #shell-mobile .mcm-dcard-hd{ display:flex; justify-content:space-between; gap:8px; align-items:flex-start; margin-bottom:10px; }
+  body.app-mobile #shell-mobile .mcm-dcard-name{ font-size:13.5px; font-weight:700; color:var(--tp); }
+  body.app-mobile #shell-mobile .mcm-dcard-meta{ font-size:11px; color:var(--ts); margin-top:2px; }
+  body.app-mobile #shell-mobile .mcm-dcard-drop{ background:none; border:none; color:var(--tm); font-size:16px; padding:0 2px; cursor:pointer; font-family:inherit; line-height:1; }
+  body.app-mobile #shell-mobile .mcm-fld{ margin-bottom:10px; }
+  body.app-mobile #shell-mobile .mcm-fld:last-child{ margin-bottom:0; }
+  body.app-mobile #shell-mobile .mcm-fld-l{ display:flex; justify-content:space-between; align-items:baseline; font-size:11px; font-weight:600; color:var(--ts); margin-bottom:5px; }
+  body.app-mobile #shell-mobile .mcm-fld-hint{ font-size:10px; color:var(--tm); font-weight:500; }
+  body.app-mobile #shell-mobile .mcm-in{ width:100%; border:1.5px solid var(--border); border-radius:8px; padding:10px 11px; font-size:14px; font-family:inherit; color:var(--tp); background:var(--white); box-sizing:border-box; }
+  body.app-mobile #shell-mobile .mcm-in:focus{ outline:none; border-color:var(--blue); }
+  body.app-mobile #shell-mobile .mcm-pctrow{ display:flex; gap:6px; }
+  body.app-mobile #shell-mobile .mcm-pctbtn{ flex:1; border:1.5px solid var(--border); background:var(--white); border-radius:8px; padding:8px 0; font-size:12px; font-weight:700; color:var(--ts); font-family:inherit; cursor:pointer; }
+  body.app-mobile #shell-mobile .mcm-pctbtn.is-on{ background:var(--blue); border-color:var(--blue); color:#fff; }
+  body.app-mobile #shell-mobile .mcm-delta{ font-size:10.5px; margin-top:5px; font-weight:600; }
+
+  /* Review (step 3) */
+  body.app-mobile #shell-mobile .mcm-rev-total{ background:linear-gradient(135deg,#15325C,#1A4A8A); border-radius:12px; padding:15px; color:#fff; margin-bottom:13px; }
+  body.app-mobile #shell-mobile .mcm-rev-total-l{ font-size:10.5px; font-weight:700; letter-spacing:0.06em; opacity:0.7; text-transform:uppercase; }
+  body.app-mobile #shell-mobile .mcm-rev-total-v{ font-size:27px; font-weight:700; letter-spacing:-0.03em; margin:3px 0 2px; }
+  body.app-mobile #shell-mobile .mcm-rev-total-s{ font-size:11.5px; opacity:0.75; }
+  body.app-mobile #shell-mobile .mcm-rev-row{ display:flex; justify-content:space-between; gap:10px; align-items:baseline; padding:9px 0; border-bottom:1px solid var(--border); }
+  body.app-mobile #shell-mobile .mcm-rev-row:last-child{ border-bottom:none; }
+  body.app-mobile #shell-mobile .mcm-rev-nm{ font-size:12.5px; font-weight:600; color:var(--tp); flex:1; min-width:0; }
+  body.app-mobile #shell-mobile .mcm-rev-sub{ font-size:10.5px; color:var(--ts); margin-top:2px; font-weight:500; }
+  body.app-mobile #shell-mobile .mcm-rev-v{ font-size:13px; font-weight:700; color:var(--tp); flex-shrink:0; }
+  body.app-mobile #shell-mobile .mcm-confirm{ display:flex; gap:10px; align-items:flex-start; background:var(--white); border:1.5px solid var(--border-strong); border-radius:10px; padding:12px; margin-top:13px; cursor:pointer; font-family:inherit; text-align:left; width:100%; }
+  body.app-mobile #shell-mobile .mcm-confirm.is-on{ border-color:var(--blue); background:#F5F9FE; }
+  body.app-mobile #shell-mobile .mcm-confirm-box{ width:19px; height:19px; border-radius:5px; border:2px solid var(--border-strong); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; margin-top:1px; }
+  body.app-mobile #shell-mobile .mcm-confirm.is-on .mcm-confirm-box{ background:var(--blue); border-color:var(--blue); }
+  body.app-mobile #shell-mobile .mcm-confirm-txt{ font-size:12px; line-height:1.5; color:var(--tp); }
+
+  /* Commits dashboard (mobile lens) */
+  body.app-mobile #shell-mobile .mcm-hero{ background:linear-gradient(135deg,#0E1B2C,#1B3A63); border-radius:13px; padding:16px; color:#fff; margin-bottom:13px; }
+  body.app-mobile #shell-mobile .mcm-hero-l{ font-size:10.5px; font-weight:700; letter-spacing:0.06em; opacity:0.62; text-transform:uppercase; }
+  body.app-mobile #shell-mobile .mcm-hero-v{ font-size:30px; font-weight:700; letter-spacing:-0.03em; margin:4px 0 3px; }
+  body.app-mobile #shell-mobile .mcm-hero-s{ font-size:11.5px; opacity:0.72; }
+  body.app-mobile #shell-mobile .mcm-hero-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-top:14px; padding-top:13px; border-top:1px solid rgba(255,255,255,0.13); }
+  body.app-mobile #shell-mobile .mcm-hero-cell-v{ font-size:16px; font-weight:700; letter-spacing:-0.02em; }
+  body.app-mobile #shell-mobile .mcm-hero-cell-l{ font-size:9.5px; opacity:0.6; margin-top:2px; letter-spacing:0.04em; }
+  body.app-mobile #shell-mobile .mcm-wcard{ background:var(--white); border:1px solid var(--border); border-radius:12px; padding:13px; margin-bottom:11px; }
+  body.app-mobile #shell-mobile .mcm-wcard.is-open{ border-color:#B9D4EE; }
+  body.app-mobile #shell-mobile .mcm-wcard-hd{ display:flex; justify-content:space-between; align-items:flex-start; gap:9px; margin-bottom:10px; }
+  body.app-mobile #shell-mobile .mcm-wcard-wk{ font-size:13.5px; font-weight:700; color:var(--tp); letter-spacing:-0.01em; }
+  body.app-mobile #shell-mobile .mcm-wcard-sub{ font-size:10.5px; color:var(--tm); margin-top:2px; }
+  body.app-mobile #shell-mobile .mcm-wcard-nums{ display:flex; gap:16px; margin-bottom:9px; }
+  body.app-mobile #shell-mobile .mcm-wcard-num-l{ font-size:9.5px; color:var(--tm); font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  body.app-mobile #shell-mobile .mcm-wcard-num-v{ font-size:16px; font-weight:700; letter-spacing:-0.02em; color:var(--tp); }
+  body.app-mobile #shell-mobile .mcm-wcard-foot{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:8px; font-size:11px; color:var(--ts); }
+  body.app-mobile #shell-mobile .mcm-drow{ display:flex; align-items:flex-start; gap:9px; padding:8px 0; border-top:1px solid var(--border); }
+  body.app-mobile #shell-mobile .mcm-drow-body{ flex:1; min-width:0; }
+  body.app-mobile #shell-mobile .mcm-drow-nm{ font-size:12.5px; font-weight:600; color:var(--tp); }
+  body.app-mobile #shell-mobile .mcm-drow-meta{ font-size:10.5px; color:var(--ts); margin-top:2px; }
+  body.app-mobile #shell-mobile .mcm-drow-r{ text-align:right; flex-shrink:0; }
+  body.app-mobile #shell-mobile .mcm-drow-v{ font-size:12.5px; font-weight:700; color:var(--tp); }
+  body.app-mobile #shell-mobile .mcm-drow-d{ font-size:10px; margin-top:2px; font-weight:600; }
+  body.app-mobile #shell-mobile .mcm-cover{ background:#FFF7EA; border:1px solid #F2DDB4; border-radius:9px; padding:10px 11px; margin-top:9px; font-size:11.5px; line-height:1.5; color:#7A4F12; }
+  body.app-mobile #shell-mobile .mcm-empty{ background:var(--white); border:1px dashed var(--border-strong); border-radius:11px; padding:24px 16px; text-align:center; color:var(--ts); font-size:12.5px; line-height:1.6; }
+
+  /* ── DESKTOP ────────────────────────────────────────────────────── */
+  body.app-desktop #shell-desktop .dcm-cta{ display:inline-flex; align-items:center; gap:9px; background:linear-gradient(135deg,#15325C,#1A4A8A); color:#fff; border:none; border-radius:9px; padding:10px 16px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer; box-shadow:0 1px 4px rgba(20,50,92,0.2); }
+  body.app-desktop #shell-desktop .dcm-cta:hover{ filter:brightness(1.08); }
+  body.app-desktop #shell-desktop .dcm-cta.is-done{ background:var(--white); color:var(--tp); border:1px solid var(--border-strong); box-shadow:none; }
+  body.app-desktop #shell-desktop .dcm-cta-sub{ font-weight:500; opacity:0.72; }
+  body.app-desktop #shell-desktop .dcm-ctabar{ display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+  body.app-desktop #shell-desktop .dcm-ctabar-note{ font-size:11.5px; color:var(--ts); }
+
+  body.app-desktop #shell-desktop .dcm-modal{ position:fixed; inset:0; z-index:2400; background:rgba(14,27,44,0.5); display:none; align-items:center; justify-content:center; padding:24px; }
+  body.app-desktop #shell-desktop .dcm-modal.open{ display:flex; }
+  body.app-desktop #shell-desktop .dcm-panel{ background:var(--white); border-radius:14px; width:100%; max-width:760px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 18px 50px rgba(0,0,0,0.28); overflow:hidden; }
+  body.app-desktop #shell-desktop .dcm-hd{ padding:16px 20px 13px; border-bottom:1px solid var(--border); flex-shrink:0; }
+  body.app-desktop #shell-desktop .dcm-hd-top{ display:flex; align-items:center; gap:12px; }
+  body.app-desktop #shell-desktop .dcm-hd-t{ flex:1; font-size:16px; font-weight:700; color:var(--tp); letter-spacing:-0.01em; }
+  body.app-desktop #shell-desktop .dcm-hd-step{ font-size:11px; font-weight:700; color:var(--tm); letter-spacing:0.05em; }
+  body.app-desktop #shell-desktop .dcm-x{ background:none; border:none; font-size:19px; color:var(--ts); cursor:pointer; font-family:inherit; line-height:1; padding:0 2px; }
+  body.app-desktop #shell-desktop .dcm-steps{ display:flex; gap:5px; margin-top:11px; }
+  body.app-desktop #shell-desktop .dcm-step-seg{ flex:1; height:3px; border-radius:2px; background:var(--light); }
+  body.app-desktop #shell-desktop .dcm-step-seg.is-on{ background:var(--blue); }
+  body.app-desktop #shell-desktop .dcm-body{ flex:1; overflow-y:auto; padding:18px 20px; background:var(--surface); }
+  body.app-desktop #shell-desktop .dcm-ft{ padding:12px 20px; border-top:1px solid var(--border); display:flex; align-items:center; gap:11px; flex-shrink:0; background:var(--white); }
+  body.app-desktop #shell-desktop .dcm-ft-meta{ flex:1; }
+  body.app-desktop #shell-desktop .dcm-ft-l{ font-size:9.5px; color:var(--tm); font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  body.app-desktop #shell-desktop .dcm-ft-v{ font-size:17px; font-weight:700; color:var(--tp); letter-spacing:-0.02em; }
+  body.app-desktop #shell-desktop .dcm-btn{ border:none; border-radius:8px; padding:9px 17px; font-size:12.5px; font-weight:700; font-family:inherit; cursor:pointer; }
+  body.app-desktop #shell-desktop .dcm-btn-primary{ background:var(--blue); color:#fff; }
+  body.app-desktop #shell-desktop .dcm-btn-primary:disabled{ background:var(--light); color:var(--tm); cursor:default; }
+  body.app-desktop #shell-desktop .dcm-btn-ghost{ background:var(--white); color:var(--ts); border:1px solid var(--border-strong); }
+  body.app-desktop #shell-desktop .dcm-btn-danger{ background:#B23A2D; color:#fff; }
+  body.app-desktop #shell-desktop .dcm-btn-danger:disabled{ background:var(--light); color:var(--tm); cursor:default; }
+  body.app-desktop #shell-desktop .dcm-sec-t{ font-size:10.5px; font-weight:700; color:var(--tm); letter-spacing:0.07em; text-transform:uppercase; margin-bottom:9px; }
+  body.app-desktop #shell-desktop .dcm-sec{ margin-bottom:18px; }
+  body.app-desktop #shell-desktop .dcm-weekgrid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:9px; }
+  body.app-desktop #shell-desktop .dcm-week{ background:var(--white); border:1.5px solid var(--border); border-radius:9px; padding:11px 13px; cursor:pointer; font-family:inherit; text-align:left; }
+  body.app-desktop #shell-desktop .dcm-week.is-sel{ border-color:var(--blue); background:#F5F9FE; }
+  body.app-desktop #shell-desktop .dcm-week-l{ font-size:13px; font-weight:700; color:var(--tp); }
+  body.app-desktop #shell-desktop .dcm-week-s{ font-size:11px; color:var(--ts); margin-top:3px; }
+  body.app-desktop #shell-desktop .dcm-dealtbl{ width:100%; border-collapse:collapse; background:var(--white); border:1px solid var(--border); border-radius:9px; overflow:hidden; }
+  body.app-desktop #shell-desktop .dcm-dealtbl th{ font-size:9.5px; font-weight:700; color:var(--tm); letter-spacing:0.06em; text-transform:uppercase; text-align:left; padding:9px 11px; background:var(--surface); border-bottom:1px solid var(--border); }
+  body.app-desktop #shell-desktop .dcm-dealtbl td{ padding:9px 11px; border-bottom:1px solid var(--border); font-size:12.5px; color:var(--tp); vertical-align:middle; }
+  body.app-desktop #shell-desktop .dcm-dealtbl tr:last-child td{ border-bottom:none; }
+  body.app-desktop #shell-desktop .dcm-dealtbl tr.is-sel td{ background:#F5F9FE; }
+  body.app-desktop #shell-desktop .dcm-dealtbl .num{ text-align:right; font-variant-numeric:tabular-nums; }
+  body.app-desktop #shell-desktop .dcm-rowname{ font-weight:600; }
+  body.app-desktop #shell-desktop .dcm-rowmeta{ font-size:10.5px; color:var(--ts); margin-top:2px; }
+  body.app-desktop #shell-desktop .dcm-in{ border:1.5px solid var(--border); border-radius:7px; padding:7px 9px; font-size:12.5px; font-family:inherit; color:var(--tp); background:var(--white); width:110px; box-sizing:border-box; text-align:right; }
+  body.app-desktop #shell-desktop .dcm-in.pct{ width:74px; }
+  body.app-desktop #shell-desktop .dcm-in:focus{ outline:none; border-color:var(--blue); }
+  body.app-desktop #shell-desktop .dcm-chk{ width:17px; height:17px; border-radius:4px; border:2px solid var(--border-strong); display:inline-flex; align-items:center; justify-content:center; font-size:11px; color:#fff; cursor:pointer; }
+  body.app-desktop #shell-desktop .dcm-chk.is-on{ background:var(--blue); border-color:var(--blue); }
+  body.app-desktop #shell-desktop .dcm-delta{ font-size:10.5px; font-weight:600; margin-top:3px; }
+  body.app-desktop #shell-desktop .dcm-rev-total{ background:linear-gradient(135deg,#15325C,#1A4A8A); border-radius:11px; padding:16px 18px; color:#fff; margin-bottom:14px; display:flex; align-items:flex-end; justify-content:space-between; gap:16px; }
+  body.app-desktop #shell-desktop .dcm-rev-total-l{ font-size:10.5px; font-weight:700; letter-spacing:0.06em; opacity:0.7; text-transform:uppercase; }
+  body.app-desktop #shell-desktop .dcm-rev-total-v{ font-size:29px; font-weight:700; letter-spacing:-0.03em; margin-top:3px; }
+  body.app-desktop #shell-desktop .dcm-rev-total-s{ font-size:11.5px; opacity:0.75; text-align:right; }
+  body.app-desktop #shell-desktop .dcm-confirm{ display:flex; gap:11px; align-items:flex-start; background:var(--white); border:1.5px solid var(--border-strong); border-radius:9px; padding:12px 14px; margin-top:14px; cursor:pointer; font-family:inherit; text-align:left; width:100%; }
+  body.app-desktop #shell-desktop .dcm-confirm.is-on{ border-color:var(--blue); background:#F5F9FE; }
+  body.app-desktop #shell-desktop .dcm-confirm-box{ width:19px; height:19px; border-radius:5px; border:2px solid var(--border-strong); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; margin-top:1px; }
+  body.app-desktop #shell-desktop .dcm-confirm.is-on .dcm-confirm-box{ background:var(--blue); border-color:var(--blue); }
+  body.app-desktop #shell-desktop .dcm-confirm-txt{ font-size:12.5px; line-height:1.55; color:var(--tp); }
+
+  /* Desktop commits dashboard */
+  body.app-desktop #shell-desktop .dcm-dash{ padding:0 20px 40px; }
+  body.app-desktop #shell-desktop .dcm-hero{ background:linear-gradient(135deg,#0E1B2C,#1B3A63); border-radius:13px; padding:20px 22px; color:#fff; margin-bottom:16px; display:flex; align-items:center; gap:26px; flex-wrap:wrap; }
+  body.app-desktop #shell-desktop .dcm-hero-main{ min-width:210px; }
+  body.app-desktop #shell-desktop .dcm-hero-l{ font-size:10.5px; font-weight:700; letter-spacing:0.06em; opacity:0.62; text-transform:uppercase; }
+  body.app-desktop #shell-desktop .dcm-hero-v{ font-size:32px; font-weight:700; letter-spacing:-0.03em; margin:4px 0 3px; }
+  body.app-desktop #shell-desktop .dcm-hero-s{ font-size:12px; opacity:0.72; }
+  body.app-desktop #shell-desktop .dcm-hero-cells{ display:flex; gap:26px; flex:1; flex-wrap:wrap; }
+  body.app-desktop #shell-desktop .dcm-hero-cell-v{ font-size:19px; font-weight:700; letter-spacing:-0.02em; }
+  body.app-desktop #shell-desktop .dcm-hero-cell-l{ font-size:10px; opacity:0.6; margin-top:3px; letter-spacing:0.04em; }
+  body.app-desktop #shell-desktop .dcm-wcard{ background:var(--white); border:1px solid var(--border); border-radius:11px; margin-bottom:12px; overflow:hidden; }
+  body.app-desktop #shell-desktop .dcm-wcard.is-open{ border-color:#B9D4EE; }
+  body.app-desktop #shell-desktop .dcm-wcard-hd{ display:flex; align-items:center; gap:18px; padding:13px 16px; cursor:pointer; }
+  body.app-desktop #shell-desktop .dcm-wcard-wk{ font-size:14px; font-weight:700; color:var(--tp); letter-spacing:-0.01em; min-width:150px; }
+  body.app-desktop #shell-desktop .dcm-wcard-sub{ font-size:10.5px; color:var(--tm); margin-top:2px; font-weight:500; }
+  body.app-desktop #shell-desktop .dcm-wcard-num{ min-width:104px; }
+  body.app-desktop #shell-desktop .dcm-wcard-num-l{ font-size:9.5px; color:var(--tm); font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  body.app-desktop #shell-desktop .dcm-wcard-num-v{ font-size:16px; font-weight:700; letter-spacing:-0.02em; color:var(--tp); }
+  body.app-desktop #shell-desktop .dcm-wcard-bar{ flex:1; min-width:130px; }
+  body.app-desktop #shell-desktop .dcm-wcard-caret{ color:var(--tm); font-size:14px; }
+  body.app-desktop #shell-desktop .dcm-wcard-body{ border-top:1px solid var(--border); padding:14px 16px; background:var(--surface); }
+  body.app-desktop #shell-desktop .dcm-dtbl{ width:100%; border-collapse:collapse; background:var(--white); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  body.app-desktop #shell-desktop .dcm-dtbl th{ font-size:9.5px; font-weight:700; color:var(--tm); letter-spacing:0.06em; text-transform:uppercase; text-align:left; padding:8px 11px; background:var(--surface); border-bottom:1px solid var(--border); }
+  body.app-desktop #shell-desktop .dcm-dtbl td{ padding:9px 11px; border-bottom:1px solid var(--border); font-size:12.5px; color:var(--tp); }
+  body.app-desktop #shell-desktop .dcm-dtbl tr:last-child td{ border-bottom:none; }
+  body.app-desktop #shell-desktop .dcm-dtbl .num{ text-align:right; font-variant-numeric:tabular-nums; }
+  body.app-desktop #shell-desktop .dcm-subhd{ font-size:10.5px; font-weight:700; color:var(--tm); letter-spacing:0.06em; text-transform:uppercase; margin:15px 0 8px; }
+  body.app-desktop #shell-desktop .dcm-cover{ background:#FFF7EA; border:1px solid #F2DDB4; border-radius:9px; padding:11px 13px; margin-top:12px; font-size:12px; line-height:1.55; color:#7A4F12; }
+  body.app-desktop #shell-desktop .dcm-empty{ background:var(--white); border:1px dashed var(--border-strong); border-radius:11px; padding:34px 20px; text-align:center; color:var(--ts); font-size:13px; line-height:1.6; }
+
 </style>
 </head>
 <body class="app-mobile">
@@ -20114,6 +20360,10 @@ body.app-ops #shell-ops { display: block; }
 <div class="view" id="view-pipeline">
   <div class="view-pad" id="pipeline-list-view">
     <div id="pipeline-scope-bar" style="margin-bottom:12px;"></div>
+    <!-- Weekly commits entry point. Sits above the revenue tracker because
+         committing is the first thing a rep does when they open Business on
+         a Friday. Label + state are rendered by renderCommitCta(). -->
+    <div id="mcm-cta-mount"></div>
     <!-- Revenue tracker — rep-specific. YTD closed-won revenue credited to
          Andreas Suri as generator, closer, or involved rep — with a progress bar against the annual quota. -->
     <div class="rev-tracker" id="rev-tracker">
@@ -20632,6 +20882,28 @@ body.app-ops #shell-ops { display: block; }
   </div>
 </div>
 
+<!-- ═══════════════ COMMITS (Business hub lens) ═══════════════ -->
+<div class="view" id="view-mob-commits">
+  <div class="view-pad" id="mcm-dash"></div>
+</div>
+
+<!-- ═══════════════ COMMITS — submission flow (full-screen) ═══════════════
+     Three steps: pick week + deals → set % and commit value per deal →
+     review and confirm. Lives outside .view so it overlays whatever tab the
+     rep launched it from and survives tab switches underneath. -->
+<div class="mcm-flow" id="mcm-flow">
+  <div class="mcm-flow-hd">
+    <div class="mcm-flow-hd-top">
+      <button class="mcm-flow-x" onclick="mcmCancel()" aria-label="Cancel">✕</button>
+      <div class="mcm-flow-title" id="mcm-flow-title">Submit commits</div>
+      <div class="mcm-flow-step" id="mcm-flow-stepn">1 / 3</div>
+    </div>
+    <div class="mcm-steps" id="mcm-steps"></div>
+  </div>
+  <div class="mcm-flow-body" id="mcm-flow-body"></div>
+  <div class="mcm-flow-ft" id="mcm-flow-ft"></div>
+</div>
+
 <!-- ═══════════════ MARKET REPORT (Tools hub) ═══════════════ -->
 <div class="view" id="view-market-report">
   <div class="view-pad">
@@ -21034,6 +21306,11 @@ body.app-ops #shell-ops { display: block; }
     </button>
     <button class="lens-row" data-pipe="dashboard" onclick="showPipeLens('dashboard')">
       <span class="lens-row-label">Dashboard</span>
+      <span class="lens-row-tag">New</span>
+      <span class="lens-row-check">✓</span>
+    </button>
+    <button class="lens-row" data-pipe="commits" onclick="showPipeLens('commits')">
+      <span class="lens-row-label">Commits</span>
       <span class="lens-row-tag">New</span>
       <span class="lens-row-check">✓</span>
     </button>
@@ -23047,6 +23324,9 @@ body.app-ops #shell-ops { display: block; }
            drills into a specific rep from the Teams Overview drill-in. -->
       <div id="pm-mgmt-banner" class="pm-mgmt-banner" style="display:none;"></div>
       <div id="pm-scope-bar" style="margin-bottom:14px;"></div>
+      <!-- Weekly commits entry point (desktop parity with the mobile
+           Business tab). Rendered by renderDeskCommitCta(). -->
+      <div id="dcm-cta-mount"></div>
       <!-- Phase A.13 — quota strip restructured for mobile parity: YTD Revenue on
            the left of the bar, Annual quota on the right. The previous "Pipeline
            value + active opps" right-side block was duplicative with the "Total
@@ -23808,6 +24088,30 @@ body.app-ops #shell-ops { display: block; }
       </div>
       <div id="efficiency-body"></div>
     </div>
+  </div>
+</div>
+
+<!-- ═══════════════ DASHBOARDS — COMMITS ═══════════════ -->
+<div class="view" id="view-commits">
+  <div style="height:calc(100vh - 56px);overflow-y:auto;background:var(--surface);">
+    <div class="dash-toggle-mount" id="dash-toggle-commits"></div>
+    <div class="dcm-dash" id="dcm-dash"></div>
+  </div>
+</div>
+
+<!-- Commits submission modal (desktop). Same three steps as mobile. -->
+<div class="dcm-modal" id="dcm-modal">
+  <div class="dcm-panel">
+    <div class="dcm-hd">
+      <div class="dcm-hd-top">
+        <div class="dcm-hd-t" id="dcm-hd-t">Submit commits</div>
+        <div class="dcm-hd-step" id="dcm-hd-step">1 / 3</div>
+        <button class="dcm-x" onclick="dcmCancel()" aria-label="Close">✕</button>
+      </div>
+      <div class="dcm-steps" id="dcm-steps"></div>
+    </div>
+    <div class="dcm-body" id="dcm-body"></div>
+    <div class="dcm-ft" id="dcm-ft"></div>
   </div>
 </div>
 
@@ -30996,6 +31300,290 @@ function dateToISOLocal(d) {
   const dy = String(d.getDate()).padStart(2, '0');
   return `${y}-${m}-${dy}`;
 }
+
+// ═══════════════════════════════════════════════════════════════════════
+//  COMMITS — weekly close commitments + historical reconciliation
+// ═══════════════════════════════════════════════════════════════════════
+//  A "commit" is a rep's declaration, made ahead of a week, of which
+//  pipeline deals they will close in that week and for how much. Commits
+//  are submitted Friday–Sunday for the week that follows and are LOCKED on
+//  submission — the whole point is that the number can't be edited after
+//  the fact, so the historical record is an honest forecast-vs-actual
+//  series rather than a rolling revision.
+//
+//  Commit record shape:
+//    { id, rep, weekStart:'YYYY-MM-DD' (Monday), submittedAt: ISO,
+//      locked: true,
+//      items: [{ oppId, name, stage, pipelineValue, commitValue, pct }],
+//      totalCommit }
+//
+//  The commit dollar value is deliberately independent of the pipeline
+//  value on the opp. Pipeline value is the working estimate and moves as
+//  the deal moves; the commit value is what the rep is putting their name
+//  on for that week. Reconciliation always compares commitValue to what
+//  actually closed, never the pipeline number.
+// ───────────────────────────────────────────────────────────────────────
+const commits = [];
+window.commits = commits;
+
+// Commit weeks are Monday-start, Sunday-end. Monday is the anchor because
+// the selling week is Mon–Fri and weekend closes belong to the week whose
+// activity produced them.
+function commitWeekStart(d) {
+  const dt = (d instanceof Date) ? new Date(d.getTime()) : new Date(String(d) + 'T12:00:00');
+  if (isNaN(dt.getTime())) return null;
+  dt.setHours(12, 0, 0, 0);
+  const dow = dt.getDay();                 // 0=Sun … 6=Sat
+  const back = (dow === 0) ? 6 : dow - 1;  // Sunday belongs to the week that started 6 days ago
+  dt.setDate(dt.getDate() - back);
+  return dateToISOLocal(dt);
+}
+function commitWeekEnd(weekStartIso) {
+  const dt = new Date(weekStartIso + 'T12:00:00');
+  dt.setDate(dt.getDate() + 6);
+  return dateToISOLocal(dt);
+}
+function commitWeekAddWeeks(weekStartIso, n) {
+  const dt = new Date(weekStartIso + 'T12:00:00');
+  dt.setDate(dt.getDate() + (n * 7));
+  return dateToISOLocal(dt);
+}
+function commitCurrentWeekStart() { return commitWeekStart(new Date()); }
+function commitNextWeekStart() { return commitWeekAddWeeks(commitCurrentWeekStart(), 1); }
+
+// "Jul 20 – Jul 26" / with year when it isn't the current one.
+function commitWeekLabel(weekStartIso) {
+  if (!weekStartIso) return '—';
+  const a = new Date(weekStartIso + 'T12:00:00');
+  const b = new Date(commitWeekEnd(weekStartIso) + 'T12:00:00');
+  const f = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const yr = (a.getFullYear() === new Date().getFullYear()) ? '' : (', ' + a.getFullYear());
+  return f(a) + ' – ' + f(b) + yr;
+}
+function commitWeekIsCurrent(weekStartIso) { return weekStartIso === commitCurrentWeekStart(); }
+function commitWeekIsFuture(weekStartIso) { return weekStartIso > commitCurrentWeekStart(); }
+function commitWeekIsPast(weekStartIso) { return weekStartIso < commitCurrentWeekStart(); }
+
+// The submission window is Fri–Sun for the following week. Outside it the
+// rep can still submit (the demo shouldn't dead-end on a Tuesday), but the
+// UI flags that they're submitting off-cadence — a real deployment would
+// likely tighten this into a hard gate plus a manager override.
+function commitInSubmissionWindow(d) {
+  const dow = (d || new Date()).getDay();
+  return dow === 5 || dow === 6 || dow === 0;   // Fri, Sat, Sun
+}
+
+// Weeks a rep may still submit for: the upcoming week always, plus the
+// current week if they never submitted for it. A week that already has a
+// submitted commit is closed permanently — no second bite.
+function commitOpenWeeks(rep) {
+  const out = [];
+  const cur = commitCurrentWeekStart(), next = commitNextWeekStart();
+  if (!getCommitForWeek(rep, cur)) out.push(cur);
+  if (!getCommitForWeek(rep, next)) out.push(next);
+  const after = commitWeekAddWeeks(next, 1);
+  if (!getCommitForWeek(rep, after)) out.push(after);
+  return out;
+}
+
+function getCommitsForRep(rep) {
+  return commits.filter(c => c.rep === rep).sort((a, b) => (a.weekStart < b.weekStart ? 1 : -1));
+}
+function getCommitForWeek(rep, weekStartIso) {
+  return commits.find(c => c.rep === rep && c.weekStart === weekStartIso) || null;
+}
+
+// Deals a rep can commit: their own, live, not closed/killed/cancelled.
+function commitEligibleOpps(rep) {
+  if (typeof opportunities === 'undefined' || !Array.isArray(opportunities)) return [];
+  return opportunities.filter(o =>
+    o && o.rep === rep && !o.closed && !o.killed && !o.cancelled
+  );
+}
+
+// Submit — the one write path. Returns the created record, or null if the
+// week is already committed (the lock is enforced here, not just in the UI,
+// so no alternate code path can quietly overwrite history).
+function submitCommit(rep, weekStartIso, items) {
+  if (!rep || !weekStartIso || !Array.isArray(items) || !items.length) return null;
+  if (getCommitForWeek(rep, weekStartIso)) return null;
+  const clean = items.map(it => ({
+    oppId: it.oppId,
+    name: it.name || '',
+    stage: it.stage || '',
+    pipelineValue: Number(it.pipelineValue) || 0,
+    commitValue: Number(it.commitValue) || 0,
+    pct: Math.max(0, Math.min(100, Number(it.pct) || 0))
+  })).filter(it => it.oppId);
+  if (!clean.length) return null;
+  const rec = {
+    id: 'cmt_' + weekStartIso.replace(/-/g, '') + '_' + Math.random().toString(36).slice(2, 7),
+    rep: rep,
+    weekStart: weekStartIso,
+    submittedAt: nowISO(),
+    locked: true,
+    items: clean,
+    totalCommit: clean.reduce((s, it) => s + it.commitValue, 0)
+  };
+  commits.push(rec);
+  if (typeof emit === 'function') { try { emit('data-changed', { source: 'submitCommit', rep: rep, weekStart: weekStartIso }); } catch (e) {} }
+  return rec;
+}
+
+// Every deal credited to `rep` that closed inside the given week. Credit
+// follows the same rule the revenue tracker uses — generator, closer, or
+// listed as involved — so a commit isn't scored as a miss because a
+// teammate signed the paperwork.
+function commitWeekClosedOpps(rep, weekStartIso) {
+  if (typeof opportunities === 'undefined' || !Array.isArray(opportunities)) return [];
+  const end = commitWeekEnd(weekStartIso);
+  return opportunities.filter(o => {
+    if (!o || !o.closed || !o.closedAt) return false;
+    if (o.closedAt < weekStartIso || o.closedAt > end) return false;
+    if (o.rep === rep) return true;
+    const co = o.closeOut || {};
+    if (co.generatedBy === rep || co.closer === rep) return true;
+    return Array.isArray(co.involvedReps) && co.involvedReps.indexOf(rep) !== -1;
+  });
+}
+
+// The reconciliation. Joins a week's commit to that week's actual closes and
+// reports both sides of the story: which committed deals landed, which
+// slipped, and — critically — which deals closed that week that were never
+// committed. A rep who misses two commits but closes three others didn't
+// necessarily have a bad week; they had a bad forecast. The dashboard shows
+// both numbers so a manager can tell those apart.
+function commitWeekScorecard(rep, weekStartIso) {
+  const commit = getCommitForWeek(rep, weekStartIso);
+  const closed = commitWeekClosedOpps(rep, weekStartIso);
+  const closedById = {};
+  closed.forEach(o => { closedById[o.id] = o; });
+
+  const items = (commit ? commit.items : []).map(it => {
+    const won = closedById[it.oppId] || null;
+    const actual = won ? (Number(won.value) || 0) : 0;
+    return {
+      oppId: it.oppId,
+      name: it.name,
+      stage: it.stage,
+      pct: it.pct,
+      pipelineValue: it.pipelineValue,
+      commitValue: it.commitValue,
+      hit: !!won,
+      actualValue: actual,
+      variance: actual - it.commitValue,
+      closedAt: won ? won.closedAt : null
+    };
+  });
+
+  const committedIds = {};
+  items.forEach(it => { committedIds[it.oppId] = true; });
+  // Closes that were never committed — the "made up for it elsewhere" bucket.
+  const uncommitted = closed.filter(o => !committedIds[o.id]).map(o => ({
+    oppId: o.id,
+    name: o.name,
+    stage: (o.closeOut && o.closeOut.previousStage) || o.stage || '',
+    actualValue: Number(o.value) || 0,
+    closedAt: o.closedAt
+  }));
+
+  const totalCommit = items.reduce((s, it) => s + it.commitValue, 0);
+  const committedRevenue = items.reduce((s, it) => s + it.actualValue, 0);
+  const uncommittedRevenue = uncommitted.reduce((s, r) => s + r.actualValue, 0);
+  const actualRevenue = committedRevenue + uncommittedRevenue;
+  const hits = items.filter(it => it.hit);
+  const misses = items.filter(it => !it.hit);
+  const missedValue = misses.reduce((s, it) => s + it.commitValue, 0);
+
+  // A week is "settled" once it's fully in the past; a current or future
+  // week is still in flight and its misses aren't misses yet.
+  const settled = commitWeekIsPast(weekStartIso);
+
+  return {
+    rep: rep,
+    weekStart: weekStartIso,
+    weekEnd: commitWeekEnd(weekStartIso),
+    label: commitWeekLabel(weekStartIso),
+    commit: commit,
+    submitted: !!commit,
+    submittedAt: commit ? commit.submittedAt : null,
+    settled: settled,
+    inFlight: !settled,
+    items: items,
+    uncommitted: uncommitted,
+    totalCommit: totalCommit,
+    committedRevenue: committedRevenue,
+    uncommittedRevenue: uncommittedRevenue,
+    actualRevenue: actualRevenue,
+    variance: actualRevenue - totalCommit,
+    attainment: totalCommit > 0 ? (actualRevenue / totalCommit) : null,
+    commitAccuracy: totalCommit > 0 ? (committedRevenue / totalCommit) : null,
+    hitCount: hits.length,
+    missCount: misses.length,
+    dealCount: items.length,
+    missedValue: missedValue,
+    // True when the commit was missed on the named deals but other closes
+    // covered the dollar gap — the case the dashboard has to call out
+    // explicitly so a manager doesn't read a green total as a clean week.
+    coveredByOthers: settled && misses.length > 0 && uncommittedRevenue > 0,
+    fullyCovered: settled && misses.length > 0 && actualRevenue >= totalCommit
+  };
+}
+
+// Every week worth showing in the history: all weeks the rep committed to,
+// plus any past week where they closed something without committing.
+function commitHistoryWeeks(rep, limit) {
+  const seen = {};
+  getCommitsForRep(rep).forEach(c => { seen[c.weekStart] = true; });
+  if (typeof opportunities !== 'undefined' && Array.isArray(opportunities)) {
+    opportunities.forEach(o => {
+      if (o && o.closed && o.closedAt) {
+        const ws = commitWeekStart(o.closedAt);
+        if (ws && commitWeekClosedOpps(rep, ws).length) seen[ws] = true;
+      }
+    });
+  }
+  const weeks = Object.keys(seen).sort().reverse();
+  return (limit ? weeks.slice(0, limit) : weeks).map(w => commitWeekScorecard(rep, w));
+}
+
+// Rolling roll-up across settled weeks — what a manager reads first.
+function commitRollup(rep, weeksBack) {
+  const cards = commitHistoryWeeks(rep).filter(c => c.settled && c.submitted);
+  const use = weeksBack ? cards.slice(0, weeksBack) : cards;
+  const totalCommit = use.reduce((s, c) => s + c.totalCommit, 0);
+  const totalActual = use.reduce((s, c) => s + c.actualRevenue, 0);
+  const totalCommitted = use.reduce((s, c) => s + c.committedRevenue, 0);
+  const deals = use.reduce((s, c) => s + c.dealCount, 0);
+  const hit = use.reduce((s, c) => s + c.hitCount, 0);
+  return {
+    weeks: use.length,
+    totalCommit: totalCommit,
+    totalActual: totalActual,
+    totalUncommitted: use.reduce((s, c) => s + c.uncommittedRevenue, 0),
+    attainment: totalCommit > 0 ? (totalActual / totalCommit) : null,
+    commitAccuracy: totalCommit > 0 ? (totalCommitted / totalCommit) : null,
+    dealHitRate: deals > 0 ? (hit / deals) : null,
+    dealCount: deals,
+    hitCount: hit,
+    cards: use
+  };
+}
+
+window.commitWeekStart = commitWeekStart;
+window.commitWeekEnd = commitWeekEnd;
+window.commitWeekLabel = commitWeekLabel;
+window.commitNextWeekStart = commitNextWeekStart;
+window.commitCurrentWeekStart = commitCurrentWeekStart;
+window.commitInSubmissionWindow = commitInSubmissionWindow;
+window.commitOpenWeeks = commitOpenWeeks;
+window.commitEligibleOpps = commitEligibleOpps;
+window.submitCommit = submitCommit;
+window.getCommitForWeek = getCommitForWeek;
+window.getCommitsForRep = getCommitsForRep;
+window.commitWeekScorecard = commitWeekScorecard;
+window.commitHistoryWeeks = commitHistoryWeeks;
+window.commitRollup = commitRollup;
 
 // ─── Domain event bus (Phase 2 step 2 / step 1 — foundation) ────────────
 // Each domain mutation function (forthcoming: killOpportunity,
@@ -42773,6 +43361,94 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
 
 
   // ═══════════════════════════════════════════════════════════════
+  //  COMMITS SEED — historical weekly commitments
+  //  Built programmatically off the closes seeded above so the history is
+  //  internally consistent: a "hit" week points at a deal that genuinely
+  //  closed in that week, and a "miss" points at a deal still sitting live
+  //  in the pipeline. Deliberately leaves the UPCOMING week uncommitted so
+  //  the submission flow is demoable end-to-end.
+  // ═══════════════════════════════════════════════════════════════
+  (function seedCommits() {
+    if (typeof commits === 'undefined' || !Array.isArray(commits) || commits.length) return;
+    if (typeof CURRENT_REP === 'undefined') return;
+    const rep = CURRENT_REP;
+
+    // Stage → rep's typical confidence, with a little variation so the
+    // column doesn't read as a formula.
+    const PCT_BY_STAGE = { 'A': 90, 'B+': 75, 'B': 60, 'C+': 45, 'C': 30 };
+    const pctFor = (stage, i) => {
+      const base = PCT_BY_STAGE[stage] != null ? PCT_BY_STAGE[stage] : 50;
+      return Math.max(10, Math.min(95, base + [0, 5, -5, 10, -10][i % 5]));
+    };
+    // Reps rarely commit the full pipeline number — they commit what they
+    // think will actually sign. Trim slightly, rounded to the nearest $500.
+    const commitValFor = (pipelineValue, i) => {
+      const f = [0.95, 1.0, 0.88, 0.92, 1.0][i % 5];
+      return Math.round((pipelineValue * f) / 500) * 500;
+    };
+
+    const cur = commitCurrentWeekStart();
+    const live = commitEligibleOpps(rep).slice();
+    let liveCursor = 0;
+    const nextLive = () => (live.length ? live[(liveCursor++) % live.length] : null);
+
+    // Walk the last 8 weeks plus the current one. Past weeks get a commit
+    // built from that week's real closes (as hits) plus a live deal or two
+    // (as misses). Not every close gets committed — the leftovers become
+    // the "uncommitted revenue" that covers a missed week.
+    for (let back = 8; back >= 0; back--) {
+      const ws = commitWeekAddWeeks(cur, -back);
+      const closedThatWeek = commitWeekClosedOpps(rep, ws);
+      const items = [];
+      const used = {};
+
+      // Commit most — but not all — of what actually closed. Dropping one
+      // close from the commit on alternating weeks produces the
+      // "missed the commit, covered by other deals" case on purpose.
+      const commitCloseCount = closedThatWeek.length
+        ? Math.max(1, closedThatWeek.length - (back % 2))
+        : 0;
+      closedThatWeek.slice(0, commitCloseCount).forEach((o, i) => {
+        used[o.id] = true;
+        const stage = (o.closeOut && o.closeOut.previousStage) || o.stage || 'B';
+        const pv = (o.closeOut && o.closeOut.netRevenue) || o.value || 0;
+        items.push({
+          oppId: o.id, name: o.name, stage: stage,
+          pipelineValue: pv, commitValue: commitValFor(pv, i), pct: pctFor(stage, i)
+        });
+      });
+
+      // Add misses — deals committed that didn't land. Skip on a couple of
+      // weeks so the history contains clean 100% weeks too.
+      // back===0 is the week in flight: no closes yet, so seed it purely
+      // from live deals. That gives the dashboard a "current week, still
+      // open" card while leaving NEXT week uncommitted for the live demo.
+      const missCount = (back === 0) ? 3 : ((back % 3 === 0) ? 0 : ((back % 4 === 1) ? 2 : 1));
+      for (let m = 0; m < missCount; m++) {
+        const o = nextLive();
+        if (!o || used[o.id]) continue;
+        used[o.id] = true;
+        const pv = o.value || 0;
+        items.push({
+          oppId: o.id, name: o.name, stage: o.stage || 'B',
+          pipelineValue: pv, commitValue: commitValFor(pv, m + 2), pct: pctFor(o.stage, m + 1)
+        });
+      }
+
+      if (!items.length) continue;
+      const rec = submitCommit(rep, ws, items);
+      // Backdate submittedAt to the Friday before the week it covers —
+      // that's when a real commit would have gone in.
+      if (rec) {
+        const fri = new Date(ws + 'T12:00:00');
+        fri.setDate(fri.getDate() - 3);
+        rec.submittedAt = fri.toISOString();
+      }
+    }
+  })();
+
+
+  // ═══════════════════════════════════════════════════════════════
   //  MOCK DATA AMPLIFIER
   //  Programmatically generates ~3x more data on top of the carefully-curated
   //  seed above. Hand-tuned seed data stays untouched (so specific demos still
@@ -43104,7 +43780,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   let _prospectReturnDay = null;
 
   // Map of tab -> default title
-  const TAB_TITLES = { today:'Today', prospects:'Prospects', routing:'Routing', pipeline:'Pipeline', map:'Map', calendar:'Calendar', library:'Library', 'mob-revenue':'Revenue', 'mob-review':'Pipeline Review', 'mob-closed':'Closed deals', 'mob-dashboard':'Dashboard', 'mob-activity':'Activity', 'mob-events':'Events', 'mob-connections':'Connections' };
+  const TAB_TITLES = { today:'Today', prospects:'Prospects', routing:'Routing', pipeline:'Pipeline', map:'Map', calendar:'Calendar', library:'Library', 'mob-revenue':'Revenue', 'mob-review':'Pipeline Review', 'mob-closed':'Closed deals', 'mob-dashboard':'Dashboard', 'mob-commits':'Commits', 'mob-activity':'Activity', 'mob-events':'Events', 'mob-connections':'Connections' };
   // Prospecting hub (Phase 7 Pass 5) — five lenses under one bottom tab.
   // Nav-only v1: selecting a lens shows it now; the tab remembers the last
   // lens. day/routing/prospmap map to existing views; general/routemap are
@@ -43127,8 +43803,8 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   // ── Pipeline hub (Phase 7 Pass 14) — Pipeline / Revenue / Review as views
   // under the Pipeline bottom tab, switched via a ☰ sheet (mirrors the
   // Prospecting hub). _pipeLens tracks the active sub-view (in-session).
-  const _PIPE_LENS_LABELS = { pipeline:'Pipeline', dashboard:'Dashboard', activity:'Activity', revenue:'Revenue', review:'Pipeline Review', closed:'Closed deals', contacts:'Contacts' };
-  const _PIPE_LENS_VIEW = { pipeline:'pipeline', dashboard:'mob-dashboard', activity:'mob-activity', revenue:'mob-revenue', review:'mob-review', closed:'mob-closed', events:'mob-events', contacts:'mob-contacts' };
+  const _PIPE_LENS_LABELS = { pipeline:'Pipeline', dashboard:'Dashboard', commits:'Commits', activity:'Activity', revenue:'Revenue', review:'Pipeline Review', closed:'Closed deals', contacts:'Contacts' };
+  const _PIPE_LENS_VIEW = { pipeline:'pipeline', dashboard:'mob-dashboard', commits:'mob-commits', activity:'mob-activity', revenue:'mob-revenue', review:'mob-review', closed:'mob-closed', events:'mob-events', contacts:'mob-contacts' };
   const _LENS_FOR_PIPE_VIEW = Object.fromEntries(Object.entries(_PIPE_LENS_VIEW).map(([k, v]) => [v, k]));
   const _PIPE_HUB_VIEWS = Object.values(_PIPE_LENS_VIEW);
   let _pipeLens = 'pipeline';
@@ -47749,6 +48425,453 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   }
   window.goBack = goBack;
 
+  // ═══════════════════════════════════════════════════════════════
+  //  COMMITS (mobile) — CTA, submission flow, tracker dashboard
+  //  All numbers come from the shared domain layer (commitWeekScorecard /
+  //  commitRollup); this module only renders and collects input. The lock
+  //  is enforced in submitCommit(), so the confirm gate here is a UX
+  //  safeguard rather than the actual guarantee.
+  // ═══════════════════════════════════════════════════════════════
+  const _mcmMoney = (n) => (n < 0 ? '-$' : '$') + Math.abs(Math.round(n || 0)).toLocaleString();
+  const _mcmMoneyK = (n) => {
+    const v = Math.abs(Math.round(n || 0));
+    const s = v >= 1000 ? '$' + (v / 1000).toFixed(v >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'k' : '$' + v;
+    return (n < 0 ? '-' : '') + s;
+  };
+  const _mcmEsc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+  // ── CTA on the Business tab ──────────────────────────────────────
+  function renderCommitCta() {
+    const mount = document.getElementById('mcm-cta-mount');
+    if (!mount) return;
+    const open = commitOpenWeeks(CURRENT_REP);
+    const next = commitNextWeekStart();
+    const nextDone = !!getCommitForWeek(CURRENT_REP, next);
+    const inWindow = commitInSubmissionWindow();
+    let title, sub, cls;
+    if (nextDone) {
+      const c = getCommitForWeek(CURRENT_REP, next);
+      title = 'Commits submitted';
+      sub = commitWeekLabel(next) + ' · ' + _mcmMoney(c.totalCommit) + ' across ' + c.items.length + ' deal' + (c.items.length === 1 ? '' : 's');
+      cls = ' is-done';
+    } else {
+      title = 'Submit commits';
+      sub = inWindow
+        ? 'Due for ' + commitWeekLabel(next)
+        : 'Window opens Friday · ' + commitWeekLabel(next);
+      cls = '';
+    }
+    mount.innerHTML = `<button type="button" class="mcm-cta${cls}" onclick="${nextDone ? "showPipeLens('commits')" : 'mcmOpen()'}">
+      <span class="mcm-cta-ico">${nextDone ? '✓' : '📌'}</span>
+      <span class="mcm-cta-txt"><span class="mcm-cta-title">${title}</span><span class="mcm-cta-sub">${_mcmEsc(sub)}</span></span>
+      <span class="mcm-cta-chev">›</span>
+    </button>`;
+    if (!open.length && !nextDone) mount.innerHTML = '';
+  }
+  window.renderCommitCta = renderCommitCta;
+
+  // ── Submission flow state ────────────────────────────────────────
+  // Draft lives only for the duration of the flow. Nothing touches the
+  // commits array until the rep clears the confirm gate on step 3.
+  let _mcmStep = 1;
+  let _mcmWeek = null;
+  let _mcmDraft = {};      // oppId -> { pct, commitValue }
+  let _mcmConfirmed = false;
+
+  function mcmOpen() {
+    const weeks = commitOpenWeeks(CURRENT_REP);
+    if (!weeks.length) { showToast('Every upcoming week is already committed'); return; }
+    _mcmStep = 1;
+    _mcmWeek = weeks.indexOf(commitNextWeekStart()) !== -1 ? commitNextWeekStart() : weeks[0];
+    _mcmDraft = {};
+    _mcmConfirmed = false;
+    document.getElementById('mcm-flow').classList.add('open');
+    _mcmRender();
+  }
+  window.mcmOpen = mcmOpen;
+
+  function mcmCancel() {
+    const n = Object.keys(_mcmDraft).length;
+    if (n && !confirm('Discard this commit draft? Nothing has been submitted yet.')) return;
+    document.getElementById('mcm-flow').classList.remove('open');
+    _mcmDraft = {}; _mcmConfirmed = false;
+  }
+  window.mcmCancel = mcmCancel;
+
+  function mcmSetWeek(w) { _mcmWeek = w; _mcmRender(); }
+  window.mcmSetWeek = mcmSetWeek;
+
+  function mcmToggleDeal(oppId) {
+    if (_mcmDraft[oppId]) { delete _mcmDraft[oppId]; }
+    else {
+      const o = commitEligibleOpps(CURRENT_REP).find(x => x.id === oppId);
+      if (!o) return;
+      // Seed the commit value from the pipeline number, but it's a starting
+      // point only — the rep is expected to overwrite it with what they
+      // actually expect to sign.
+      _mcmDraft[oppId] = { pct: _mcmDefaultPct(o.stage), commitValue: Number(o.value) || 0 };
+    }
+    _mcmRender();
+  }
+  window.mcmToggleDeal = mcmToggleDeal;
+
+  function _mcmDefaultPct(stage) {
+    const m = { 'A': 90, 'B+': 75, 'B': 60, 'C+': 45, 'C': 30 };
+    return m[stage] != null ? m[stage] : 50;
+  }
+  function mcmSetPct(oppId, pct) { if (_mcmDraft[oppId]) { _mcmDraft[oppId].pct = pct; _mcmRender(); } }
+  window.mcmSetPct = mcmSetPct;
+  function mcmSetPctInput(oppId, v) {
+    if (!_mcmDraft[oppId]) return;
+    const n = parseFloat(String(v).replace(/[^0-9.]/g, ''));
+    _mcmDraft[oppId].pct = isNaN(n) ? 0 : Math.max(0, Math.min(100, n));
+    _mcmUpdateFooter();
+  }
+  window.mcmSetPctInput = mcmSetPctInput;
+  function mcmSetVal(oppId, v) {
+    if (!_mcmDraft[oppId]) return;
+    const n = parseFloat(String(v).replace(/[$,\s]/g, ''));
+    _mcmDraft[oppId].commitValue = isNaN(n) ? 0 : Math.max(0, n);
+    _mcmUpdateFooter();
+    const d = document.getElementById('mcm-delta-' + oppId);
+    if (d) {
+      const o = commitEligibleOpps(CURRENT_REP).find(x => x.id === oppId);
+      d.outerHTML = _mcmDeltaHtml(oppId, o ? (Number(o.value) || 0) : 0);
+    }
+  }
+  window.mcmSetVal = mcmSetVal;
+  function mcmDropDeal(oppId) { delete _mcmDraft[oppId]; _mcmRender(); }
+  window.mcmDropDeal = mcmDropDeal;
+  function mcmToggleConfirm() { _mcmConfirmed = !_mcmConfirmed; _mcmRender(); }
+  window.mcmToggleConfirm = mcmToggleConfirm;
+
+  function _mcmTotal() {
+    return Object.keys(_mcmDraft).reduce((s, k) => s + (Number(_mcmDraft[k].commitValue) || 0), 0);
+  }
+  function _mcmDeltaHtml(oppId, pipelineValue) {
+    const d = _mcmDraft[oppId];
+    const diff = (d ? d.commitValue : 0) - pipelineValue;
+    if (!pipelineValue || Math.abs(diff) < 1) {
+      return `<div class="mcm-delta cmt-neutral" id="mcm-delta-${oppId}">Same as pipeline value</div>`;
+    }
+    const cls = diff > 0 ? 'cmt-good' : 'cmt-bad';
+    return `<div class="mcm-delta ${cls}" id="mcm-delta-${oppId}">${diff > 0 ? '+' : ''}${_mcmMoney(diff)} vs pipeline value of ${_mcmMoney(pipelineValue)}</div>`;
+  }
+
+  function mcmNext() { if (_mcmStep < 3) { _mcmStep++; _mcmRender(); } }
+  window.mcmNext = mcmNext;
+  function mcmBack() { if (_mcmStep > 1) { _mcmStep--; _mcmRender(); } }
+  window.mcmBack = mcmBack;
+
+  function mcmSubmit() {
+    if (!_mcmConfirmed) return;
+    const ids = Object.keys(_mcmDraft);
+    if (!ids.length) return;
+    const eligible = commitEligibleOpps(CURRENT_REP);
+    const items = ids.map(id => {
+      const o = eligible.find(x => x.id === id) || {};
+      return {
+        oppId: id, name: o.name || '', stage: o.stage || '',
+        pipelineValue: Number(o.value) || 0,
+        commitValue: _mcmDraft[id].commitValue,
+        pct: _mcmDraft[id].pct
+      };
+    });
+    const rec = submitCommit(CURRENT_REP, _mcmWeek, items);
+    if (!rec) { showToast('That week already has a submitted commit'); return; }
+    document.getElementById('mcm-flow').classList.remove('open');
+    _mcmDraft = {}; _mcmConfirmed = false;
+    showToast('Commit locked for ' + commitWeekLabel(rec.weekStart));
+    renderCommitCta();
+    showPipeLens('commits');
+  }
+  window.mcmSubmit = mcmSubmit;
+
+  function _mcmUpdateFooter() {
+    const v = document.getElementById('mcm-ft-total');
+    if (v) v.textContent = _mcmMoney(_mcmTotal());
+  }
+
+  // ── Flow rendering ───────────────────────────────────────────────
+  function _mcmRender() {
+    const body = document.getElementById('mcm-flow-body');
+    const ft = document.getElementById('mcm-flow-ft');
+    const steps = document.getElementById('mcm-steps');
+    if (!body) return;
+    document.getElementById('mcm-flow-stepn').textContent = _mcmStep + ' / 3';
+    document.getElementById('mcm-flow-title').textContent =
+      _mcmStep === 1 ? 'Pick deals' : _mcmStep === 2 ? 'Set your numbers' : 'Review & confirm';
+    steps.innerHTML = [1, 2, 3].map(i => `<div class="mcm-step-seg${i <= _mcmStep ? ' is-on' : ''}"></div>`).join('');
+    if (_mcmStep === 1) _mcmRenderStep1(body, ft);
+    else if (_mcmStep === 2) _mcmRenderStep2(body, ft);
+    else _mcmRenderStep3(body, ft);
+  }
+
+  function _mcmRenderStep1(body, ft) {
+    const weeks = commitOpenWeeks(CURRENT_REP);
+    if (weeks.indexOf(_mcmWeek) === -1) _mcmWeek = weeks[0];
+    const cur = commitCurrentWeekStart(), next = commitNextWeekStart();
+    const weekHtml = weeks.map(w => {
+      const tag = w === next ? 'Next week — the normal commit' : w === cur ? 'This week — already in progress' : 'Two weeks out';
+      return `<button type="button" class="mcm-week${w === _mcmWeek ? ' is-sel' : ''}" onclick="mcmSetWeek('${w}')">
+        <span class="mcm-week-radio"></span>
+        <span class="mcm-week-txt"><span class="mcm-week-l">${commitWeekLabel(w)}</span><span class="mcm-week-s">${tag}</span></span>
+      </button>`;
+    }).join('');
+
+    const opps = commitEligibleOpps(CURRENT_REP);
+    const order = { 'A': 0, 'B+': 1, 'B': 2, 'C+': 3, 'C': 4 };
+    opps.sort((a, b) => (order[a.stage] ?? 9) - (order[b.stage] ?? 9) || (b.value || 0) - (a.value || 0));
+    const dealHtml = opps.length ? opps.map(o => {
+      const sel = !!_mcmDraft[o.id];
+      return `<button type="button" class="mcm-deal${sel ? ' is-sel' : ''}" onclick="mcmToggleDeal('${o.id}')">
+        <span class="mcm-deal-box">${sel ? '✓' : ''}</span>
+        <span class="mcm-deal-body">
+          <span class="mcm-deal-name">${_mcmEsc(o.name)}</span>
+          <span class="mcm-deal-meta">Stage ${_mcmEsc(o.stage || '—')} · ${_mcmEsc(o.devices || 'No devices listed')}</span>
+        </span>
+        <span class="mcm-deal-val">${_mcmMoneyK(o.value)}</span>
+      </button>`;
+    }).join('') : '<div class="mcm-empty">No live deals in your pipeline to commit.</div>';
+
+    const offWindow = !commitInSubmissionWindow();
+    body.innerHTML = `
+      ${offWindow ? `<div class="cmt-lockbar" style="margin-bottom:14px;"><span class="cmt-lockbar-ico">🗓</span><span class="cmt-lockbar-txt">Commits normally go in <b>Friday through Sunday</b> for the week ahead. You're submitting off-cadence — that's fine, but your manager will see the submission timestamp.</span></div>` : ''}
+      <div class="mcm-sec">
+        <div class="mcm-sec-t">Commit week</div>
+        <div class="mcm-weekpick">${weekHtml}</div>
+      </div>
+      <div class="mcm-sec">
+        <div class="mcm-sec-t">Your pipeline · ${opps.length} live deal${opps.length === 1 ? '' : 's'}</div>
+        ${dealHtml}
+      </div>`;
+
+    const n = Object.keys(_mcmDraft).length;
+    ft.innerHTML = `<div class="mcm-ft-meta"><div class="mcm-ft-l">SELECTED</div><div class="mcm-ft-v">${n} deal${n === 1 ? '' : 's'}</div></div>
+      <button class="mcm-btn mcm-btn-primary" onclick="mcmNext()" ${n ? '' : 'disabled'}>Next</button>`;
+  }
+
+  function _mcmRenderStep2(body, ft) {
+    const eligible = commitEligibleOpps(CURRENT_REP);
+    const ids = Object.keys(_mcmDraft);
+    const cards = ids.map(id => {
+      const o = eligible.find(x => x.id === id) || {};
+      const d = _mcmDraft[id];
+      const pv = Number(o.value) || 0;
+      const pcts = [25, 50, 75, 90];
+      return `<div class="mcm-dcard">
+        <div class="mcm-dcard-hd">
+          <div>
+            <div class="mcm-dcard-name">${_mcmEsc(o.name)}</div>
+            <div class="mcm-dcard-meta">Stage ${_mcmEsc(o.stage || '—')} · pipeline ${_mcmMoney(pv)}</div>
+          </div>
+          <button class="mcm-dcard-drop" onclick="mcmDropDeal('${id}')" aria-label="Remove">✕</button>
+        </div>
+        <div class="mcm-fld">
+          <div class="mcm-fld-l"><span>Chance to close</span><span class="mcm-fld-hint">${d.pct}%</span></div>
+          <div class="mcm-pctrow">
+            ${pcts.map(p => `<button type="button" class="mcm-pctbtn${d.pct === p ? ' is-on' : ''}" onclick="mcmSetPct('${id}',${p})">${p}%</button>`).join('')}
+          </div>
+          <input class="mcm-in" style="margin-top:6px;" type="text" inputmode="decimal" value="${d.pct}" oninput="mcmSetPctInput('${id}',this.value)" aria-label="Custom percent">
+        </div>
+        <div class="mcm-fld">
+          <div class="mcm-fld-l"><span>Commit value</span><span class="mcm-fld-hint">what you'll actually sign</span></div>
+          <input class="mcm-in" type="text" inputmode="decimal" value="${d.commitValue}" oninput="mcmSetVal('${id}',this.value)">
+          ${_mcmDeltaHtml(id, pv)}
+        </div>
+      </div>`;
+    }).join('');
+
+    body.innerHTML = `
+      <div class="cmt-lockbar" style="margin-bottom:14px;">
+        <span class="cmt-lockbar-ico">💡</span>
+        <span class="cmt-lockbar-txt">The <b>commit value</b> is independent of the pipeline value. Pipeline is your working estimate; the commit is the number you're standing behind for this week. Trim it if you expect to discount.</span>
+      </div>
+      ${cards}`;
+    ft.innerHTML = `<div class="mcm-ft-meta"><div class="mcm-ft-l">TOTAL COMMIT</div><div class="mcm-ft-v" id="mcm-ft-total">${_mcmMoney(_mcmTotal())}</div></div>
+      <button class="mcm-btn mcm-btn-ghost" onclick="mcmBack()">Back</button>
+      <button class="mcm-btn mcm-btn-primary" onclick="mcmNext()">Review</button>`;
+  }
+
+  function _mcmRenderStep3(body, ft) {
+    const eligible = commitEligibleOpps(CURRENT_REP);
+    const ids = Object.keys(_mcmDraft);
+    const total = _mcmTotal();
+    // Weighted = sum(commitValue × pct). Shown alongside the raw commit so
+    // the rep sees what their own confidence implies before they lock it.
+    const weighted = ids.reduce((s, id) => s + _mcmDraft[id].commitValue * (_mcmDraft[id].pct / 100), 0);
+    const rows = ids.map(id => {
+      const o = eligible.find(x => x.id === id) || {};
+      const d = _mcmDraft[id];
+      return `<div class="mcm-rev-row">
+        <div class="mcm-rev-nm">${_mcmEsc(o.name)}<div class="mcm-rev-sub">Stage ${_mcmEsc(o.stage || '—')} · ${d.pct}% chance · pipeline ${_mcmMoney(Number(o.value) || 0)}</div></div>
+        <div class="mcm-rev-v">${_mcmMoney(d.commitValue)}</div>
+      </div>`;
+    }).join('');
+
+    body.innerHTML = `
+      <div class="mcm-rev-total">
+        <div class="mcm-rev-total-l">Committing for ${commitWeekLabel(_mcmWeek)}</div>
+        <div class="mcm-rev-total-v">${_mcmMoney(total)}</div>
+        <div class="mcm-rev-total-s">${ids.length} deal${ids.length === 1 ? '' : 's'} · ${_mcmMoney(weighted)} weighted by your own odds</div>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:11px;padding:4px 13px;">${rows}</div>
+      <div class="cmt-lockbar" style="margin-top:14px;">
+        <span class="cmt-lockbar-ico">🔒</span>
+        <span class="cmt-lockbar-txt"><b>This cannot be edited or withdrawn.</b> Once submitted, this commit is locked and becomes the permanent record for ${commitWeekLabel(_mcmWeek)}. Your manager sees it, and it will be scored against what actually closes that week.</span>
+      </div>
+      <button type="button" class="mcm-confirm${_mcmConfirmed ? ' is-on' : ''}" onclick="mcmToggleConfirm()">
+        <span class="mcm-confirm-box">${_mcmConfirmed ? '✓' : ''}</span>
+        <span class="mcm-confirm-txt">I understand this commit is final and cannot be changed after submission.</span>
+      </button>`;
+    ft.innerHTML = `<div class="mcm-ft-meta"><div class="mcm-ft-l">TOTAL COMMIT</div><div class="mcm-ft-v">${_mcmMoney(total)}</div></div>
+      <button class="mcm-btn mcm-btn-ghost" onclick="mcmBack()">Back</button>
+      <button class="mcm-btn mcm-btn-danger" onclick="mcmSubmit()" ${_mcmConfirmed ? '' : 'disabled'}>Submit &amp; lock</button>`;
+  }
+
+  // ── Commits dashboard (Business → Commits lens) ──────────────────
+  let _mcmOpenWeeks = {};   // weekStart -> expanded?
+  function mcmToggleWeek(w) { _mcmOpenWeeks[w] = !_mcmOpenWeeks[w]; renderMobCommits(); }
+  window.mcmToggleWeek = mcmToggleWeek;
+
+  function _mcmBarHtml(card) {
+    // Track = commit. Fill = actual, split committed (green) vs uncommitted
+    // (amber) so "we hit the number, but not with the deals we promised"
+    // is visible at a glance instead of hiding inside a single green bar.
+    const denom = Math.max(card.totalCommit, card.actualRevenue, 1);
+    const cw = Math.min(100, (card.committedRevenue / denom) * 100);
+    const uw = Math.min(100 - cw, (card.uncommittedRevenue / denom) * 100);
+    return `<div class="cmt-bar">
+      <div class="cmt-bar-fill is-committed" style="width:${cw}%"></div>
+      <div class="cmt-bar-fill is-uncommitted" style="width:${uw}%"></div>
+    </div>`;
+  }
+
+  function _mcmStatusPill(card) {
+    if (!card.submitted) return '<span class="cmt-pill cmt-pill-none">No commit</span>';
+    if (card.inFlight) return '<span class="cmt-pill cmt-pill-open">In flight</span>';
+    if (card.missCount === 0) return '<span class="cmt-pill cmt-pill-hit">All hit</span>';
+    if (card.fullyCovered) return '<span class="cmt-pill cmt-pill-covered">Covered by others</span>';
+    return `<span class="cmt-pill cmt-pill-miss">${card.missCount} missed</span>`;
+  }
+
+  function renderMobCommits() {
+    const mount = document.getElementById('mcm-dash');
+    if (!mount) return;
+    const roll = commitRollup(CURRENT_REP);
+    const cards = commitHistoryWeeks(CURRENT_REP, 14);
+    const next = commitNextWeekStart();
+    const nextDone = !!getCommitForWeek(CURRENT_REP, next);
+
+    const att = roll.attainment == null ? '—' : Math.round(roll.attainment * 100) + '%';
+    const acc = roll.commitAccuracy == null ? '—' : Math.round(roll.commitAccuracy * 100) + '%';
+    const hr = roll.dealHitRate == null ? '—' : Math.round(roll.dealHitRate * 100) + '%';
+
+    const hero = `<div class="mcm-hero">
+      <div class="mcm-hero-l">Commit attainment · last ${roll.weeks} settled week${roll.weeks === 1 ? '' : 's'}</div>
+      <div class="mcm-hero-v">${att}</div>
+      <div class="mcm-hero-s">${_mcmMoney(roll.totalActual)} closed against ${_mcmMoney(roll.totalCommit)} committed</div>
+      <div class="mcm-hero-grid">
+        <div><div class="mcm-hero-cell-v">${acc}</div><div class="mcm-hero-cell-l">FROM COMMITTED DEALS</div></div>
+        <div><div class="mcm-hero-cell-v">${hr}</div><div class="mcm-hero-cell-l">DEAL HIT RATE</div></div>
+        <div><div class="mcm-hero-cell-v">${_mcmMoneyK(roll.totalUncommitted)}</div><div class="mcm-hero-cell-l">UNCOMMITTED</div></div>
+      </div>
+    </div>`;
+
+    // The gap between dollar attainment and deal hit rate is the single most
+    // diagnostic number here, so it gets called out in words rather than
+    // leaving the reader to divide two percentages in their head.
+    let readout = '';
+    if (roll.attainment != null && roll.dealHitRate != null && roll.weeks >= 2) {
+      const attP = Math.round(roll.attainment * 100), hrP = Math.round(roll.dealHitRate * 100);
+      if (attP - hrP >= 15) {
+        readout = `<div class="mcm-cover">You're hitting <b>${attP}%</b> of committed dollars but only <b>${hrP}%</b> of committed deals — the revenue is landing, just not from the deals you name. That's a forecasting gap, not a production gap.</div>`;
+      } else if (hrP - attP >= 15) {
+        readout = `<div class="mcm-cover">You close <b>${hrP}%</b> of the deals you commit but only reach <b>${attP}%</b> of committed dollars — the deals land smaller than committed. Worth revisiting how you set commit values.</div>`;
+      }
+    }
+
+    const ctaBlock = nextDone ? '' :
+      `<button type="button" class="mcm-cta" style="margin-top:13px;" onclick="mcmOpen()">
+        <span class="mcm-cta-ico">📌</span>
+        <span class="mcm-cta-txt"><span class="mcm-cta-title">Submit commits</span><span class="mcm-cta-sub">${commitWeekLabel(next)} is still open</span></span>
+        <span class="mcm-cta-chev">›</span>
+      </button>`;
+
+    const weekCards = cards.length ? cards.map(c => {
+      const openState = !!_mcmOpenWeeks[c.weekStart];
+      const varCls = c.variance >= 0 ? 'cmt-good' : 'cmt-bad';
+      const detail = openState ? _mcmWeekDetail(c) : '';
+      return `<div class="mcm-wcard${c.inFlight ? ' is-open' : ''}">
+        <div class="mcm-wcard-hd" onclick="mcmToggleWeek('${c.weekStart}')">
+          <div>
+            <div class="mcm-wcard-wk">${c.label}</div>
+            <div class="mcm-wcard-sub">${c.submitted ? (c.dealCount + ' deal' + (c.dealCount === 1 ? '' : 's') + ' committed') : 'Closed without a commit'}</div>
+          </div>
+          ${_mcmStatusPill(c)}
+        </div>
+        <div class="mcm-wcard-nums">
+          <div><div class="mcm-wcard-num-l">Committed</div><div class="mcm-wcard-num-v">${_mcmMoney(c.totalCommit)}</div></div>
+          <div><div class="mcm-wcard-num-l">Actual</div><div class="mcm-wcard-num-v">${_mcmMoney(c.actualRevenue)}</div></div>
+          <div><div class="mcm-wcard-num-l">Variance</div><div class="mcm-wcard-num-v ${c.submitted ? varCls : 'cmt-neutral'}">${c.submitted ? (c.variance >= 0 ? '+' : '') + _mcmMoney(c.variance) : '—'}</div></div>
+        </div>
+        ${_mcmBarHtml(c)}
+        <div class="mcm-wcard-foot">
+          <span>${c.submitted ? (c.hitCount + ' of ' + c.dealCount + ' committed deals closed') : (c.uncommitted.length + ' close' + (c.uncommitted.length === 1 ? '' : 's') + ' this week')}</span>
+          <span style="color:var(--tm);">${openState ? 'Hide ▴' : 'Details ▾'}</span>
+        </div>
+        ${detail}
+      </div>`;
+    }).join('') : '<div class="mcm-empty">No commit history yet.<br>Submit your first weekly commit to start tracking.</div>';
+
+    mount.innerHTML = hero + readout + ctaBlock + '<div style="height:14px;"></div>' + weekCards;
+  }
+  window.renderMobCommits = renderMobCommits;
+
+  function _mcmWeekDetail(c) {
+    const committed = c.items.length ? c.items.map(it => {
+      const pill = c.inFlight
+        ? (it.hit ? '<span class="cmt-pill cmt-pill-hit">Closed</span>' : '<span class="cmt-pill cmt-pill-open">Open</span>')
+        : (it.hit ? '<span class="cmt-pill cmt-pill-hit">Hit</span>' : '<span class="cmt-pill cmt-pill-miss">Missed</span>');
+      const dcls = it.variance >= 0 ? 'cmt-good' : 'cmt-bad';
+      return `<div class="mcm-drow">
+        <div class="mcm-drow-body">
+          <div class="mcm-drow-nm">${_mcmEsc(it.name)}</div>
+          <div class="mcm-drow-meta">Stage ${_mcmEsc(it.stage || '—')} · committed at ${it.pct}%</div>
+        </div>
+        <div class="mcm-drow-r">
+          <div class="mcm-drow-v">${_mcmMoney(it.commitValue)}</div>
+          <div class="mcm-drow-d ${it.hit ? dcls : 'cmt-neutral'}">${it.hit ? ((it.variance >= 0 ? '+' : '') + _mcmMoney(it.variance) + ' actual') : '—'}</div>
+          <div style="margin-top:4px;">${pill}</div>
+        </div>
+      </div>`;
+    }).join('') : '';
+
+    const others = c.uncommitted.length ? `
+      <div class="mcm-sec-t" style="margin-top:12px;">Closed but not committed</div>
+      ${c.uncommitted.map(u => `<div class="mcm-drow">
+        <div class="mcm-drow-body">
+          <div class="mcm-drow-nm">${_mcmEsc(u.name)}</div>
+          <div class="mcm-drow-meta">Stage ${_mcmEsc(u.stage || '—')} · closed ${u.closedAt}</div>
+        </div>
+        <div class="mcm-drow-r"><div class="mcm-drow-v">${_mcmMoney(u.actualValue)}</div>
+        <div style="margin-top:4px;"><span class="cmt-pill cmt-pill-covered">Unplanned</span></div></div>
+      </div>`).join('')}` : '';
+
+    // The explicit "made up for it elsewhere" callout the tracker exists for.
+    let cover = '';
+    if (c.coveredByOthers) {
+      cover = c.fullyCovered
+        ? `<div class="mcm-cover"><b>Missed the commit, made the number.</b> ${c.missCount} committed deal${c.missCount === 1 ? '' : 's'} worth ${_mcmMoney(c.missedValue)} didn't close, but ${_mcmMoney(c.uncommittedRevenue)} came in from ${c.uncommitted.length} deal${c.uncommitted.length === 1 ? '' : 's'} that weren't committed — covering the gap.</div>`
+        : `<div class="mcm-cover"><b>Partially covered.</b> ${_mcmMoney(c.missedValue)} of committed revenue slipped; ${_mcmMoney(c.uncommittedRevenue)} of uncommitted closes offset part of it, leaving the week ${_mcmMoney(Math.abs(c.variance))} short.</div>`;
+    }
+
+    const header = c.submitted
+      ? `<div class="mcm-sec-t" style="margin-top:12px;">Committed deals${c.submittedAt ? ' · submitted ' + new Date(c.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''}</div>`
+      : '';
+    return header + committed + others + cover;
+  }
+
   function renderActiveTab() {
     if (currentTab === 'today') renderToday();
     else if (currentTab === 'prospects') renderProspects();
@@ -47760,6 +48883,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     else if (currentTab === 'finance-calc') renderFinanceCalc();
     else if (currentTab === 'mob-revenue') renderMobRevenue();
     else if (currentTab === 'mob-dashboard') renderMobDashboard();
+    else if (currentTab === 'mob-commits') renderMobCommits();
     else if (currentTab === 'mob-activity') renderMobActivity();
     else if (currentTab === 'mob-events') renderMobEventsDashboard();
     else if (currentTab === 'mob-review') renderMobReview();
@@ -54255,6 +55379,8 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   window.openOppDetail = openOppDetail;
 
   function renderPipelineList() {
+    // Weekly commits CTA sits above both trackers in DOM order.
+    renderCommitCta();
     // Revenue + active-pipeline trackers at top (revenue first, matching DOM order)
     renderRevenueTracker();
     renderPipelineValueTracker();
@@ -59445,9 +60571,9 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   // the mobile Business-tab lens pattern. Revenue + Pipeline reuse the existing
   // renderers; Efficiency + Custom Dashboard land in follow-up passes.
   // ════════════════════════════════════════════════════════════════════
-  const _DASH_LENS_VIEW = { revenue: 'revenue', pipeline: 'review', efficiency: 'efficiency', custom: 'custom-dashboard', events: 'events' };
-  const _VIEW_DASH_LENS = { revenue: 'revenue', review: 'pipeline', efficiency: 'efficiency', 'custom-dashboard': 'custom', events: 'events' };
-  const _DASH_CATS = [['revenue', 'Revenue'], ['pipeline', 'Pipeline'], ['events', 'Events'], ['efficiency', 'Efficiency'], ['custom', 'Custom Dashboard']];
+  const _DASH_LENS_VIEW = { revenue: 'revenue', pipeline: 'review', commits: 'commits', efficiency: 'efficiency', custom: 'custom-dashboard', events: 'events' };
+  const _VIEW_DASH_LENS = { revenue: 'revenue', review: 'pipeline', commits: 'commits', efficiency: 'efficiency', 'custom-dashboard': 'custom', events: 'events' };
+  const _DASH_CATS = [['revenue', 'Revenue'], ['pipeline', 'Pipeline'], ['commits', 'Commits'], ['events', 'Events'], ['efficiency', 'Efficiency'], ['custom', 'Custom Dashboard']];
   let _dashLens = 'revenue';
   let _dashDefault = null; // pinned-as-default lens (in-memory)
 
@@ -59479,6 +60605,333 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     if (typeof showToast === 'function') showToast(_dashDefault ? ('Pinned "' + ((_DASH_CATS.find(c => c[0] === lens) || [, lens])[1]) + '" as your default dashboard') : 'Cleared pinned dashboard');
   }
   window.toggleDashPin = toggleDashPin;
+
+  // ════════════════════════════════════════════════════════════════════
+  //  COMMITS (desktop) — CTA, submission modal, tracker dashboard
+  //  Desktop port of the mobile flow. Same shared domain layer, same three
+  //  steps; the deal picker and per-deal inputs become one table because
+  //  the width is there and reps scanning 15 deals want a grid, not cards.
+  // ════════════════════════════════════════════════════════════════════
+  const _dcmMoney = (n) => (n < 0 ? '-$' : '$') + Math.abs(Math.round(n || 0)).toLocaleString();
+  const _dcmMoneyK = (n) => {
+    const v = Math.abs(Math.round(n || 0));
+    const s = v >= 1000 ? '$' + (v / 1000).toFixed(v >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'k' : '$' + v;
+    return (n < 0 ? '-' : '') + s;
+  };
+  const _dcmE = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+  function renderDeskCommitCta() {
+    const mount = document.getElementById('dcm-cta-mount');
+    if (!mount) return;
+    const next = commitNextWeekStart();
+    const done = getCommitForWeek(CURRENT_REP, next);
+    const inWindow = commitInSubmissionWindow();
+    if (done) {
+      mount.innerHTML = `<div class="dcm-ctabar">
+        <button type="button" class="dcm-cta is-done" onclick="showDashLens('commits')">✓ Commits submitted <span class="dcm-cta-sub">· ${commitWeekLabel(next)}</span></button>
+        <span class="dcm-ctabar-note">${_dcmMoney(done.totalCommit)} across ${done.items.length} deal${done.items.length === 1 ? '' : 's'} · locked</span>
+      </div>`;
+    } else {
+      mount.innerHTML = `<div class="dcm-ctabar">
+        <button type="button" class="dcm-cta" onclick="dcmOpen()">📌 Submit commits</button>
+        <span class="dcm-ctabar-note">${inWindow ? 'Due now for ' + commitWeekLabel(next) : 'Window opens Friday · for ' + commitWeekLabel(next)}</span>
+      </div>`;
+    }
+  }
+  window.renderDeskCommitCta = renderDeskCommitCta;
+
+  // ── Flow state (draft only; nothing persists until the confirm gate) ──
+  let _dcmStep = 1, _dcmWeek = null, _dcmDraft = {}, _dcmConfirmed = false;
+
+  function dcmOpen() {
+    const weeks = commitOpenWeeks(CURRENT_REP);
+    if (!weeks.length) { if (typeof showToast === 'function') showToast('Every upcoming week is already committed'); return; }
+    _dcmStep = 1;
+    _dcmWeek = weeks.indexOf(commitNextWeekStart()) !== -1 ? commitNextWeekStart() : weeks[0];
+    _dcmDraft = {}; _dcmConfirmed = false;
+    document.getElementById('dcm-modal').classList.add('open');
+    _dcmRender();
+  }
+  window.dcmOpen = dcmOpen;
+  function dcmCancel() {
+    if (Object.keys(_dcmDraft).length && !confirm('Discard this commit draft? Nothing has been submitted yet.')) return;
+    document.getElementById('dcm-modal').classList.remove('open');
+    _dcmDraft = {}; _dcmConfirmed = false;
+  }
+  window.dcmCancel = dcmCancel;
+  function dcmSetWeek(w) { _dcmWeek = w; _dcmRender(); }
+  window.dcmSetWeek = dcmSetWeek;
+  function _dcmDefaultPct(stage) { const m = { 'A': 90, 'B+': 75, 'B': 60, 'C+': 45, 'C': 30 }; return m[stage] != null ? m[stage] : 50; }
+  function dcmToggleDeal(id) {
+    if (_dcmDraft[id]) delete _dcmDraft[id];
+    else {
+      const o = commitEligibleOpps(CURRENT_REP).find(x => x.id === id);
+      if (!o) return;
+      _dcmDraft[id] = { pct: _dcmDefaultPct(o.stage), commitValue: Number(o.value) || 0 };
+    }
+    _dcmRender();
+  }
+  window.dcmToggleDeal = dcmToggleDeal;
+  function dcmSetPct(id, v) {
+    if (!_dcmDraft[id]) return;
+    const n = parseFloat(String(v).replace(/[^0-9.]/g, ''));
+    _dcmDraft[id].pct = isNaN(n) ? 0 : Math.max(0, Math.min(100, n));
+    _dcmFooterSync();
+  }
+  window.dcmSetPct = dcmSetPct;
+  function dcmSetVal(id, v) {
+    if (!_dcmDraft[id]) return;
+    const n = parseFloat(String(v).replace(/[$,\s]/g, ''));
+    _dcmDraft[id].commitValue = isNaN(n) ? 0 : Math.max(0, n);
+    _dcmFooterSync();
+    const d = document.getElementById('dcm-delta-' + id);
+    if (d) {
+      const o = commitEligibleOpps(CURRENT_REP).find(x => x.id === id);
+      d.outerHTML = _dcmDeltaHtml(id, o ? (Number(o.value) || 0) : 0);
+    }
+  }
+  window.dcmSetVal = dcmSetVal;
+  function dcmDropDeal(id) { delete _dcmDraft[id]; _dcmRender(); }
+  window.dcmDropDeal = dcmDropDeal;
+  function dcmToggleConfirm() { _dcmConfirmed = !_dcmConfirmed; _dcmRender(); }
+  window.dcmToggleConfirm = dcmToggleConfirm;
+  function dcmNext() { if (_dcmStep < 3) { _dcmStep++; _dcmRender(); } }
+  window.dcmNext = dcmNext;
+  function dcmBack() { if (_dcmStep > 1) { _dcmStep--; _dcmRender(); } }
+  window.dcmBack = dcmBack;
+  function _dcmTotal() { return Object.keys(_dcmDraft).reduce((s, k) => s + (Number(_dcmDraft[k].commitValue) || 0), 0); }
+  function _dcmFooterSync() { const el = document.getElementById('dcm-ft-total'); if (el) el.textContent = _dcmMoney(_dcmTotal()); }
+  function _dcmDeltaHtml(id, pv) {
+    const d = _dcmDraft[id];
+    const diff = (d ? d.commitValue : 0) - pv;
+    if (!pv || Math.abs(diff) < 1) return `<div class="dcm-delta cmt-neutral" id="dcm-delta-${id}">= pipeline</div>`;
+    return `<div class="dcm-delta ${diff > 0 ? 'cmt-good' : 'cmt-bad'}" id="dcm-delta-${id}">${diff > 0 ? '+' : ''}${_dcmMoney(diff)} vs pipeline</div>`;
+  }
+
+  function dcmSubmit() {
+    if (!_dcmConfirmed) return;
+    const ids = Object.keys(_dcmDraft);
+    if (!ids.length) return;
+    const eligible = commitEligibleOpps(CURRENT_REP);
+    const items = ids.map(id => {
+      const o = eligible.find(x => x.id === id) || {};
+      return { oppId: id, name: o.name || '', stage: o.stage || '', pipelineValue: Number(o.value) || 0, commitValue: _dcmDraft[id].commitValue, pct: _dcmDraft[id].pct };
+    });
+    const rec = submitCommit(CURRENT_REP, _dcmWeek, items);
+    if (!rec) { if (typeof showToast === 'function') showToast('That week already has a submitted commit'); return; }
+    document.getElementById('dcm-modal').classList.remove('open');
+    _dcmDraft = {}; _dcmConfirmed = false;
+    if (typeof showToast === 'function') showToast('Commit locked for ' + commitWeekLabel(rec.weekStart));
+    renderDeskCommitCta();
+    showDashLens('commits');
+  }
+  window.dcmSubmit = dcmSubmit;
+
+  function _dcmRender() {
+    const body = document.getElementById('dcm-body'), ft = document.getElementById('dcm-ft');
+    if (!body) return;
+    document.getElementById('dcm-hd-step').textContent = _dcmStep + ' / 3';
+    document.getElementById('dcm-hd-t').textContent = _dcmStep === 1 ? 'Pick deals to commit' : _dcmStep === 2 ? 'Set your numbers' : 'Review & confirm';
+    document.getElementById('dcm-steps').innerHTML = [1, 2, 3].map(i => `<div class="dcm-step-seg${i <= _dcmStep ? ' is-on' : ''}"></div>`).join('');
+    if (_dcmStep === 1) _dcmStep1(body, ft);
+    else if (_dcmStep === 2) _dcmStep2(body, ft);
+    else _dcmStep3(body, ft);
+  }
+
+  function _dcmStep1(body, ft) {
+    const weeks = commitOpenWeeks(CURRENT_REP);
+    if (weeks.indexOf(_dcmWeek) === -1) _dcmWeek = weeks[0];
+    const cur = commitCurrentWeekStart(), next = commitNextWeekStart();
+    const wk = weeks.map(w => `<button type="button" class="dcm-week${w === _dcmWeek ? ' is-sel' : ''}" onclick="dcmSetWeek('${w}')">
+      <div class="dcm-week-l">${commitWeekLabel(w)}</div>
+      <div class="dcm-week-s">${w === next ? 'Next week — the normal commit' : w === cur ? 'This week — already in progress' : 'Two weeks out'}</div>
+    </button>`).join('');
+
+    const opps = commitEligibleOpps(CURRENT_REP);
+    const order = { 'A': 0, 'B+': 1, 'B': 2, 'C+': 3, 'C': 4 };
+    opps.sort((a, b) => (order[a.stage] ?? 9) - (order[b.stage] ?? 9) || (b.value || 0) - (a.value || 0));
+    const rows = opps.length ? opps.map(o => {
+      const sel = !!_dcmDraft[o.id];
+      return `<tr class="${sel ? 'is-sel' : ''}" onclick="dcmToggleDeal('${o.id}')" style="cursor:pointer;">
+        <td style="width:34px;"><span class="dcm-chk${sel ? ' is-on' : ''}">${sel ? '✓' : ''}</span></td>
+        <td><div class="dcm-rowname">${_dcmE(o.name)}</div><div class="dcm-rowmeta">${_dcmE(o.devices || 'No devices listed')}</div></td>
+        <td>${_dcmE(o.stage || '—')}</td>
+        <td class="num">${_dcmMoney(o.value)}</td>
+      </tr>`;
+    }).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--ts);padding:24px;">No live deals in your pipeline to commit.</td></tr>';
+
+    body.innerHTML = `
+      ${!commitInSubmissionWindow() ? `<div class="cmt-lockbar" style="margin-bottom:16px;"><span class="cmt-lockbar-ico">🗓</span><span class="cmt-lockbar-txt">Commits normally go in <b>Friday through Sunday</b> for the week ahead. You're submitting off-cadence — that's allowed, but the submission timestamp is recorded and visible to your manager.</span></div>` : ''}
+      <div class="dcm-sec"><div class="dcm-sec-t">Commit week</div><div class="dcm-weekgrid">${wk}</div></div>
+      <div class="dcm-sec"><div class="dcm-sec-t">Your pipeline · ${opps.length} live deal${opps.length === 1 ? '' : 's'}</div>
+        <table class="dcm-dealtbl"><thead><tr><th></th><th>Deal</th><th>Stage</th><th class="num">Pipeline value</th></tr></thead><tbody>${rows}</tbody></table>
+      </div>`;
+    const n = Object.keys(_dcmDraft).length;
+    ft.innerHTML = `<div class="dcm-ft-meta"><div class="dcm-ft-l">Selected</div><div class="dcm-ft-v">${n} deal${n === 1 ? '' : 's'}</div></div>
+      <button class="dcm-btn dcm-btn-ghost" onclick="dcmCancel()">Cancel</button>
+      <button class="dcm-btn dcm-btn-primary" onclick="dcmNext()" ${n ? '' : 'disabled'}>Next</button>`;
+  }
+
+  function _dcmStep2(body, ft) {
+    const eligible = commitEligibleOpps(CURRENT_REP);
+    const rows = Object.keys(_dcmDraft).map(id => {
+      const o = eligible.find(x => x.id === id) || {};
+      const d = _dcmDraft[id], pv = Number(o.value) || 0;
+      return `<tr>
+        <td><div class="dcm-rowname">${_dcmE(o.name)}</div><div class="dcm-rowmeta">Stage ${_dcmE(o.stage || '—')} · pipeline ${_dcmMoney(pv)}</div></td>
+        <td class="num"><input class="dcm-in pct" type="text" inputmode="decimal" value="${d.pct}" oninput="dcmSetPct('${id}',this.value)"> %</td>
+        <td class="num"><input class="dcm-in" type="text" inputmode="decimal" value="${d.commitValue}" oninput="dcmSetVal('${id}',this.value)">${_dcmDeltaHtml(id, pv)}</td>
+        <td style="width:34px;"><button class="dcm-x" onclick="dcmDropDeal('${id}')" aria-label="Remove">✕</button></td>
+      </tr>`;
+    }).join('');
+    body.innerHTML = `
+      <div class="cmt-lockbar" style="margin-bottom:16px;"><span class="cmt-lockbar-ico">💡</span><span class="cmt-lockbar-txt">The <b>commit value</b> is independent of the pipeline value. Pipeline is your working estimate; the commit is the number you're standing behind for this week. Trim it if you expect to discount.</span></div>
+      <table class="dcm-dealtbl"><thead><tr><th>Deal</th><th class="num">Chance to close</th><th class="num">Commit value</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+    ft.innerHTML = `<div class="dcm-ft-meta"><div class="dcm-ft-l">Total commit</div><div class="dcm-ft-v" id="dcm-ft-total">${_dcmMoney(_dcmTotal())}</div></div>
+      <button class="dcm-btn dcm-btn-ghost" onclick="dcmBack()">Back</button>
+      <button class="dcm-btn dcm-btn-primary" onclick="dcmNext()">Review</button>`;
+  }
+
+  function _dcmStep3(body, ft) {
+    const eligible = commitEligibleOpps(CURRENT_REP);
+    const ids = Object.keys(_dcmDraft);
+    const total = _dcmTotal();
+    const weighted = ids.reduce((s, id) => s + _dcmDraft[id].commitValue * (_dcmDraft[id].pct / 100), 0);
+    const rows = ids.map(id => {
+      const o = eligible.find(x => x.id === id) || {};
+      const d = _dcmDraft[id];
+      return `<tr>
+        <td><div class="dcm-rowname">${_dcmE(o.name)}</div><div class="dcm-rowmeta">Stage ${_dcmE(o.stage || '—')} · pipeline ${_dcmMoney(Number(o.value) || 0)}</div></td>
+        <td class="num">${d.pct}%</td>
+        <td class="num">${_dcmMoney(d.commitValue)}</td>
+      </tr>`;
+    }).join('');
+    body.innerHTML = `
+      <div class="dcm-rev-total">
+        <div><div class="dcm-rev-total-l">Committing for ${commitWeekLabel(_dcmWeek)}</div><div class="dcm-rev-total-v">${_dcmMoney(total)}</div></div>
+        <div class="dcm-rev-total-s">${ids.length} deal${ids.length === 1 ? '' : 's'}<br>${_dcmMoney(weighted)} weighted by your own odds</div>
+      </div>
+      <table class="dcm-dealtbl"><thead><tr><th>Deal</th><th class="num">Chance</th><th class="num">Commit value</th></tr></thead><tbody>${rows}</tbody></table>
+      <div class="cmt-lockbar" style="margin-top:16px;"><span class="cmt-lockbar-ico">🔒</span><span class="cmt-lockbar-txt"><b>This cannot be edited or withdrawn.</b> Once submitted, this commit is locked and becomes the permanent record for ${commitWeekLabel(_dcmWeek)}. Your manager sees it, and it will be scored against what actually closes that week.</span></div>
+      <button type="button" class="dcm-confirm${_dcmConfirmed ? ' is-on' : ''}" onclick="dcmToggleConfirm()">
+        <span class="dcm-confirm-box">${_dcmConfirmed ? '✓' : ''}</span>
+        <span class="dcm-confirm-txt">I understand this commit is final and cannot be changed after submission.</span>
+      </button>`;
+    ft.innerHTML = `<div class="dcm-ft-meta"><div class="dcm-ft-l">Total commit</div><div class="dcm-ft-v">${_dcmMoney(total)}</div></div>
+      <button class="dcm-btn dcm-btn-ghost" onclick="dcmBack()">Back</button>
+      <button class="dcm-btn dcm-btn-danger" onclick="dcmSubmit()" ${_dcmConfirmed ? '' : 'disabled'}>Submit &amp; lock</button>`;
+  }
+
+  // ── Desktop commits dashboard ────────────────────────────────────
+  let _dcmOpenWeeks = {};
+  function dcmToggleWeek(w) { _dcmOpenWeeks[w] = !_dcmOpenWeeks[w]; renderDeskCommits(); }
+  window.dcmToggleWeek = dcmToggleWeek;
+
+  function _dcmBar(c) {
+    const denom = Math.max(c.totalCommit, c.actualRevenue, 1);
+    const cw = Math.min(100, (c.committedRevenue / denom) * 100);
+    const uw = Math.min(100 - cw, (c.uncommittedRevenue / denom) * 100);
+    return `<div class="cmt-bar"><div class="cmt-bar-fill is-committed" style="width:${cw}%"></div><div class="cmt-bar-fill is-uncommitted" style="width:${uw}%"></div></div>`;
+  }
+  function _dcmPill(c) {
+    if (!c.submitted) return '<span class="cmt-pill cmt-pill-none">No commit</span>';
+    if (c.inFlight) return '<span class="cmt-pill cmt-pill-open">In flight</span>';
+    if (c.missCount === 0) return '<span class="cmt-pill cmt-pill-hit">All hit</span>';
+    if (c.fullyCovered) return '<span class="cmt-pill cmt-pill-covered">Covered by others</span>';
+    return `<span class="cmt-pill cmt-pill-miss">${c.missCount} missed</span>`;
+  }
+
+  function renderDeskCommits() {
+    const mount = document.getElementById('dcm-dash');
+    if (!mount) return;
+    const roll = commitRollup(CURRENT_REP);
+    const cards = commitHistoryWeeks(CURRENT_REP, 14);
+    const next = commitNextWeekStart();
+    const nextDone = !!getCommitForWeek(CURRENT_REP, next);
+    const att = roll.attainment == null ? '—' : Math.round(roll.attainment * 100) + '%';
+    const acc = roll.commitAccuracy == null ? '—' : Math.round(roll.commitAccuracy * 100) + '%';
+    const hr = roll.dealHitRate == null ? '—' : Math.round(roll.dealHitRate * 100) + '%';
+
+    const hero = `<div class="dcm-hero">
+      <div class="dcm-hero-main">
+        <div class="dcm-hero-l">Commit attainment · last ${roll.weeks} settled week${roll.weeks === 1 ? '' : 's'}</div>
+        <div class="dcm-hero-v">${att}</div>
+        <div class="dcm-hero-s">${_dcmMoney(roll.totalActual)} closed against ${_dcmMoney(roll.totalCommit)} committed</div>
+      </div>
+      <div class="dcm-hero-cells">
+        <div><div class="dcm-hero-cell-v">${acc}</div><div class="dcm-hero-cell-l">FROM COMMITTED DEALS</div></div>
+        <div><div class="dcm-hero-cell-v">${hr}</div><div class="dcm-hero-cell-l">DEAL HIT RATE</div></div>
+        <div><div class="dcm-hero-cell-v">${_dcmMoneyK(roll.totalUncommitted)}</div><div class="dcm-hero-cell-l">UNCOMMITTED REVENUE</div></div>
+        <div><div class="dcm-hero-cell-v">${roll.hitCount} / ${roll.dealCount}</div><div class="dcm-hero-cell-l">DEALS HIT</div></div>
+      </div>
+    </div>`;
+
+    let readout = '';
+    if (roll.attainment != null && roll.dealHitRate != null && roll.weeks >= 2) {
+      const a = Math.round(roll.attainment * 100), h = Math.round(roll.dealHitRate * 100);
+      if (a - h >= 15) readout = `<div class="dcm-cover">Hitting <b>${a}%</b> of committed dollars but only <b>${h}%</b> of committed deals — the revenue is landing, just not from the deals being named. That's a forecasting gap, not a production gap.</div>`;
+      else if (h - a >= 15) readout = `<div class="dcm-cover">Closing <b>${h}%</b> of committed deals but reaching only <b>${a}%</b> of committed dollars — deals are landing smaller than committed. Worth revisiting how commit values are set.</div>`;
+    }
+
+    const cta = nextDone ? '' : `<div class="dcm-ctabar" style="margin-bottom:16px;">
+      <button type="button" class="dcm-cta" onclick="dcmOpen()">📌 Submit commits</button>
+      <span class="dcm-ctabar-note">${commitWeekLabel(next)} is still open</span></div>`;
+
+    const list = cards.length ? cards.map(c => {
+      const open = !!_dcmOpenWeeks[c.weekStart];
+      const vc = c.variance >= 0 ? 'cmt-good' : 'cmt-bad';
+      return `<div class="dcm-wcard${c.inFlight ? ' is-open' : ''}">
+        <div class="dcm-wcard-hd" onclick="dcmToggleWeek('${c.weekStart}')">
+          <div class="dcm-wcard-wk">${c.label}<div class="dcm-wcard-sub">${c.submitted ? (c.dealCount + ' deal' + (c.dealCount === 1 ? '' : 's') + ' committed') : 'Closed without a commit'}</div></div>
+          ${_dcmPill(c)}
+          <div class="dcm-wcard-num"><div class="dcm-wcard-num-l">Committed</div><div class="dcm-wcard-num-v">${_dcmMoney(c.totalCommit)}</div></div>
+          <div class="dcm-wcard-num"><div class="dcm-wcard-num-l">Actual</div><div class="dcm-wcard-num-v">${_dcmMoney(c.actualRevenue)}</div></div>
+          <div class="dcm-wcard-num"><div class="dcm-wcard-num-l">Variance</div><div class="dcm-wcard-num-v ${c.submitted ? vc : 'cmt-neutral'}">${c.submitted ? (c.variance >= 0 ? '+' : '') + _dcmMoney(c.variance) : '—'}</div></div>
+          <div class="dcm-wcard-bar">${_dcmBar(c)}</div>
+          <div class="dcm-wcard-caret">${open ? '▴' : '▾'}</div>
+        </div>
+        ${open ? _dcmWeekDetail(c) : ''}
+      </div>`;
+    }).join('') : '<div class="dcm-empty">No commit history yet.<br>Submit your first weekly commit to start tracking forecast against actuals.</div>';
+
+    mount.innerHTML = hero + readout + cta + list;
+  }
+  window.renderDeskCommits = renderDeskCommits;
+
+  function _dcmWeekDetail(c) {
+    const committed = c.items.length ? `
+      <div class="dcm-subhd">Committed deals${c.submittedAt ? ' · submitted ' + new Date(c.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''}</div>
+      <table class="dcm-dtbl"><thead><tr><th>Deal</th><th>Stage</th><th class="num">Chance</th><th class="num">Committed</th><th class="num">Actual</th><th class="num">Variance</th><th>Result</th></tr></thead><tbody>
+      ${c.items.map(it => {
+        const pill = c.inFlight
+          ? (it.hit ? '<span class="cmt-pill cmt-pill-hit">Closed</span>' : '<span class="cmt-pill cmt-pill-open">Open</span>')
+          : (it.hit ? '<span class="cmt-pill cmt-pill-hit">Hit</span>' : '<span class="cmt-pill cmt-pill-miss">Missed</span>');
+        return `<tr>
+          <td class="dcm-rowname">${_dcmE(it.name)}</td>
+          <td>${_dcmE(it.stage || '—')}</td>
+          <td class="num">${it.pct}%</td>
+          <td class="num">${_dcmMoney(it.commitValue)}</td>
+          <td class="num">${it.hit ? _dcmMoney(it.actualValue) : '—'}</td>
+          <td class="num ${it.hit ? (it.variance >= 0 ? 'cmt-good' : 'cmt-bad') : 'cmt-neutral'}">${it.hit ? ((it.variance >= 0 ? '+' : '') + _dcmMoney(it.variance)) : '—'}</td>
+          <td>${pill}</td>
+        </tr>`;
+      }).join('')}
+      </tbody></table>` : '';
+
+    const others = c.uncommitted.length ? `
+      <div class="dcm-subhd">Closed but not committed</div>
+      <table class="dcm-dtbl"><thead><tr><th>Deal</th><th>Stage</th><th>Closed</th><th class="num">Revenue</th></tr></thead><tbody>
+      ${c.uncommitted.map(u => `<tr><td class="dcm-rowname">${_dcmE(u.name)}</td><td>${_dcmE(u.stage || '—')}</td><td>${u.closedAt}</td><td class="num">${_dcmMoney(u.actualValue)}</td></tr>`).join('')}
+      </tbody></table>` : '';
+
+    let cover = '';
+    if (c.coveredByOthers) {
+      cover = c.fullyCovered
+        ? `<div class="dcm-cover"><b>Missed the commit, made the number.</b> ${c.missCount} committed deal${c.missCount === 1 ? '' : 's'} worth ${_dcmMoney(c.missedValue)} didn't close, but ${_dcmMoney(c.uncommittedRevenue)} came in from ${c.uncommitted.length} uncommitted deal${c.uncommitted.length === 1 ? '' : 's'} — covering the gap.</div>`
+        : `<div class="dcm-cover"><b>Partially covered.</b> ${_dcmMoney(c.missedValue)} of committed revenue slipped; ${_dcmMoney(c.uncommittedRevenue)} of uncommitted closes offset part of it, leaving the week ${_dcmMoney(Math.abs(c.variance))} short.</div>`;
+    }
+    return `<div class="dcm-wcard-body">${committed}${others}${cover}</div>`;
+  }
 
   // ── Events dashboard (Day / Weekend / Annual) ──────────────────────────
   // Lists events upcoming-first with stage-weighted anticipated pipeline, and
@@ -65631,6 +67084,8 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
   }
 
   function renderPipeline() {
+    // Weekly commits CTA at the top of the tab (mirrors mobile Business).
+    if (typeof renderDeskCommitCta === 'function') { try { renderDeskCommitCta(); } catch (e) {} }
     // Always refresh the accounts + C-meetings + tasks + killed sections first so
     // closes/scheduling/kills flow through even when the main pipeline view isn't
     // currently mounted.
@@ -82699,6 +84154,7 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     if (v === 'efficiency' && typeof renderEfficiency === 'function') { try { renderEfficiency(); } catch (e) {} }
     if (v === 'custom-dashboard' && typeof renderDeskDashboard === 'function') { try { renderDeskDashboard(); } catch (e) {} }
     if (v === 'events' && typeof renderEventsDashboard === 'function') { try { renderEventsDashboard(); } catch (e) {} }
+    if (v === 'commits' && typeof renderDeskCommits === 'function') { try { renderDeskCommits(); } catch (e) {} }
     if (_VIEW_DASH_LENS[v] !== undefined) { _dashLens = _VIEW_DASH_LENS[v]; _renderDashToggle(); }
     if (v === 'pipeline') {
       // Same staleness pattern as the revenue tab above: renderPipeline()
