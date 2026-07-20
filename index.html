@@ -60329,9 +60329,10 @@ window.nlGenerateMatchesShared = nlGenerateMatchesShared;
     let h='<div class="dfc-cmp-scroll"><table class="dfc-cmp-table"><thead><tr><th></th>';cols.forEach(c=>{h+=`<th>${_dfcEsc(c.name)}</th>`;});h+='</tr></thead><tbody>';
     rows.forEach(r=>{h+=`<tr><td class="dfc-cmp-lbl">${r[0]}</td>`;cols.forEach(c=>{let cls='';if(r[2]==='net'&&best!==null&&Math.abs(c.net-best)<0.005)cls='dfc-cmp-best';else if(r[2]==='pay'&&isFinite(c.payment)&&Math.abs(c.payment-lowPay)<0.005)cls='dfc-cmp-best';else if(r[2]==='floor'&&isFinite(c.floor))cls=(c.net-c.floor>=0)?'dfc-cmp-good':'dfc-cmp-bad';h+=`<td class="${cls}">${r[1](c)}</td>`;});h+='</tr>';});
     h+='</tbody></table></div><div class="dfc-cmp-legend">Green = highest net deal value · lowest payment · above floor. Amber = below floor.</div>';b.innerHTML=h;}
-  var _dfcSeeded=false;
+  // Opens blank — no seeded demo values. The rep (or the demo driver) types
+  // real numbers in. Inputs persist for the session once entered; only the
+  // first paint is empty.
   function renderFinanceCalcDesk(){
-    if(!_dfcSeeded){_dfcSeeded=true;const c=window.addOnCategories||[];_dfcRestoreInputs({device:135000,apr:9.9,term:60,down:10000,tax:7,ship:1200,defer:'3',bdPayment:2400,floor:117000,bdMode:'payment',solve:'payment',addons:[{cat:(c[0]||{}).id,amt:2000},{cat:(c[1]||c[0]||{}).id,amt:1500}]});}
     dfcSetSolve(_dfcSolve);_dfcRenderAddonLines();_dfcRenderSaved();
   }
   window.renderFinanceCalcDesk=renderFinanceCalcDesk;
